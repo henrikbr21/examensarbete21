@@ -7,13 +7,12 @@ public class Board {
 		char[][] board = {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', 'P', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
 				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-				
 		};
 		
 		initBitboards(board);
@@ -36,11 +35,11 @@ public class Board {
 		int k = -1;
 		
 		for(int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8; j++) {
- 				k++;
+			for(int j = 7; j >= 0; j--) {
+				k++;
 				
 				String boardString = "0000000000000000000000000000000000000000000000000000000000000000";
-				boardString = boardString.substring(k+1) + "1" + boardString.substring(0, k);
+				boardString = boardString.substring(k+1)  + "1" + boardString.substring(0, k);
 				
 				switch(board[i][j]) {
 					case 'p':
