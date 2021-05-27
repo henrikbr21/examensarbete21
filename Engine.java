@@ -9,6 +9,7 @@ public class Engine {
 	public Engine(String color, Board board){
 		this.board = board;
 		this.color = color;
+		AttackSets.initKnightMoves();
 	}
 	
 	public void generateMoves(String playerColor) {
@@ -16,7 +17,7 @@ public class Engine {
 		
 		if(playerColor.equals("WHITE")) {
 			
-			//PUSHES-----------------------------------------------------------------------
+			//PAWNS-----------------------------------------------------------------------
 			//Push one
 			long WPMoves = board.WP >>> 8;
 			long legalWPMoves = WPMoves & empty();
@@ -76,7 +77,7 @@ public class Engine {
 			String WPString = Long.toBinaryString(board.WP); //need to check the actual board
 			WPString = Util.padBinaryString(WPString);
 			
-			for(int i = 0; i<64; i++) {
+			for(int i = 0; i < 64; i++) {
 				if(WPAttacksLString.charAt(i) == '1') {
 					moveList = moveList + Util.convertNumToAlph(i-7) + (((i-7)/8)+1);
 					
@@ -90,11 +91,36 @@ public class Engine {
 				}
 			}
 			
-			
+			//KNIGHTS
+			//OPTIMIZATION POSSIBLE: STOP LOOP AFTER 2 KNIGHTS FOUND, STOP SECOND LOOP AFTER 6 MOVES FOUND.
+			String WNString = Long.toBinaryString(board.WN);
+			WNString = Util.padBinaryString(WNString);
+			for(int i = 0; i < 64; i++) {
+				if(WNString.charAt(i) == '1') {
+					
+					long WNAttacks = AttackSets.knightMoves(i);
+					String WNAttacksString = Long.toBinaryString(WNAttacks);
+					WNAttacksString = Util.padBinaryString(WNAttacksString);
+					
+					long legalWNMoves2 = WNAttacks & empty();
+					long legalWNMoves3 = WNAttacks & enemies();
+					
+					long legalWNMoves = legalWNMoves2 | legalWNMoves3;
+					String legalWNMovesString = Long.toBinaryString(legalWNMoves);
+					legalWNMovesString = Util.padBinaryString(legalWNMovesString);
+					
+					for(int j = 0; j < 64; j++) {
+						if(legalWNMovesString.charAt(j) == '1') {
+								moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
+								moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+						}
+					}
+				}
+			}
 			System.out.println(moveList);
 
 		}else if(playerColor.equals("BLACK")){
-			//PUSHES-----------------------------------------------------------------------
+			//PAWNS-----------------------------------------------------------------------
 			//Push one
 			long BPMoves = board.BP << 8;
 			long legalBPMoves = BPMoves & empty();
@@ -195,6 +221,29 @@ public class Engine {
 		return enemies;
 	}
 	
+	private long friends() {
+		long friends = 0L;
+		
+		if(color.equals("WHITE")) {
+			friends = friends ^ board.WP;
+			friends = friends ^ board.WR;
+			friends = friends ^ board.WN;
+			friends = friends ^ board.WB;
+			friends = friends ^ board.WK;
+			friends = friends ^ board.WQ;
+			
+		}else if(color.equals("BLACK")) {
+			friends = friends ^ board.BP;
+			friends = friends ^ board.BR;
+			friends = friends ^ board.BN;
+			friends = friends ^ board.BB;
+			friends = friends ^ board.BK;
+			friends = friends ^ board.BQ;
+		}
+		
+		return friends;
+	}
+	
 	private long empty() {
 		long empty = 0l;
 		empty = ~(empty & 0); //flip all bits to 1 
@@ -214,6 +263,8 @@ public class Engine {
 		
 		return empty;
 	}
+	
+	
 	
 	private String search() { //return type?
 		
@@ -237,17 +288,12 @@ public class Engine {
 	
 	private String rookMoves(int xPos, int yPos, String COLOR) {
 		String moves = "";
-		
-		
+
 		return moves;
 	}
+
 	
-	private String knightMoves(int xPos, int yPos, String COLOR) {
-		String moves = "";
-		
-		
-		return moves;
-	}
+
 	
 	private String bishopMoves(int xPos, int yPos, String COLOR) {
 		String moves = "";
