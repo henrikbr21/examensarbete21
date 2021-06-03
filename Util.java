@@ -33,4 +33,30 @@ public abstract class Util {
 		
 		return string;
 	}
+	
+	public static long boardFromArray(char[][] board) {
+		long moves = 0L;
+		
+		int k = -1;
+		for(int i = 0; i < 8; i++) {
+			for(int j = 7; j >= 0; j--) {
+			k++;
+			
+			String boardString = "0000000000000000000000000000000000000000000000000000000000000000";
+			boardString = boardString.substring(k+1)  + "1" + boardString.substring(0, k);
+			
+			if(board[i][j] == '1')
+				moves += Util.stringToLong(boardString);
+			}
+		}
+		return moves;
+	}
+	
+	public static long stringToLong(String s) {
+		if(s.charAt(0) == '0') {
+			return Long.parseLong(s, 2);
+		}else {
+			return Long.parseLong("1" + s.substring(2), 2)*2;
+		}
+	}
 }

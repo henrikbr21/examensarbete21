@@ -30,7 +30,6 @@ public class Board {
 		}
 	}
 			
-	
 	private void initBitboards(char[][] board) {
 		int k = -1;
 		

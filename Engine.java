@@ -10,6 +10,7 @@ public class Engine {
 		this.board = board;
 		this.color = color;
 		AttackSets.initKnightMoves();
+		AttackSets.initKingMoves();
 	}
 	
 	public void generateMoves(String playerColor) {
@@ -92,11 +93,15 @@ public class Engine {
 			}
 			
 			//KNIGHTS
-			//OPTIMIZATION POSSIBLE: STOP LOOP AFTER 2 KNIGHTS FOUND, STOP SECOND LOOP AFTER 6 MOVES FOUND.
 			String WNString = Long.toBinaryString(board.WN);
 			WNString = Util.padBinaryString(WNString);
+			
+			int knightsFound = 0;
 			for(int i = 0; i < 64; i++) {
+				if(knightsFound == 2)
+					break;
 				if(WNString.charAt(i) == '1') {
+					knightsFound++;
 					
 					long WNAttacks = AttackSets.knightMoves(i);
 					String WNAttacksString = Long.toBinaryString(WNAttacks);
@@ -109,14 +114,54 @@ public class Engine {
 					String legalWNMovesString = Long.toBinaryString(legalWNMoves);
 					legalWNMovesString = Util.padBinaryString(legalWNMovesString);
 					
+					
+					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
+						if(movesFound == 2)
+							break;
+						
 						if(legalWNMovesString.charAt(j) == '1') {
-								moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
-								moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+							movesFound++;
+							
+							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
+							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
 						}
 					}
 				}
 			}
+			
+			//King
+			String WKString = Long.toBinaryString(board.WK);
+			WKString = Util.padBinaryString(WKString);
+			for(int i = 0; i < 64; i++) {
+				if(WKString.charAt(i) == '1') {
+					
+					long WKMoves = AttackSets.kingMoves(i);
+					
+					//Remove pseudolegal moves
+					long legalWKMoves2 = WKMoves & empty();
+					long legalWKMoves3 = WKMoves & enemies();
+					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
+					
+					String legalMovesString = Long.toBinaryString(legalWKMoves);
+					legalMovesString = Util.padBinaryString(legalMovesString);
+					
+					int movesFound = 0;
+					for(int j = 0; j < 64; j++) {
+						if(movesFound == 8) 
+							break;
+						
+						if(legalMovesString.charAt(j) == '1') {
+							movesFound++;
+							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
+							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+						}
+					}
+					break;
+				}
+			}
+			
+			
 			System.out.println(moveList);
 
 		}else if(playerColor.equals("BLACK")){
@@ -192,6 +237,76 @@ public class Engine {
 					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
 				}
 			}
+			
+			//KNIGHTS
+			String BNString = Long.toBinaryString(board.BN);
+			BNString = Util.padBinaryString(BNString);
+			
+			int knightsFound = 0;
+			for(int i = 0; i < 64; i++) {
+				if(knightsFound == 2)
+					break;
+				if(BNString.charAt(i) == '1') {
+					knightsFound++;
+					
+					long BNAttacks = AttackSets.knightMoves(i);
+					String BNAttacksString = Long.toBinaryString(BNAttacks);
+					BNAttacksString = Util.padBinaryString(BNAttacksString);
+					
+					long legalBNMoves2 = BNAttacks & empty();
+					long legalBNMoves3 = BNAttacks & enemies();
+					
+					long legalBNMoves = legalBNMoves2 | legalBNMoves3;
+					String legalBNMovesString = Long.toBinaryString(legalBNMoves);
+					legalBNMovesString = Util.padBinaryString(legalBNMovesString);
+					
+					
+					int movesFound = 0;
+					for(int j = 0; j < 64; j++) {
+						if(movesFound == 2)
+							break;
+						
+						if(legalBNMovesString.charAt(j) == '1') {
+							movesFound++;
+							
+							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
+							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+						}
+					}
+				}
+			}
+			
+			//King
+			String BKString = Long.toBinaryString(board.BK);
+			BKString = Util.padBinaryString(BKString);
+			for(int i = 0; i < 64; i++) {
+				if(BKString.charAt(i) == '1') {
+					
+					long BKMoves = AttackSets.kingMoves(i);
+					
+					//Remove pseudolegal moves
+					long legalBKMoves2 = BKMoves & empty();
+					long legalBKMoves3 = BKMoves & enemies();
+					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
+					
+					String legalMovesString = Long.toBinaryString(legalBKMoves);
+					legalMovesString = Util.padBinaryString(legalMovesString);
+					
+					int movesFound = 0;
+					for(int j = 0; j < 64; j++) {
+						if(movesFound == 8) 
+							break;
+						
+						if(legalMovesString.charAt(j) == '1') {
+							movesFound++;
+							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
+							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+						}
+					}
+					break;
+				}
+			}
+			
 			
 			System.out.println(moveList);
 			
