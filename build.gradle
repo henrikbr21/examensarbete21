@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation 'junit:junit:4.12'
+}
+
+test {
+  // Log passed/failed tests in the console (see also build/reports/tests):
+  testLogging.events 'passed', 'failed'
+
+  testLogging.exceptionFormat = 'full' // Full error output for test failures.
+
+  dependsOn 'cleanTest'  // This causes tests to always be re-run.
+}
