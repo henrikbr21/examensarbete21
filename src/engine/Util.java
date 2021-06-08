@@ -60,4 +60,27 @@ public abstract class Util {
 			return Long.parseLong("1" + s.substring(2), 2)*2;
 		}
 	}
+	
+	public static void draw(long bitBoard) {
+		String bitBoardString = Long.toBinaryString(bitBoard);
+		bitBoardString = Util.padBinaryString(bitBoardString);
+		int q = 64;
+		
+        for (int i=0;i<8;i++) {
+        	System.out.print("[");
+        	int k = -1;
+        	q = q - 8;
+        			
+        	for(int j = 0; j < 8; j++) {
+        		k++;
+        		
+            	
+                System.out.print(bitBoardString.charAt(q+k));
+                if(k != 7) 
+                	System.out.print(",");
+        	}
+        	System.out.println("]");
+        }
+        System.out.println("-----------------");
+    }
 }

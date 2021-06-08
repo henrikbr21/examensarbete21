@@ -16,11 +16,14 @@ public class Engine {
 		AttackSets.initKingMoves();
 		AttackSets.initRookMoves();
 		AttackSets.initLineMasks();
+		AttackSets.initLeftRays();
+		AttackSets.initRightRays();
 		time = System.currentTimeMillis() - time;
 		System.out.println("Initialization took " + time + "ms.");
 	}
 	
 	public void generateMoves(String playerColor) {
+
 		String moveList = "";
 		
 		if(playerColor.equals("WHITE")) {
@@ -140,6 +143,8 @@ public class Engine {
 			//King
 			String WKString = Long.toBinaryString(board.WK);
 			WKString = Util.padBinaryString(WKString);
+			System.out.println(WKString);
+			
 			for(int i = 0; i < 64; i++) {
 				if(WKString.charAt(i) == '1') {
 					
@@ -214,17 +219,42 @@ public class Engine {
 					String singleBishopString = "0000000000000000000000000000000000000000000000000000000000000000";
 					singleBishopString = singleBishopString.substring(0, i) + "1" + singleBishopString.substring(i+1);
 					long singleBishop = Util.stringToLong(singleBishopString);
-					System.out.println();
-					long OCCUPIED = occupied();
 					
-					long possibilitiesDiagonal = ((OCCUPIED&AttackSets.diagMasksLeft((i/8) + (i%8))) - (2 * singleBishop)) ^ Long.reverse(Long.reverse(OCCUPIED&AttackSets.diagMasksLeft((i/8) + (i%8))) - (2 * Long.reverse(singleBishop)));
-					draw(possibilitiesDiagonal);
+					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
 					
-			        //long leftDiagAttacks = ((occupied&AttackSets.diagMasksLeft(i/8)+(i%8)) - (2 * singleBishop)) ^ Long.reverse((occupied&AttackSets.diagMasksLeft(i/8)+(i%8)) - (2 * Long.reverse(singleBishop)));
-			        
+					int closestPos = Long.numberOfLeadingZeros(URAttacks);
+					URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
 					
-			        //draw(possibilitiesDiagonal);
-			        //long RightDiagAttacks = ((OCCUPIED&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]) - (2 * binaryS)) ^ Long.reverse(Long.reverse(OCCUPIED&AntiDiagonalMasks8[(s / 8) + 7 - (s % 8)]) - (2 * Long.reverse(binaryS)));
+					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					//draw(DRAttacks);
+					closestPos = Long.numberOfLeadingZeros(DRAttacks);
+					
+					String drattacksstring = Long.toBinaryString(DRAttacks);
+					drattacksstring = Util.padBinaryString(drattacksstring);
+					System.out.println(drattacksstring);
+					
+					long DR1 = AttackSets.diagRaysDR(i);
+					//draw(DR1);
+					long DR2 = ~(AttackSets.diagRaysDR(closestPos));
+					//draw(DR2);
+					DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos+7));
+					//draw(DRAttacks);
+					
+					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+					
+					closestPos = Long.numberOfLeadingZeros(ULAttacks);
+					ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
+					
+					
+					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+					
+					closestPos = Long.numberOfLeadingZeros(DLAttacks);
+					DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
+					draw(DLAttacks);
+					
+					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					//draw(bishopAttacks);
+					
 				}
 			}
 			
@@ -400,7 +430,7 @@ public class Engine {
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long rookAttacks = verticalAttacks ^ horizontalAttacks;
 					rookAttacks = rookAttacks & (enemies() ^ empty());
-					draw(rookAttacks);
+					//draw(rookAttacks);
 				}
 			}
 			
@@ -553,7 +583,7 @@ public class Engine {
     }
     
     */
-
+	
 	public void draw(long bitBoard) {
 		String bitBoardString = Long.toBinaryString(bitBoard);
 		bitBoardString = Util.padBinaryString(bitBoardString);
@@ -576,6 +606,7 @@ public class Engine {
         }
         System.out.println("-----------------");
     }
+    
     
     public void makeMove(String move) {
     	
