@@ -2,6 +2,32 @@ package engine;
 
 public abstract class Util {
 
+	public static String convertNumToCoord(int i){
+		String coord = "";
+		int k = i%8;
+		int j = (i/8)+1;
+
+		switch(k) {
+			case 0:
+				return coord = coord + "a" + j;
+			case 1:
+				return coord = coord + "b" + j;
+			case 2:
+				return coord = coord + "c" + j;
+			case 3:
+				return coord = coord + "d" + j;
+			case 4:
+				return coord = coord + "e" + j;
+			case 5:
+				return coord = coord + "f" + j;
+			case 6:
+				return coord = coord + "g" + j;
+			case 7:
+				return coord = coord + "h" + j;
+		}
+		return coord;
+	}
+
 	public static String convertNumToAlph(int i) {
 		int k = i%8;
 		

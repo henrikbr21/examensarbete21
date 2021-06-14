@@ -10,7 +10,7 @@ public class main {
 		for(int i = 0; i < 1; i++) {
 			engine.generateMoves("WHITE");
 		}
-		System.out.println(System.currentTimeMillis()-time);
+		System.out.println("Move generation took " + (System.currentTimeMillis()-time) + "ms.");
 		
 	}
 

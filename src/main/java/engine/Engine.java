@@ -22,12 +22,13 @@ public class Engine {
 		System.out.println("Initialization took " + time + "ms.");
 	}
 	
-	public void generateMoves(String playerColor) {
+	public String generateMoves(String playerColor) {
 
 		String moveList = "";
-		
+
+
 		if(playerColor.equals("WHITE")) {
-			
+
 			//PAWNS-----------------------------------------------------------------------
 			//Push one
 			long WPMoves = board.WP >>> 8;
@@ -124,10 +125,10 @@ public class Engine {
 					String legalWNMovesString = Long.toBinaryString(legalWNMoves);
 					legalWNMovesString = Util.padBinaryString(legalWNMovesString);
 					
-					
+					System.out.println(legalWNMovesString);
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
-						if(movesFound == 2)
+						if(movesFound == 6)
 							break;
 						
 						if(legalWNMovesString.charAt(j) == '1') {
@@ -154,10 +155,21 @@ public class Engine {
 					long legalWKMoves2 = WKMoves & empty();
 					long legalWKMoves3 = WKMoves & enemies();
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
-					
+
+					if(board.castleWKValid){
+						if((occupied() & AttackSets.WKRblockers) == 0){
+							legalWKMoves = legalWKMoves | AttackSets.castleWKR;
+						}
+					}
+					if(board.castleWQValid){
+						if((occupied() & AttackSets.WKLblockers) == 0){
+							legalWKMoves = legalWKMoves | AttackSets.castleWKL;
+						}
+					}
+
 					String legalMovesString = Long.toBinaryString(legalWKMoves);
 					legalMovesString = Util.padBinaryString(legalMovesString);
-					
+
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
 						if(movesFound == 8) 
@@ -195,14 +207,23 @@ public class Engine {
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
 					long occupied = occupied();
 					long horizontalAttacks = (occupied - 2 * singleRook) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleRook));
-					
+					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
+
 					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleRook)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleRook)));
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long rookAttacks = verticalAttacks ^ horizontalAttacks;
 					rookAttacks = rookAttacks & (enemies() ^ empty());
+
+					//generate moveList
+					for(int j = 0; j < 64; j++){
+						if(((rookAttacks>>j)&1)==1){
+							moveList = moveList + Util.convertNumToCoord(i);
+							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+						}
+					}
 				}
 			}
-			
+
 			//Bishops
 			
 			String WBString = Long.toBinaryString(board.WB);
@@ -215,50 +236,143 @@ public class Engine {
 				
 				if(WBString.charAt(i) == '1') {
 					bishopsFound++;
-					
-					String singleBishopString = "0000000000000000000000000000000000000000000000000000000000000000";
-					singleBishopString = singleBishopString.substring(0, i) + "1" + singleBishopString.substring(i+1);
-					long singleBishop = Util.stringToLong(singleBishopString);
-					
 					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
 					
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					
+					if(closestPos != 64){
+						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
+					}else{
+						URAttacks = AttackSets.diagRaysUR(i);
+					}
+
 					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
-					//draw(DRAttacks);
-					closestPos = Long.numberOfLeadingZeros(DRAttacks);
-					
-					String drattacksstring = Long.toBinaryString(DRAttacks);
-					drattacksstring = Util.padBinaryString(drattacksstring);
-					System.out.println(drattacksstring);
-					
-					long DR1 = AttackSets.diagRaysDR(i);
-					//draw(DR1);
-					long DR2 = ~(AttackSets.diagRaysDR(closestPos));
-					//draw(DR2);
-					DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos+7));
-					//draw(DRAttacks);
-					
+					closestPos = Long.numberOfTrailingZeros(DRAttacks);
+					closestPos = 63 - closestPos;
+					if(closestPos > 0){
+						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
+					}else{
+						DRAttacks = AttackSets.diagRaysDR(i);
+					}
+
 					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
 					
 					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					
-					
+					if(closestPos != 64){
+						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
+					}else{
+						ULAttacks = AttackSets.diagRaysUL(i);
+					}
+
 					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
 					
-					closestPos = Long.numberOfLeadingZeros(DLAttacks);
-					DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					draw(DLAttacks);
-					
+					closestPos = Long.numberOfTrailingZeros(DLAttacks);
+					closestPos = 63 - closestPos;
+
+					if(closestPos > 0){
+						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
+					}else{
+						DLAttacks = AttackSets.diagRaysDL(i);
+					}
+
 					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					//draw(bishopAttacks);
-					
+					bishopAttacks = bishopAttacks & (enemies() ^ empty());
+
+					//generate moveList
+					for(int j = 0; j < 64; j++){
+						if(((bishopAttacks>>j)&1)==1){
+							moveList = moveList + Util.convertNumToCoord(i);
+							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+						}
+					}
 				}
 			}
-			
+
+			//Queen
+			String WQString = Long.toBinaryString(board.WQ);
+			WQString = Util.padBinaryString(WQString);
+
+			for(int i = 0; i < 64; i++) {
+
+				if(WQString.charAt(i) == '1') {
+
+					String singleQueenString = "0000000000000000000000000000000000000000000000000000000000000000";
+					singleQueenString = singleQueenString.substring(0, i) + "1" + singleQueenString.substring(i+1);
+					long singleQueen = Util.stringToLong(singleQueenString);
+
+					//long occupied = occupied() & AttackSets.rowMask(i/8);
+					long occupied = occupied();
+					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
+					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
+
+					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
+					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
+					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
+					queenAttacks1 = queenAttacks1 & (enemies() ^ empty());
+
+					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+
+					int closestPos = Long.numberOfLeadingZeros(URAttacks);
+					if(closestPos != 64){
+						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
+					}else{
+						URAttacks = AttackSets.diagRaysUR(i);
+					}
+
+					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					closestPos = Long.numberOfTrailingZeros(DRAttacks);
+					closestPos = 63 - closestPos;
+					if(closestPos > 0){
+						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
+					}else{
+						DRAttacks = AttackSets.diagRaysDR(i);
+					}
+
+					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+
+					closestPos = Long.numberOfLeadingZeros(ULAttacks);
+					if(closestPos != 64){
+						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
+					}else{
+						ULAttacks = AttackSets.diagRaysUL(i);
+					}
+
+					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+
+					closestPos = Long.numberOfTrailingZeros(DLAttacks);
+					closestPos = 63 - closestPos;
+
+					if(closestPos > 0){
+						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
+					}else{
+						DLAttacks = AttackSets.diagRaysDL(i);
+					}
+
+					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					diagAttacks = diagAttacks & (enemies() ^ empty());
+					long queenAttacks = queenAttacks1 ^ diagAttacks;
+
+
+
+					//generate moveList
+					for(int j = 0; j < 64; j++){
+						if(((queenAttacks>>j)&1)==1){
+							moveList = moveList + Util.convertNumToCoord(i);
+							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+						}
+					}
+				}
+			}
+
+			int count = 0;
+			for (int i = 0; i < moveList.length(); i++) {
+				if (moveList.charAt(i) == ' ') {
+					count++;
+				}
+			}
+			System.out.println("Number of moves:" + count);
+
 			System.out.println(moveList);
+			return moveList;
 
 		}else if(playerColor.equals("BLACK")){
 			//PAWNS-----------------------------------------------------------------------
@@ -384,7 +498,18 @@ public class Engine {
 					long legalBKMoves2 = BKMoves & empty();
 					long legalBKMoves3 = BKMoves & enemies();
 					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
-					
+
+					if(board.castleBKValid){
+						if((occupied() & AttackSets.BKRblockers) == 0){
+							legalBKMoves = legalBKMoves | AttackSets.castleBKR;
+						}
+					}
+					if(board.castleBQValid){
+						if((occupied() & AttackSets.BKLblockers) == 0){
+							legalBKMoves = legalBKMoves | AttackSets.castleBKL;
+						}
+					}
+
 					String legalMovesString = Long.toBinaryString(legalBKMoves);
 					legalMovesString = Util.padBinaryString(legalMovesString);
 					
@@ -406,7 +531,7 @@ public class Engine {
 			//Rook
 			String BRString = Long.toBinaryString(board.BR);
 			BRString = Util.padBinaryString(BRString);
-			
+
 			int rooksFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(rooksFound == 2)
@@ -430,13 +555,158 @@ public class Engine {
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long rookAttacks = verticalAttacks ^ horizontalAttacks;
 					rookAttacks = rookAttacks & (enemies() ^ empty());
-					//draw(rookAttacks);
+
+					//generate moveList
+					for(int j = 0; j < 64; j++){
+						if(((rookAttacks>>j)&1)==1){
+							moveList = moveList + Util.convertNumToCoord(i);
+							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+						}
+					}
 				}
 			}
-			
+
+			//Bishops
+
+			String BBString = Long.toBinaryString(board.BB);
+			BBString = Util.padBinaryString(BBString);
+
+			int bishopsFound = 0;
+			for(int i = 0; i < 64; i++) {
+				if(bishopsFound == 2)
+					break;
+
+				if(BBString.charAt(i) == '1') {
+					bishopsFound++;
+					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+
+					int closestPos = Long.numberOfLeadingZeros(URAttacks);
+					if(closestPos != 64){
+						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
+					}else{
+						URAttacks = AttackSets.diagRaysUR(i);
+					}
+
+					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					closestPos = Long.numberOfTrailingZeros(DRAttacks);
+					closestPos = 63 - closestPos;
+					if(closestPos > 0){
+						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
+					}else{
+						DRAttacks = AttackSets.diagRaysDR(i);
+					}
+
+					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+
+					closestPos = Long.numberOfLeadingZeros(ULAttacks);
+					if(closestPos != 64){
+						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
+					}else{
+						ULAttacks = AttackSets.diagRaysUL(i);
+					}
+
+					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+
+					closestPos = Long.numberOfTrailingZeros(DLAttacks);
+					closestPos = 63 - closestPos;
+
+					if(closestPos > 0){
+						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
+					}else{
+						DLAttacks = AttackSets.diagRaysDL(i);
+					}
+
+					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					bishopAttacks = bishopAttacks & (enemies() ^ empty());
+
+					//generate moveList
+					for(int j = 0; j < 64; j++){
+						if(((bishopAttacks>>j)&1)==1){
+							moveList = moveList + Util.convertNumToCoord(i);
+							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+						}
+					}
+
+				}
+			}
+
+			//Queen
+			String BQString = Long.toBinaryString(board.BQ);
+			BQString = Util.padBinaryString(BQString);
+
+			for(int i = 0; i < 64; i++) {
+
+				if(BQString.charAt(i) == '1') {
+
+					String singleQueenString = "0000000000000000000000000000000000000000000000000000000000000000";
+					singleQueenString = singleQueenString.substring(0, i) + "1" + singleQueenString.substring(i+1);
+					long singleQueen = Util.stringToLong(singleQueenString);
+
+					//long occupied = occupied() & AttackSets.rowMask(i/8);
+					long occupied = occupied();
+					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
+					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
+
+					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
+					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
+					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
+					queenAttacks1 = queenAttacks1 & (enemies() ^ empty());
+
+					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+
+					int closestPos = Long.numberOfLeadingZeros(URAttacks);
+					if(closestPos != 64){
+						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
+					}else{
+						URAttacks = AttackSets.diagRaysUR(i);
+					}
+
+					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					closestPos = Long.numberOfTrailingZeros(DRAttacks);
+					closestPos = 63 - closestPos;
+					if(closestPos > 0){
+						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
+					}else{
+						DRAttacks = AttackSets.diagRaysDR(i);
+					}
+
+					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+
+					closestPos = Long.numberOfLeadingZeros(ULAttacks);
+					if(closestPos != 64){
+						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
+					}else{
+						ULAttacks = AttackSets.diagRaysUL(i);
+					}
+
+					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+
+					closestPos = Long.numberOfTrailingZeros(DLAttacks);
+					closestPos = 63 - closestPos;
+
+					if(closestPos > 0){
+						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
+					}else{
+						DLAttacks = AttackSets.diagRaysDL(i);
+					}
+
+					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					diagAttacks = diagAttacks & (enemies() ^ empty());
+					long queenAttacks = queenAttacks1 ^ diagAttacks;
+
+					//generate moveList
+					for(int j = 0; j < 64; j++){
+						if(((queenAttacks>>j)&1)==1){
+							moveList = moveList + Util.convertNumToCoord(i);
+							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+						}
+					}
+				}
+			}
 			System.out.println(moveList);
-			
+			return moveList;
 		}
+		return "";
 	}
 	
 	private long enemies() {
