@@ -8,6 +8,8 @@ import org.junit.Test;
 import engine.Engine;
 import engine.Util;
 
+import java.util.ArrayList;
+
 public class BoardTests {
 
 	@Test
@@ -43,15 +45,9 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board);
-		String moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves("WHITE");
 
-		int count = 0;
-		for (int i = 0; i < moves.length(); i++) {
-			if (moves.charAt(i) == ' ') {
-				count++;
-			}
-		}
-		assertEquals(30, count);
+		assertEquals(30, moves.size());
 	}
 
 	@Test
@@ -69,15 +65,9 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board);
-		String moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves("WHITE");
 
-		int count = 0;
-		for (int i = 0; i < moves.length(); i++) {
-			if (moves.charAt(i) == ' ') {
-				count++;
-			}
-		}
-		assertEquals(47, count);
+		assertEquals(47, moves.size());
 	}
 
 	@Test
@@ -95,14 +85,27 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board);
-		String moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves("WHITE");
 
-		int count = 0;
-		for (int i = 0; i < moves.length(); i++) {
-			if (moves.charAt(i) == ' ') {
-				count++;
-			}
-		}
-		assertEquals(51, count);
+		assertEquals(51, moves.size());
+	}
+
+	@Test
+	public void testCheck(){
+
+		char[][] testBoard = new char[][] {
+				{'r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', ' ', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', 'B', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'q', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', ' ', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board);
+		ArrayList<String> moves = engine.generateMoves("WHITE");
+		assertEquals(3, board.check());
 	}
 }

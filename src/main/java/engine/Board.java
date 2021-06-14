@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
@@ -11,14 +12,14 @@ public class Board {
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{'r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', ' ', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', 'B', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'q', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', 'P', ' '},
-				{' ', ' ', ' ', ' ', 'P', 'N', 'B', ' '},
-				{'P', 'P', 'P', 'P', ' ', 'P', ' ', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
+				{'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', ' ', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -87,19 +88,59 @@ public class Board {
 				}
 			}
 		}
-		
+	}
+	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
+	public int check() {
+		boolean player1Checked = false;
+		boolean player2Checked = false;
+
+		Engine engine = new Engine("WHITE", this);
+		Engine engine2 = new Engine("BLACK", this);
+
+		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
+		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
+
+		String WKPos = "";
+		for(int i = 0; i < 64; i++){
+			if(((this.WK>>i)&1)==1){
+				WKPos = Util.convertNumToCoord(63-i);
+			}
+		}
+		String BKPos = "";
+		for(int i = 0; i < 64; i++){
+			if(((this.BK>>i)&1)==1){
+				BKPos = Util.convertNumToCoord(63-i);
+			}
+		}
+		for(String move : whiteMoves){
+			String move2 = move.substring(2);
+			if(move2.equals(BKPos)){
+				player2Checked = true;
+				break;
+			}
+		}
+		for(String move : blackMoves){
+			String move2 = move.substring(2);
+			if(move2.equals(WKPos)){
+				player1Checked = true;
+				break;
+			}
+		}
+		if(player1Checked && player2Checked)
+			return 3;
+		else if(player1Checked)
+			return 1;
+		else if(player2Checked)
+			return 2;
+		return 0;
+
 	}
 	
 	//makes a move, updates the board and castling rights
 	public void makeMove(int from, int to) {
 		
 	}
-	
-	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
-	public int check() {
-		return 0;
-	}
-	
+
     public void draw() {
         String chessBoard[][]=new String[8][8];
         for (int i=0;i<64;i++) {
@@ -123,9 +164,4 @@ public class Board {
             System.out.println(Arrays.toString(chessBoard[i]));
         }
     }
-    
-    public void makeMove(String move) {
-    	
-    }
-    
 }

@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Engine {
@@ -22,10 +23,10 @@ public class Engine {
 		System.out.println("Initialization took " + time + "ms.");
 	}
 	
-	public String generateMoves(String playerColor) {
+	public ArrayList<String> generateMoves(String playerColor) {
 
-		String moveList = "";
-
+		//String moveList = "";
+		ArrayList<String> moveList = new ArrayList<String>();
 
 		if(playerColor.equals("WHITE")) {
 
@@ -63,10 +64,13 @@ public class Engine {
 			WPMovesString = Util.padBinaryString(WPMovesString); //Padding needed for 64-bits
 			
 			//Converting bitboards to move string:
+
 			for(int i = 0; i<64; i++) {
+				String move = "";
 				if(WPMovesString.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8));
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					move = Util.convertNumToAlph(i) + ((i/8));
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
 			}
 			
@@ -74,9 +78,11 @@ public class Engine {
 			WPMoves2String = Util.padBinaryString(WPMoves2String);
 			
 			for(int i = 0; i<64; i++) {
+				String move = "";
 				if(WPMoves2String.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)-1);
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					move = Util.convertNumToAlph(i) + ((i/8)-1);
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
 			}
 			
@@ -90,16 +96,19 @@ public class Engine {
 			WPString = Util.padBinaryString(WPString);
 			
 			for(int i = 0; i < 64; i++) {
+				String move = "";
 				if(WPAttacksLString.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i-7) + (((i-7)/8)+1);
+					move = move + Util.convertNumToAlph(i-7) + (((i-7)/8)+1);
 					
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
-				
+				move = "";
 				if(WPAttacksRString.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i-9) + (((i-9)/8)+1);
+					move = move + Util.convertNumToAlph(i-9) + (((i-9)/8)+1);
 					
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
 			}
 			
@@ -124,18 +133,19 @@ public class Engine {
 					long legalWNMoves = legalWNMoves2 | legalWNMoves3;
 					String legalWNMovesString = Long.toBinaryString(legalWNMoves);
 					legalWNMovesString = Util.padBinaryString(legalWNMovesString);
-					
-					System.out.println(legalWNMovesString);
+
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
 						if(movesFound == 6)
 							break;
-						
+
 						if(legalWNMovesString.charAt(j) == '1') {
+							String move = "";
 							movesFound++;
 							
-							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
-							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
+							moveList.add(move);
 						}
 					}
 				}
@@ -144,7 +154,6 @@ public class Engine {
 			//King
 			String WKString = Long.toBinaryString(board.WK);
 			WKString = Util.padBinaryString(WKString);
-			System.out.println(WKString);
 			
 			for(int i = 0; i < 64; i++) {
 				if(WKString.charAt(i) == '1') {
@@ -156,14 +165,16 @@ public class Engine {
 					long legalWKMoves3 = WKMoves & enemies();
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
 
-					if(board.castleWKValid){
-						if((occupied() & AttackSets.WKRblockers) == 0){
-							legalWKMoves = legalWKMoves | AttackSets.castleWKR;
+					if(board.WK == AttackSets.WKStart){
+						if(board.castleWKValid){
+							if((occupied() & AttackSets.WKRblockers) == 0){
+								legalWKMoves = legalWKMoves | AttackSets.castleWKR;
+							}
 						}
-					}
-					if(board.castleWQValid){
-						if((occupied() & AttackSets.WKLblockers) == 0){
-							legalWKMoves = legalWKMoves | AttackSets.castleWKL;
+						if(board.castleWQValid){
+							if((occupied() & AttackSets.WKLblockers) == 0){
+								legalWKMoves = legalWKMoves | AttackSets.castleWKL;
+							}
 						}
 					}
 
@@ -176,9 +187,13 @@ public class Engine {
 							break;
 						
 						if(legalMovesString.charAt(j) == '1') {
+							String move = "";
+
 							movesFound++;
-							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
-							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
+
+							moveList.add(move);
 						}
 					}
 					break;
@@ -217,8 +232,10 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if(((rookAttacks>>j)&1)==1){
-							moveList = moveList + Util.convertNumToCoord(i);
-							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+							String move = "";
+							move = move + Util.convertNumToCoord(i);
+							move = move + Util.convertNumToCoord(63-j);
+							moveList.add(move);
 						}
 					}
 				}
@@ -280,8 +297,10 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if(((bishopAttacks>>j)&1)==1){
-							moveList = moveList + Util.convertNumToCoord(i);
-							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+							String move = "";
+							move = move + Util.convertNumToCoord(i);
+							move = move + Util.convertNumToCoord(63-j);
+							moveList.add(move);
 						}
 					}
 				}
@@ -356,20 +375,14 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if(((queenAttacks>>j)&1)==1){
-							moveList = moveList + Util.convertNumToCoord(i);
-							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+							String move = "";
+							move = move + Util.convertNumToCoord(i);
+							move = move + Util.convertNumToCoord(63-j);
+							moveList.add(move);
 						}
 					}
 				}
 			}
-
-			int count = 0;
-			for (int i = 0; i < moveList.length(); i++) {
-				if (moveList.charAt(i) == ' ') {
-					count++;
-				}
-			}
-			System.out.println("Number of moves:" + count);
 
 			System.out.println(moveList);
 			return moveList;
@@ -410,8 +423,10 @@ public class Engine {
 			//Converting bitboards to move string:
 			for(int i = 0; i<64; i++) {
 				if(BPMovesString.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+2);
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					String move = "";
+					move = move + Util.convertNumToAlph(i) + ((i/8)+2);
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
 			}
 			
@@ -420,8 +435,10 @@ public class Engine {
 			
 			for(int i = 0; i<64; i++) {
 				if(BPMoves2String.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+3);
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					String move = "";
+					move = move + Util.convertNumToAlph(i) + ((i/8)+3);
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
 			}
 			
@@ -436,15 +453,19 @@ public class Engine {
 			
 			for(int i = 0; i<64; i++) {
 				if(BPAttacksLString.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i-9) + (((i-9)/8)+3);
+					String move = "";
+					move = move + Util.convertNumToAlph(i-9) + (((i-9)/8)+3);
 					
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
-				
+
 				if(BPAttacksRString.charAt(i) == '1') {
-					moveList = moveList + Util.convertNumToAlph(i-7) + (((i-7)/8)+3);
+					String move = "";
+					move = move + Util.convertNumToAlph(i-7) + (((i-7)/8)+3);
 					
-					moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1) + " ";
+					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					moveList.add(move);
 				}
 			}
 			
@@ -478,9 +499,10 @@ public class Engine {
 						
 						if(legalBNMovesString.charAt(j) == '1') {
 							movesFound++;
-							
-							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
-							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+							String move = "";
+							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
+							moveList.add(move);
 						}
 					}
 				}
@@ -520,8 +542,11 @@ public class Engine {
 						
 						if(legalMovesString.charAt(j) == '1') {
 							movesFound++;
-							moveList = moveList + Util.convertNumToAlph(i) + ((i/8)+1);
-							moveList = moveList + Util.convertNumToAlph(j) + ((j/8)+1) + " ";
+
+							String move = "";
+							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
+							moveList.add(move);
 						}
 					}
 					break;
@@ -559,8 +584,10 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if(((rookAttacks>>j)&1)==1){
-							moveList = moveList + Util.convertNumToCoord(i);
-							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+							String move = "";
+							move = move + Util.convertNumToCoord(i);
+							move = move + Util.convertNumToCoord(63-j);
+							moveList.add(move);
 						}
 					}
 				}
@@ -622,8 +649,10 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if(((bishopAttacks>>j)&1)==1){
-							moveList = moveList + Util.convertNumToCoord(i);
-							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+							String move = "";
+							move = move + Util.convertNumToCoord(i);
+							move = move + Util.convertNumToCoord(63-j);
+							moveList.add(move);
 						}
 					}
 
@@ -697,8 +726,10 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if(((queenAttacks>>j)&1)==1){
-							moveList = moveList + Util.convertNumToCoord(i);
-							moveList = moveList + Util.convertNumToCoord(63-j) + " ";
+							String move = "";
+							move = move + Util.convertNumToCoord(i);
+							move = move + Util.convertNumToCoord(63-j);
+							moveList.add(move);
 						}
 					}
 				}
@@ -706,7 +737,7 @@ public class Engine {
 			System.out.println(moveList);
 			return moveList;
 		}
-		return "";
+		return null;
 	}
 	
 	private long enemies() {

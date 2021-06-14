@@ -11,6 +11,8 @@ public class main {
 			engine.generateMoves("WHITE");
 		}
 		System.out.println("Move generation took " + (System.currentTimeMillis()-time) + "ms.");
+
+		System.out.println("Check: " + board.check());
 		
 	}
 
