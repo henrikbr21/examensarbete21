@@ -108,4 +108,31 @@ public class BoardTests {
 		ArrayList<String> moves = engine.generateMoves("WHITE");
 		assertEquals(3, board.check());
 	}
+
+	@Test
+	public void testCastlingValidation(){
+
+		char[][] testBoard = new char[][] {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board);
+
+		board.makeMove(0, 1);
+		assertEquals(false, board.castleWQValid);
+		board.makeMove(7, 15);
+		assertEquals(false, board.castleWKValid);
+		board.makeMove(56, 57);
+		assertEquals(false, board.castleBQValid);
+		board.makeMove(63, 62);
+		assertEquals(false, board.castleBKValid);
+	}
+
 }

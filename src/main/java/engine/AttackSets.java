@@ -3,7 +3,7 @@ package engine;
 public abstract class AttackSets {
 	private static long knightMoves[] = new long[64];
 	private static long kingMoves[] = new long[64];
-
+	private static long positions[] = new long[64];
 	private static long rookMoves[] = new long[64];
 	private static long rowMasks[] = new long[8];
 	private static long colMasks[] = new long[8];
@@ -4375,6 +4375,24 @@ public abstract class AttackSets {
 			{'1', '0', '0', '0', '0', '0', '0', '0'},
 		};
 		diagRaysDL[63] = Util.boardFromArray(board);
+	}
+
+	public static void initPositions(){
+		positions[63] = 1L;
+		Util.draw(positions[63]);
+
+		long pos = 1L;
+		for(int i = 0; i < 63; i++){
+			pos = pos << 1;
+			Util.draw(pos);
+			positions[62-i] = pos;
+		}
+
+
+	}
+
+	public static long getPosition(int pos) {
+		return positions[pos];
 	}
 	
 	public static long diagRaysUR(int pos) {

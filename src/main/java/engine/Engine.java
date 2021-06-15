@@ -19,6 +19,7 @@ public class Engine {
 		AttackSets.initLineMasks();
 		AttackSets.initLeftRays();
 		AttackSets.initRightRays();
+		AttackSets.initPositions();
 		time = System.currentTimeMillis() - time;
 		System.out.println("Initialization took " + time + "ms.");
 	}

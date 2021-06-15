@@ -5,21 +5,22 @@ import java.util.Arrays;
 
 public class Board {
 	long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
-	boolean castleWQValid = true;
-	boolean castleWKValid = true;
-	boolean castleBQValid = true;
-	boolean castleBKValid = true;
+	long[] boards = new long[12];
+	public boolean castleWQValid = true;
+	public boolean castleWKValid = true;
+	public boolean castleBQValid = true;
+	public boolean castleBKValid = true;
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', 'p', ' ', 'p', 'p'},
-				{' ', ' ', ' ', ' ', ' ', ' ', 'B', ' '},
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', 'q', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', ' ', 'N', 'R'}
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -88,6 +89,18 @@ public class Board {
 				}
 			}
 		}
+		boards[0] = WK;
+		boards[1] = WP;
+		boards[2] = WR;
+		boards[3] = WN;
+		boards[4] = WB;
+		boards[5] = WQ;
+		boards[6] = BK;
+		boards[7] = BP;
+		boards[8] = BR;
+		boards[9] = BN;
+		boards[10] = BB;
+		boards[11] = BQ;
 	}
 	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
 	public int check() {
@@ -135,10 +148,110 @@ public class Board {
 		return 0;
 
 	}
+
+	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
+	public int checkmate(){
+		return 0;
+	}
 	
 	//makes a move, updates the board and castling rights
 	public void makeMove(int from, int to) {
-		
+		long fromPos = AttackSets.getPosition(from);
+		Util.draw(fromPos);
+		long toPos = AttackSets.getPosition(to);
+
+		if((this.WP & fromPos) != 0){
+			this.WP = this.WP ^ fromPos;
+			this.WP = this.WP ^ toPos;
+		}else if((this.WK & fromPos) != 0){
+			this.WK = this.WK ^ fromPos;
+			this.WK = this.WK ^ toPos;
+			castleWKValid = false;
+			castleWQValid = false;
+		}else if((this.WR & fromPos) != 0){
+			Util.draw(WR);
+			this.WR = this.WR ^ toPos;
+			Util.draw(WR);
+
+			if((AttackSets.getPosition(7) & fromPos) != 0){
+				castleWKValid = false;
+			}else if((AttackSets.getPosition(0) & fromPos) != 0){
+				castleWQValid = false;
+			}
+		}else if((this.WN & fromPos) != 0){
+			this.WN = this.WN ^ fromPos;
+			this.WN = this.WN ^ toPos;
+		}else if((this.WB & fromPos) != 0){
+			this.WB = this.WB ^ fromPos;
+			this.WB = this.WB ^ toPos;
+		}else if((this.WQ & fromPos) != 0){
+			this.WQ = this.WQ ^ fromPos;
+			this.WQ = this.WQ ^ toPos;
+		}else if((this.BP & fromPos) != 0){
+			this.BP = this.BP ^ fromPos;
+			this.BP = this.BP ^ toPos;
+		}else if((this.BK & fromPos) != 0){
+			this.BK = this.BK ^ fromPos;
+			this.BK = this.BK ^ toPos;
+			castleBKValid = false;
+			castleBQValid = false;
+		}else if((this.BR & fromPos) != 0){
+			this.BR = this.BR ^ fromPos;
+			this.BR = this.BR ^ toPos;
+			if((AttackSets.getPosition(63) & fromPos) != 0){
+				castleBKValid = false;
+			}else if((AttackSets.getPosition(56) & fromPos) != 0){
+				castleBQValid = false;
+			}
+		}else if((this.BN & fromPos) != 0){
+			this.BN = this.BN ^ fromPos;
+			this.BN = this.BN ^ toPos;
+		}else if((this.BB & fromPos) != 0){
+			this.BB = this.BB ^ fromPos;
+			this.BB = this.BB ^ toPos;
+		}else if((this.BQ & fromPos) != 0){
+			this.BQ = this.BQ ^ fromPos;
+			this.BQ = this.BQ ^ toPos;
+		}
+
+		//remove the old, duplicate piece
+		WK = WK & (~fromPos);
+		WP = WP & (~fromPos);
+		WR = WR & (~fromPos);
+		WN = WN & (~fromPos);
+		WB = WB & (~fromPos);
+		WQ = WQ & (~fromPos);
+		BK = BK & (~fromPos);
+		BP = BP & (~fromPos);
+		BR = BR & (~fromPos);
+		BN = BN & (~fromPos);
+		BB = BB & (~fromPos);
+		BQ = BQ & (~fromPos);
+
+
+	}
+
+	public String castleValid(){
+		StringBuilder stringBuilder = new StringBuilder();
+		if(castleWKValid){
+			stringBuilder.append("castleWKValid == true \n");
+		}else{
+			stringBuilder.append("castleWKValid == false \n");
+		}if(castleWQValid){
+			stringBuilder.append("castleWQValid == true \n");
+		}else{
+			stringBuilder.append("castleWQValid == false \n");
+		}if(castleBKValid){
+			stringBuilder.append("castleBKValid == true \n");
+		}else{
+			stringBuilder.append("castleBKValid == false \n");
+		}if(castleBQValid){
+			stringBuilder.append("castleBQValid == true \n");
+		}else{
+			stringBuilder.append("castleBQValid == false \n");
+		}
+
+		return stringBuilder.toString();
 	}
 
     public void draw() {
@@ -160,8 +273,15 @@ public class Board {
             if (((BQ>>i)&1)==1) {chessBoard[i/8][i%8]="q";}
             if (((BK>>i)&1)==1) {chessBoard[i/8][i%8]="k";}
         }
+        String[][] chessBoard2 = new String[8][8];
+		for(int i = 0; i < 8; i++){
+			for(int j = 0; j < 8; j++){
+				chessBoard2[i][7-j] = chessBoard[i][j];
+			}
+		}
+
         for (int i=0;i<8;i++) {
-            System.out.println(Arrays.toString(chessBoard[i]));
+            System.out.println(Arrays.toString(chessBoard2[i]));
         }
     }
 }
