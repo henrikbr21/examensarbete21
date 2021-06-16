@@ -13,14 +13,14 @@ public class Board {
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', 'p', ' ', ' ', 'k', ' ', ' ', 'r'},
+				{'P', ' ', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+				{' ', 'P', 'P', 'P', 'P', 'P', 'p', 'P'},
+				{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		
 		initBitboards(board);
@@ -161,17 +161,31 @@ public class Board {
 		long toPos = AttackSets.getPosition(to);
 
 		if((this.WP & fromPos) != 0){
-			this.WP = this.WP ^ fromPos;
+			clearPosition(toPos);
 			this.WP = this.WP ^ toPos;
+
+			if((toPos & AttackSets.wPromotion) != 0){
+				this.WP = this.WP ^ toPos;
+				this.WQ = this.WQ ^ toPos;
+			}
 		}else if((this.WK & fromPos) != 0){
-			this.WK = this.WK ^ fromPos;
+			clearPosition(toPos);
 			this.WK = this.WK ^ toPos;
 			castleWKValid = false;
 			castleWQValid = false;
+
+			if(fromPos == AttackSets.WKStart){
+				if(toPos == AttackSets.castleWKL){
+					this.WR = this.WR ^ AttackSets.wLeftRookStart;
+					this.WR = this.WR ^ AttackSets.wLeftRookCastle;
+				}else if(toPos == AttackSets.castleWKR){
+					this.WR = this.WR ^ AttackSets.wRightRookStart;
+					this.WR = this.WR ^ AttackSets.wRightRookCastle;
+				}
+			}
 		}else if((this.WR & fromPos) != 0){
-			Util.draw(WR);
+			clearPosition(toPos);
 			this.WR = this.WR ^ toPos;
-			Util.draw(WR);
 
 			if((AttackSets.getPosition(7) & fromPos) != 0){
 				castleWKValid = false;
@@ -179,56 +193,59 @@ public class Board {
 				castleWQValid = false;
 			}
 		}else if((this.WN & fromPos) != 0){
-			this.WN = this.WN ^ fromPos;
+			clearPosition(toPos);
 			this.WN = this.WN ^ toPos;
 		}else if((this.WB & fromPos) != 0){
-			this.WB = this.WB ^ fromPos;
+			clearPosition(toPos);
 			this.WB = this.WB ^ toPos;
 		}else if((this.WQ & fromPos) != 0){
-			this.WQ = this.WQ ^ fromPos;
+			clearPosition(toPos);
 			this.WQ = this.WQ ^ toPos;
 		}else if((this.BP & fromPos) != 0){
-			this.BP = this.BP ^ fromPos;
+			clearPosition(toPos);
 			this.BP = this.BP ^ toPos;
+
+			if((toPos & AttackSets.bPromotion) != 0){
+				this.BP = this.BP ^ toPos;
+				this.BQ = this.BQ ^ toPos;
+			}
 		}else if((this.BK & fromPos) != 0){
-			this.BK = this.BK ^ fromPos;
+			clearPosition(toPos);
 			this.BK = this.BK ^ toPos;
 			castleBKValid = false;
 			castleBQValid = false;
+
+			if(fromPos == AttackSets.BKStart){
+				if(toPos == AttackSets.castleBKL){
+					this.BR = this.BR ^ AttackSets.bLeftRookStart;
+					this.BR = this.BR ^ AttackSets.bLeftRookCastle;
+				}else if(toPos == AttackSets.castleBKR){
+					this.BR = this.BR ^ AttackSets.bRightRookStart;
+					this.BR = this.BR ^ AttackSets.bRightRookCastle;
+				}
+			}
 		}else if((this.BR & fromPos) != 0){
-			this.BR = this.BR ^ fromPos;
+			clearPosition(toPos);
 			this.BR = this.BR ^ toPos;
+
 			if((AttackSets.getPosition(63) & fromPos) != 0){
 				castleBKValid = false;
 			}else if((AttackSets.getPosition(56) & fromPos) != 0){
 				castleBQValid = false;
 			}
 		}else if((this.BN & fromPos) != 0){
-			this.BN = this.BN ^ fromPos;
+			clearPosition(toPos);
 			this.BN = this.BN ^ toPos;
 		}else if((this.BB & fromPos) != 0){
-			this.BB = this.BB ^ fromPos;
+			clearPosition(toPos);
 			this.BB = this.BB ^ toPos;
 		}else if((this.BQ & fromPos) != 0){
-			this.BQ = this.BQ ^ fromPos;
+			clearPosition(toPos);
 			this.BQ = this.BQ ^ toPos;
 		}
 
 		//remove the old, duplicate piece
-		WK = WK & (~fromPos);
-		WP = WP & (~fromPos);
-		WR = WR & (~fromPos);
-		WN = WN & (~fromPos);
-		WB = WB & (~fromPos);
-		WQ = WQ & (~fromPos);
-		BK = BK & (~fromPos);
-		BP = BP & (~fromPos);
-		BR = BR & (~fromPos);
-		BN = BN & (~fromPos);
-		BB = BB & (~fromPos);
-		BQ = BQ & (~fromPos);
-
-
+		clearPosition(fromPos);
 	}
 
 	public String castleValid(){
@@ -252,6 +269,21 @@ public class Board {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	public void clearPosition(long pos){
+		WK = WK & (~pos);
+		WP = WP & (~pos);
+		WR = WR & (~pos);
+		WN = WN & (~pos);
+		WB = WB & (~pos);
+		WQ = WQ & (~pos);
+		BK = BK & (~pos);
+		BP = BP & (~pos);
+		BR = BR & (~pos);
+		BN = BN & (~pos);
+		BB = BB & (~pos);
+		BQ = BQ & (~pos);
 	}
 
     public void draw() {

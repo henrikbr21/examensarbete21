@@ -8,9 +8,9 @@ public class main {
 
 		long time = System.currentTimeMillis();
 		board.draw();
-		board.makeMove(63, 62);
+		board.makeMove(14, 7);
 		board.draw();
-		System.out.println(board.castleValid());
+		System.out.println();
 		/*
 		for(int i = 0; i < 500000; i++){
 			board.makeMove(10, 18);
