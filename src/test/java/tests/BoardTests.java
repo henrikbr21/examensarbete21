@@ -135,4 +135,42 @@ public class BoardTests {
 		assertEquals(false, board.castleBKValid);
 	}
 
+	@Test
+	public void testCheckMate1(){
+
+		char[][] testBoard = {
+				{'r', 'n', 'b', ' ', 'k', 'b', 'n', ' '},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'q', ' ', ' ', 'P', 'P', 'P', 'P'},
+				{' ', 'r', ' ', ' ', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board);
+
+		assertEquals(1, board.checkmate());
+	}
+
+	@Test
+	public void testCheckMate2(){
+
+		char[][] testBoard = {
+				{'Q', ' ', ' ', ' ', 'k', 'b', 'n', ' '},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board);
+
+		assertEquals(2, board.checkmate());
+	}
+
 }

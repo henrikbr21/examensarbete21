@@ -4511,12 +4511,10 @@ public abstract class AttackSets {
 
 	public static void initPositions(){
 		positions[63] = 1L;
-		Util.draw(positions[63]);
 
 		long pos = 1L;
 		for(int i = 0; i < 63; i++){
 			pos = pos << 1;
-			Util.draw(pos);
 			positions[62-i] = pos;
 		}
 

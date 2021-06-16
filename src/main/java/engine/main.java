@@ -5,20 +5,19 @@ public class main {
 	public static void main(String[] args) {
 		Board board = new Board();
 		Engine engine = new Engine("WHITE", board);
+		System.out.println(board.checkmate());
 
-		long time = System.currentTimeMillis();
-		board.draw();
-		board.makeMove(14, 7);
-		board.draw();
-		System.out.println();
 		/*
-		for(int i = 0; i < 500000; i++){
-			board.makeMove(10, 18);
-			board.makeMove(18, 10);
+		long time = System.currentTimeMillis();
+
+		for(int i = 0; i < 1000000; i++){
+			board.checkmate();
 		}
-		*/
 
 		System.out.println("Move generation took " + (System.currentTimeMillis()-time) + "ms.");
+		*/
+
+
 		/*
 		long time = System.currentTimeMillis();
 		for(int i = 0; i < 1; i++) {

@@ -13,14 +13,14 @@ public class Board {
 	
 	public Board() {
 		char[][] board = {
-				{' ', 'p', ' ', ' ', 'k', ' ', ' ', 'r'},
-				{'P', ' ', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{'r', 'n', 'b', ' ', 'k', 'b', 'n', ' '},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', 'P', 'P', 'P', 'P', 'P', 'p', 'P'},
-				{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
+				{'P', 'q', ' ', ' ', 'P', 'P', 'P', 'P'},
+				{' ', 'r', ' ', ' ', 'K', 'B', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -28,6 +28,26 @@ public class Board {
 	
 	public Board(char[][] board) {
 		initBitboards(board);
+	}
+
+	//Constructor for copying boards
+	public Board(long WP, long WR, long WN, long WB, long WK, long WQ, long BP, long BR, long BN, long BB, long BK, long BQ, boolean castleWKValid, boolean castleWQValid, boolean castleBKValid, boolean castleBQValid) {
+		this.WP = WP;
+		this.WR = WR;
+		this.WN = WN;
+		this.WB = WB;
+		this.WK = WK;
+		this.WQ = WQ;
+		this.BP = BP;
+		this.BR = BR;
+		this.BN = BN;
+		this.BB = BB;
+		this.BK = BK;
+		this.BQ = BQ;
+		this.castleWKValid = castleWKValid;
+		this.castleWQValid = castleWQValid;
+		this.castleBKValid = castleBKValid;
+		this.castleBQValid = castleBKValid;
 	}
 	
 	private long stringToLong(String s) {
@@ -151,13 +171,46 @@ public class Board {
 
 	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
 	public int checkmate(){
+		int check = this.check();
+		if(check == 0){
+			return 0;
+		}
+
+		Engine engine = new Engine("WHITE", this);
+		Engine engine2 = new Engine("BLACK", this);
+
+		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
+		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
+
+		if(check == 1){
+			for(String move : whiteMoves){
+				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
+				int startPos = Util.convertCoordToNum(move.substring(0, 2));
+				int endPos = Util.convertCoordToNum(move.substring(2));
+				simBoard.makeMove(startPos, endPos);
+				if(simBoard.check() == 0){
+					return 0;
+				}
+			}
+			return 1;
+		}else if(check == 2){
+			for(String move : blackMoves){
+				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
+				int startPos = Util.convertCoordToNum(move.substring(0, 2));
+				int endPos = Util.convertCoordToNum(move.substring(2));
+				simBoard.makeMove(startPos, endPos);
+				if(simBoard.check() == 0){
+					return 0;
+				}
+			}
+			return 2;
+		}
 		return 0;
 	}
 	
 	//makes a move, updates the board and castling rights
 	public void makeMove(int from, int to) {
 		long fromPos = AttackSets.getPosition(from);
-		Util.draw(fromPos);
 		long toPos = AttackSets.getPosition(to);
 
 		if((this.WP & fromPos) != 0){
