@@ -44,7 +44,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 		ArrayList<String> moves = engine.generateMoves("WHITE");
 
 		assertEquals(30, moves.size());
@@ -64,7 +64,7 @@ public class BoardTests {
 				{' ', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 		ArrayList<String> moves = engine.generateMoves("WHITE");
 
 		assertEquals(47, moves.size());
@@ -84,7 +84,7 @@ public class BoardTests {
 				{'R', ' ', ' ', ' ', ' ', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 		ArrayList<String> moves = engine.generateMoves("WHITE");
 
 		assertEquals(51, moves.size());
@@ -104,7 +104,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', ' ', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 		ArrayList<String> moves = engine.generateMoves("WHITE");
 		assertEquals(3, board.check());
 	}
@@ -123,7 +123,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 
 		board.makeMove(0, 1);
 		assertEquals(false, board.castleWQValid);
@@ -149,7 +149,7 @@ public class BoardTests {
 				{' ', 'r', ' ', ' ', 'K', 'B', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 
 		assertEquals(1, board.checkmate());
 	}
@@ -168,7 +168,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board);
+		Engine engine = new Engine("WHITE", board, false);
 
 		assertEquals(2, board.checkmate());
 	}

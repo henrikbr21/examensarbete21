@@ -9,21 +9,61 @@ public class Engine {
 	private long full = ~0L;
 
 	
-	public Engine(String color, Board board){
+	public Engine(String color, Board board, boolean initialized){
 		long time = System.currentTimeMillis();
 		this.board = board;
 		this.color = color;
-		AttackSets.initKnightMoves();
-		AttackSets.initKingMoves();
-		AttackSets.initRookMoves();
-		AttackSets.initLineMasks();
-		AttackSets.initLeftRays();
-		AttackSets.initRightRays();
-		AttackSets.initPositions();
+		if(!initialized){
+			AttackSets.initKnightMoves();
+			AttackSets.initKingMoves();
+			AttackSets.initRookMoves();
+			AttackSets.initLineMasks();
+			AttackSets.initLeftRays();
+			AttackSets.initRightRays();
+			AttackSets.initPositions();
+		}
 		time = System.currentTimeMillis() - time;
-		System.out.println("Initialization took " + time + "ms.");
+		if(!initialized)
+			System.out.println("Initialization took " + time + "ms.");
 	}
-	
+
+	public ArrayList<String> findMoveList(String playerColor){
+		ArrayList<String> legalMoves = new ArrayList<String>();
+
+		if(playerColor == "WHITE"){
+			if(checkmate(board) == 1)
+				return new ArrayList<String>();
+			else{
+				ArrayList<String> moves = this.generateMoves("WHITE");
+
+				for(String move : moves){
+					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+					int startPos = Util.convertCoordToNum(move.substring(0, 2));
+					int endPos = Util.convertCoordToNum(move.substring(2));
+					simBoard.makeMove(startPos, endPos);
+					if(simBoard.check() == 2 || simBoard.check() == 0)
+						legalMoves.add(move);
+				}
+			}
+		}else if(playerColor == "BLACK") {
+			if(checkmate(board) == 2)
+				return new ArrayList<String>();
+			else{
+				ArrayList<String> moves = this.generateMoves("BLACK");
+
+				for(String move : moves){
+					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+					int startPos = Util.convertCoordToNum(move.substring(0, 2));
+					int endPos = Util.convertCoordToNum(move.substring(2));
+					simBoard.makeMove(startPos, endPos);
+					if(simBoard.check() == 2 || simBoard.check() == 0)
+						legalMoves.add(move);
+				}
+			}
+		}
+		return legalMoves;
+	}
+
 	public ArrayList<String> generateMoves(String playerColor) {
 
 		//String moveList = "";
@@ -385,7 +425,7 @@ public class Engine {
 				}
 			}
 
-			System.out.println(moveList);
+			//System.out.println(moveList);
 			return moveList;
 
 		}else if(playerColor.equals("BLACK")){
@@ -735,7 +775,7 @@ public class Engine {
 					}
 				}
 			}
-			System.out.println(moveList);
+			//System.out.println(moveList);
 			return moveList;
 		}
 		return null;

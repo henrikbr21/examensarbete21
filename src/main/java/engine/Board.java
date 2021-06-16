@@ -13,14 +13,14 @@ public class Board {
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', 'b', ' ', 'k', 'b', 'n', ' '},
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'q', ' ', ' ', 'P', 'P', 'P', 'P'},
-				{' ', 'r', ' ', ' ', 'K', 'B', 'N', 'R'}
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -127,8 +127,8 @@ public class Board {
 		boolean player1Checked = false;
 		boolean player2Checked = false;
 
-		Engine engine = new Engine("WHITE", this);
-		Engine engine2 = new Engine("BLACK", this);
+		Engine engine = new Engine("WHITE", this, true);
+		Engine engine2 = new Engine("BLACK", this, true);
 
 		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
 		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
@@ -176,8 +176,8 @@ public class Board {
 			return 0;
 		}
 
-		Engine engine = new Engine("WHITE", this);
-		Engine engine2 = new Engine("BLACK", this);
+		Engine engine = new Engine("WHITE", this, true);
+		Engine engine2 = new Engine("BLACK", this, true);
 
 		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
 		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
