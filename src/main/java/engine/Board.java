@@ -170,18 +170,40 @@ public class Board {
 
 	}
 
-	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
+	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated, returns 4 if stalemate
 	public int checkmate(){
-		int check = this.check();
-		if(check == 0){
-			return 0;
-		}
-
 		Engine engine = new Engine("WHITE", this, true);
 		Engine engine2 = new Engine("BLACK", this, true);
 
 		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
 		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
+
+
+		int check = this.check();
+		boolean allCauseCheckForWhite = true;
+		boolean allCauseCheckForBlack = true;
+		if(check == 0){
+			for(String move : whiteMoves){
+				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
+				int startPos = Util.convertCoordToNum(move.substring(0, 2));
+				int endPos = Util.convertCoordToNum(move.substring(2));
+				simBoard.makeMove(startPos, endPos);
+				if(simBoard.check() == 0){
+					allCauseCheckForWhite = false;
+				}
+			}
+			for(String move : blackMoves){
+				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
+				int startPos = Util.convertCoordToNum(move.substring(0, 2));
+				int endPos = Util.convertCoordToNum(move.substring(2));
+				simBoard.makeMove(startPos, endPos);
+				if(simBoard.check() == 0){
+					allCauseCheckForBlack = false;
+				}
+			}
+			if(allCauseCheckForWhite || allCauseCheckForBlack)
+				return 4;
+		}
 
 		if(check == 1){
 			for(String move : whiteMoves){

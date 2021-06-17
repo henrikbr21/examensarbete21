@@ -303,4 +303,23 @@ public class BoardTests {
 		assertEquals(2, engine.findMoveList("BLACK").size());
 	}
 
+	@Test
+	public void testStaleMate(){
+		char[][] testBoard = {
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k'},
+				{' ', ' ', ' ', ' ', 'R', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', 'R', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false);
+		System.out.println(engine.findMoveList("BLACK"));
+
+		assertEquals(4, board.checkmate());
+	}
+
 }
