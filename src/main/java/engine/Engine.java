@@ -21,6 +21,7 @@ public class Engine {
 			AttackSets.initLeftRays();
 			AttackSets.initRightRays();
 			AttackSets.initPositions();
+			AttackSets.initEnPassantMoves();
 		}
 		time = System.currentTimeMillis() - time;
 		if(!initialized)
@@ -150,6 +151,39 @@ public class Engine {
 					
 					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
 					moveList.add(move);
+				}
+			}
+
+			//en passant
+			long enPassantAttacks = 0L;
+			if(board.enPassant){
+				if(board.enPassantPos % 8 == 0){
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
+				}else if(board.enPassantPos % 8 == 7) {
+					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
+				}else{
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
+					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
 				}
 			}
 			
@@ -530,6 +564,39 @@ public class Engine {
 					
 					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
 					moveList.add(move);
+				}
+			}
+
+			//en passant
+			long enPassantAttacks = 0L;
+			if(board.enPassant){
+				if(board.enPassantPos % 8 == 0){
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
+				}else if(board.enPassantPos % 8 == 7) {
+					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
+				}else{
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
+					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0){
+						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
+						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
+						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						moveList.add(enPassantAttack);
+					}
 				}
 			}
 			

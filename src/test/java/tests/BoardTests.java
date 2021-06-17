@@ -3,6 +3,7 @@ package tests;
 import static org.junit.Assert.*;
 import engine.*;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import engine.Engine;
@@ -241,7 +242,6 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
-		System.out.println(engine.findMoveList("BLACK"));
 
 		assertEquals(2, engine.findMoveList("BLACK").size());
 	}
@@ -260,7 +260,6 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
-		System.out.println(engine.findMoveList("BLACK"));
 
 		assertEquals(4, engine.findMoveList("BLACK").size());
 	}
@@ -279,7 +278,6 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
-		System.out.println(engine.findMoveList("BLACK"));
 
 		assertEquals(4, engine.findMoveList("BLACK").size());
 	}
@@ -298,7 +296,6 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
-		System.out.println(engine.findMoveList("BLACK"));
 
 		assertEquals(2, engine.findMoveList("BLACK").size());
 	}
@@ -317,9 +314,34 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
-		System.out.println(engine.findMoveList("BLACK"));
 
 		assertEquals(4, board.checkmate());
+	}
+
+	@Test
+	public void testEnPassant(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		board.makeMove(51, 35);
+		assertEquals(true, board.enPassant);
+		Engine engine = new Engine("WHITE", board, false);
+		ArrayList<String> moves = engine.findMoveList("WHITE");
+		String allMoves = new String();
+		for(String move : moves){
+			allMoves += move;
+		}
+		assertThat(allMoves, CoreMatchers.containsString("e5d6"));
+		board.makeMove(36, 43);
+		assertEquals(0, board.BP & AttackSets.getPosition(35)); //black pawn removed
 	}
 
 }

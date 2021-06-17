@@ -4,23 +4,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Board {
-	long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
+	public long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
 	long[] boards = new long[12];
 	public boolean castleWQValid = true;
 	public boolean castleWKValid = true;
 	public boolean castleBQValid = true;
 	public boolean castleBKValid = true;
+	public boolean enPassant = false;
+	public int enPassantPos = -1;
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', ' ', ' ', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'q', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', ' ', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
+				{' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -235,14 +237,32 @@ public class Board {
 	public void makeMove(int from, int to) {
 		long fromPos = AttackSets.getPosition(from);
 		long toPos = AttackSets.getPosition(to);
+		boolean enPassantEnabledThisTurn = false;
 
 		if((this.WP & fromPos) != 0){
 			clearPosition(toPos);
-			this.WP = this.WP ^ toPos;
 
-			if((toPos & AttackSets.wPromotion) != 0){
+
+			//en passant, make possible
+			if((fromPos & AttackSets.WPStartRow) != 0 && (toPos & AttackSets.WPStartRowPlus2) != 0){
+				enPassant = true;
+				enPassantEnabledThisTurn = true;
+				enPassantPos = to;
+			}
+
+			//en passant move
+			if((to % 8) != (from % 8)){ //if sideways attack
+				Util.draw(toPos);
+				Util.draw(occupied());
+				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
+	 				this.BP = this.BP ^ AttackSets.getPosition(to-8);
+					this.WP = this.WP ^ toPos;
+				} //pawn promotion
+			}else if((toPos & AttackSets.wPromotion) != 0){
 				this.WP = this.WP ^ toPos;
 				this.WQ = this.WQ ^ toPos;
+			}else { //"normal" pawn moves
+				this.WP = this.WP ^ toPos;
 			}
 		}else if((this.WK & fromPos) != 0){
 			clearPosition(toPos);
@@ -279,11 +299,25 @@ public class Board {
 			this.WQ = this.WQ ^ toPos;
 		}else if((this.BP & fromPos) != 0){
 			clearPosition(toPos);
-			this.BP = this.BP ^ toPos;
 
-			if((toPos & AttackSets.bPromotion) != 0){
+			//en passant, make possible
+			if((fromPos & AttackSets.BPStartRow) != 0 && (toPos & AttackSets.BPStartRowMinus2) != 0){
+				enPassant = true;
+				enPassantEnabledThisTurn = true;
+				enPassantPos = to;
+			}
+
+			//en passant move
+			if((to % 8) != (from % 8)){ //if sideways attack
+				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
+					this.WP = this.WP ^ AttackSets.getPosition(to+8);
+					this.BP = this.BP ^ toPos;
+				} //pawn promotion
+			}else if((toPos & AttackSets.bPromotion) != 0){
 				this.BP = this.BP ^ toPos;
 				this.BQ = this.BQ ^ toPos;
+			}else { //"normal" pawn moves
+				this.BP = this.BP ^ toPos;
 			}
 		}else if((this.BK & fromPos) != 0){
 			clearPosition(toPos);
@@ -319,6 +353,9 @@ public class Board {
 			clearPosition(toPos);
 			this.BQ = this.BQ ^ toPos;
 		}
+
+		if(!enPassantEnabledThisTurn)
+			enPassant = false;
 
 		//remove the old, duplicate piece
 		clearPosition(fromPos);
@@ -392,4 +429,28 @@ public class Board {
             System.out.println(Arrays.toString(chessBoard2[i]));
         }
     }
+
+	private long empty() {
+		long empty = 0l;
+		empty = ~(empty & 0); //flip all bits to 1
+		empty = empty ^ WP;
+		empty = empty ^ WR;
+		empty = empty ^ WN;
+		empty = empty ^ WB;
+		empty = empty ^ WK;
+		empty = empty ^ WQ;
+
+		empty = empty ^ BP;
+		empty = empty ^ BR;
+		empty = empty ^ BN;
+		empty = empty ^ BB;
+		empty = empty ^ BK;
+		empty = empty ^ BQ;
+
+		return empty;
+	}
+
+	private long occupied() {
+		return ~empty();
+	}
 }

@@ -38,6 +38,12 @@ public abstract class AttackSets {
 	public static long wPromotion;
 	public static long bPromotion;
 
+	//en passant boards
+	public static long WPStartRow;
+	public static long BPStartRow;
+	public static long WPStartRowPlus2;
+	public static long BPStartRowMinus2;
+
 	//TO DO: move boards to AttackSets class
 	public static void initKnightMoves() {
 		long bottomLeft1 = 9223372036854775807L;
@@ -4507,6 +4513,57 @@ public abstract class AttackSets {
 			{'1', '0', '0', '0', '0', '0', '0', '0'},
 		};
 		diagRaysDL[63] = Util.boardFromArray(board);
+	}
+
+	public static void initEnPassantMoves() {
+
+		char[][] board = {
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'1', '1', '1', '1', '1', '1', '1', '1'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'}
+		};
+		WPStartRow = Util.boardFromArray(board);
+
+		board = new char[][]{
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'1', '1', '1', '1', '1', '1', '1', '1'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'}
+		};
+		BPStartRow = Util.boardFromArray(board);
+
+		board = new char[][]{
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'1', '1', '1', '1', '1', '1', '1', '1'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'}
+		};
+		WPStartRowPlus2 = Util.boardFromArray(board);
+
+		board = new char[][]{
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'1', '1', '1', '1', '1', '1', '1', '1'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'},
+				{'0', '0', '0', '0', '0', '0', '0', '0'}
+		};
+		BPStartRowMinus2 = Util.boardFromArray(board);
 	}
 
 	public static void initPositions(){
