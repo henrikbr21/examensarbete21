@@ -31,7 +31,7 @@ public class Engine {
 		ArrayList<String> legalMoves = new ArrayList<String>();
 
 		if(playerColor == "WHITE"){
-			if(checkmate(board) == 1)
+			if(board.checkmate() == 1)
 				return new ArrayList<String>();
 			else{
 				ArrayList<String> moves = this.generateMoves("WHITE");
@@ -46,7 +46,7 @@ public class Engine {
 				}
 			}
 		}else if(playerColor == "BLACK") {
-			if(checkmate(board) == 2)
+			if(board.checkmate() == 2)
 				return new ArrayList<String>();
 			else{
 				ArrayList<String> moves = this.generateMoves("BLACK");
@@ -56,7 +56,7 @@ public class Engine {
 					int startPos = Util.convertCoordToNum(move.substring(0, 2));
 					int endPos = Util.convertCoordToNum(move.substring(2));
 					simBoard.makeMove(startPos, endPos);
-					if(simBoard.check() == 2 || simBoard.check() == 0)
+					if(simBoard.check() == 1 || simBoard.check() == 0)
 						legalMoves.add(move);
 				}
 			}
@@ -209,12 +209,35 @@ public class Engine {
 					if(board.WK == AttackSets.WKStart){
 						if(board.castleWKValid){
 							if((occupied() & AttackSets.WKRblockers) == 0){
-								legalWKMoves = legalWKMoves | AttackSets.castleWKR;
+								if(board.check() == 0) {
+									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
+									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
+									simBoard.WK = simBoard.WK ^ AttackSets.castleWKR;
+									if(simBoard.check() == 0){
+										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
+										simBoard.WK = simBoard.WK ^ AttackSets.getPosition(5);
+
+										if(simBoard.check() == 0)
+											legalWKMoves = legalWKMoves | AttackSets.castleWKR;
+									}
+
+								}
 							}
 						}
 						if(board.castleWQValid){
 							if((occupied() & AttackSets.WKLblockers) == 0){
-								legalWKMoves = legalWKMoves | AttackSets.castleWKL;
+								if(board.check() == 0){
+									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
+									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
+									simBoard.WK = simBoard.WK ^ AttackSets.castleWKL;
+									if(simBoard.check() == 0){
+										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
+										simBoard.WK = simBoard.WK ^ AttackSets.getPosition(3);
+										if(simBoard.check() == 0){
+											legalWKMoves = legalWKMoves | AttackSets.castleWKL;
+										}
+									}
+								}
 							}
 						}
 					}
@@ -562,14 +585,39 @@ public class Engine {
 					long legalBKMoves3 = BKMoves & enemies();
 					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
 
-					if(board.castleBKValid){
-						if((occupied() & AttackSets.BKRblockers) == 0){
-							legalBKMoves = legalBKMoves | AttackSets.castleBKR;
+					if(board.BK == AttackSets.BKStart){
+						if(board.castleBKValid){
+							if((occupied() & AttackSets.BKRblockers) == 0){
+								if(board.check() == 0) {
+									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
+									simBoard.BK = simBoard.BK ^ AttackSets.castleBKR;
+									if(simBoard.check() == 0){
+										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(61);
+
+										if(simBoard.check() == 0)
+											legalBKMoves = legalBKMoves | AttackSets.castleBKR;
+									}
+
+								}
+							}
 						}
-					}
-					if(board.castleBQValid){
-						if((occupied() & AttackSets.BKLblockers) == 0){
-							legalBKMoves = legalBKMoves | AttackSets.castleBKL;
+						if(board.castleBQValid){
+							if((occupied() & AttackSets.BKLblockers) == 0){
+								if(board.check() == 0){
+									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
+									simBoard.BK = simBoard.BK ^ AttackSets.castleBKL;
+									if(simBoard.check() == 0){
+										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(3);
+										if(simBoard.check() == 0){
+											legalBKMoves = legalBKMoves | AttackSets.castleBKL;
+										}
+									}
+								}
+							}
 						}
 					}
 
@@ -860,41 +908,7 @@ public class Engine {
 	private double evalPosition() {
 		return 0;
 	}
-	
-	//returns 0 if no players are checked, 1 if the white player is checked, 2 if the black player is checked
-	// and 3 if both players are checked.
-	public int check(Board board) {
-		return 0;
-	}
-	
-	
-	//returns 0 if no players are checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
-	public int checkmate(Board board) {
-		return 0;
-	}
-	
-	private String rookMoves(int xPos, int yPos, String COLOR) {
-		String moves = "";
 
-		return moves;
-	}
-
-	
-
-	
-	private String bishopMoves(int xPos, int yPos, String COLOR) {
-		String moves = "";
-		
-		
-		return moves;
-	}
-	
-	private String Moves(int xPos, int yPos, String COLOR) {
-		String moves = "";
-		
-		
-		return moves;
-	}
 	
 	/*
     public void draw(long bitBoard) {

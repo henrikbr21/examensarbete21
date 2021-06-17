@@ -173,4 +173,134 @@ public class BoardTests {
 		assertEquals(2, board.checkmate());
 	}
 
+	@Test
+	public void testCastlingRemoval(){
+		char[][] testBoard = {
+				{'r', 'n', ' ', ' ', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'q', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false);
+
+		assertEquals(7, engine.findMoveList("WHITE").size());
+	}
+
+	@Test
+	public void testCastlingRemoval2(){
+		char[][] testBoard = {
+				{' ', 'n', ' ', ' ', 'k', 'b', 'n', ' '},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'r', ' ', 'r', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', ' ', ' ', 'P', ' ', 'P'},
+				{'R', 'N', ' ', ' ', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false);
+
+		assertEquals(3, engine.findMoveList("WHITE").size());
+	}
+
+	@Test
+	public void testCastlingRemoval3(){
+		char[][] testBoard = {
+				{' ', 'n', ' ', ' ', 'k', 'b', 'n', ' '},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'r', 'r', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', ' ', ' ', ' ', ' ', 'P'},
+				{'R', 'N', ' ', ' ', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false);
+
+		assertEquals(2, engine.findMoveList("WHITE").size());
+	}
+
+	@Test
+	public void testCastlingRemoval4(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', 'b', 'k', ' ', ' ', 'r'},
+				{'p', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'R', 'R', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false);
+		System.out.println(engine.findMoveList("BLACK"));
+
+		assertEquals(2, engine.findMoveList("BLACK").size());
+	}
+
+	@Test
+	public void testCastlingRemoval5(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', 'b', 'k', ' ', ' ', 'r'},
+				{'p', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'R', ' ', 'R', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false);
+		System.out.println(engine.findMoveList("BLACK"));
+
+		assertEquals(4, engine.findMoveList("BLACK").size());
+	}
+
+	@Test
+	public void testCastlingRemoval6(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', ' ', 'k', 'b', ' ', 'r'},
+				{'p', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', 'R', ' ', 'R', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false);
+		System.out.println(engine.findMoveList("BLACK"));
+
+		assertEquals(4, engine.findMoveList("BLACK").size());
+	}
+
+	@Test
+	public void testCastlingRemoval7(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', ' ', 'k', 'b', ' ', 'r'},
+				{'p', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', 'R', 'R', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false);
+		System.out.println(engine.findMoveList("BLACK"));
+
+		assertEquals(2, engine.findMoveList("BLACK").size());
+	}
+
 }

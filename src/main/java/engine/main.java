@@ -8,7 +8,8 @@ public class main {
 
 		long time = System.currentTimeMillis();
 
-		System.out.println("Move count: " + engine.findMoveList("WHITE").size());
+		System.out.println(engine.findMoveList("WHITE").size());
+
 		System.out.println("Move generation took " + (System.currentTimeMillis()-time) + "ms.");
 
 
