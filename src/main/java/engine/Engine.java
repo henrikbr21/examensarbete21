@@ -28,14 +28,14 @@ public class Engine {
 			System.out.println("Initialization took " + time + "ms.");
 	}
 
-	public ArrayList<String> findMoveList(String playerColor){
+	public ArrayList<String> findMoveList(Board board, String playerColor){
 		ArrayList<String> legalMoves = new ArrayList<String>();
 
 		if(playerColor == "WHITE"){
 			if(board.checkmate() == 1)
 				return new ArrayList<String>();
 			else{
-				ArrayList<String> moves = this.generateMoves("WHITE");
+				ArrayList<String> moves = this.generateMoves(board,"WHITE");
 
 				for(String move : moves){
 					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
@@ -50,7 +50,7 @@ public class Engine {
 			if(board.checkmate() == 2)
 				return new ArrayList<String>();
 			else{
-				ArrayList<String> moves = this.generateMoves("BLACK");
+				ArrayList<String> moves = this.generateMoves(board,"BLACK");
 
 				for(String move : moves){
 					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
@@ -65,21 +65,34 @@ public class Engine {
 		return legalMoves;
 	}
 
-	public ArrayList<String> generateMoves(String playerColor) {
+	public ArrayList<String> generateMoves(Board board, String playerColor) {
 
 		//String moveList = "";
 		ArrayList<String> moveList = new ArrayList<String>();
+
+		long occupied = occupied();
+		long empty = empty();
+
+		long enemies = 0L;
+		long friends = 0L;
+		if((playerColor == "WHITE" && this.color == "WHITE") || (playerColor == "BLACK" && this.color == "BLACK")){
+			enemies = enemies();
+			friends = friends();
+		}else if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
+			enemies = friends();
+			friends = enemies();
+		}
 
 		if(playerColor.equals("WHITE")) {
 
 			//PAWNS-----------------------------------------------------------------------
 			//Push one
 			long WPMoves = board.WP >>> 8;
-			long legalWPMoves = WPMoves & empty();
+			long legalWPMoves = WPMoves & empty;
 			
 			//Push two
 			long WPMoves2 = legalWPMoves >>> 8;
-			long legalWPMoves2 = WPMoves2 & empty();
+			long legalWPMoves2 = WPMoves2 & empty;
 			long invalidateDoubleX2 = 9223372032559808512L; //Bitboard to invalidate pawns doing double moves again
 			legalWPMoves2 = invalidateDoubleX2 & legalWPMoves2;
 			
@@ -90,7 +103,7 @@ public class Engine {
 			long WPAttacksR = board.WP & RightColumn0;
 			WPAttacksR = WPAttacksR >>> 9;
 			
-			WPAttacksR = WPAttacksR & enemies(); //only possible if enemy present
+			WPAttacksR = WPAttacksR & enemies; //only possible if enemy present
 			
 			//Attacks up and to the right
 			long leftColumn0 = 9187201950435737471L;
@@ -98,7 +111,7 @@ public class Engine {
 			long WPAttacksL = board.WP & leftColumn0;
 			WPAttacksL = WPAttacksL >>> 7;
 			
-			WPAttacksL = WPAttacksL & enemies(); //only possible if enemy present
+			WPAttacksL = WPAttacksL & enemies; //only possible if enemy present
 			
 			long WPAttacks = WPAttacksL | WPAttacksR; //Probably not needed
 			
@@ -202,8 +215,8 @@ public class Engine {
 					String WNAttacksString = Long.toBinaryString(WNAttacks);
 					WNAttacksString = Util.padBinaryString(WNAttacksString);
 					
-					long legalWNMoves2 = WNAttacks & empty();
-					long legalWNMoves3 = WNAttacks & enemies();
+					long legalWNMoves2 = WNAttacks & empty;
+					long legalWNMoves3 = WNAttacks & enemies;
 					
 					long legalWNMoves = legalWNMoves2 | legalWNMoves3;
 					String legalWNMovesString = Long.toBinaryString(legalWNMoves);
@@ -236,13 +249,13 @@ public class Engine {
 					long WKMoves = AttackSets.kingMoves(i);
 					
 					//Remove pseudolegal moves
-					long legalWKMoves2 = WKMoves & empty();
-					long legalWKMoves3 = WKMoves & enemies();
+					long legalWKMoves2 = WKMoves & empty;
+					long legalWKMoves3 = WKMoves & enemies;
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
 
 					if(board.WK == AttackSets.WKStart){
 						if(board.castleWKValid){
-							if((occupied() & AttackSets.WKRblockers) == 0){
+							if((occupied & AttackSets.WKRblockers) == 0){
 								if(board.check() == 0) {
 									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
 									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
@@ -259,7 +272,7 @@ public class Engine {
 							}
 						}
 						if(board.castleWQValid){
-							if((occupied() & AttackSets.WKLblockers) == 0){
+							if((occupied & AttackSets.WKLblockers) == 0){
 								if(board.check() == 0){
 									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
 									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
@@ -318,14 +331,13 @@ public class Engine {
 					long singleRook = Util.stringToLong(singleRookString);
 					
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long occupied = occupied();
 					long horizontalAttacks = (occupied - 2 * singleRook) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleRook));
 					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
 
 					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleRook)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleRook)));
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long rookAttacks = verticalAttacks ^ horizontalAttacks;
-					rookAttacks = rookAttacks & (enemies() ^ empty());
+					rookAttacks = rookAttacks & (enemies ^ empty);
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
@@ -351,7 +363,7 @@ public class Engine {
 				
 				if(WBString.charAt(i) == '1') {
 					bishopsFound++;
-					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 					
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
 					if(closestPos != 64){
@@ -360,7 +372,7 @@ public class Engine {
 						URAttacks = AttackSets.diagRaysUR(i);
 					}
 
-					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
 					closestPos = Long.numberOfTrailingZeros(DRAttacks);
 					closestPos = 63 - closestPos;
 					if(closestPos > 0){
@@ -369,7 +381,7 @@ public class Engine {
 						DRAttacks = AttackSets.diagRaysDR(i);
 					}
 
-					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
 					
 					closestPos = Long.numberOfLeadingZeros(ULAttacks);
 					if(closestPos != 64){
@@ -378,7 +390,7 @@ public class Engine {
 						ULAttacks = AttackSets.diagRaysUL(i);
 					}
 
-					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
 					
 					closestPos = Long.numberOfTrailingZeros(DLAttacks);
 					closestPos = 63 - closestPos;
@@ -390,7 +402,7 @@ public class Engine {
 					}
 
 					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies() ^ empty());
+					bishopAttacks = bishopAttacks & (enemies ^ empty);
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
@@ -417,16 +429,15 @@ public class Engine {
 					long singleQueen = Util.stringToLong(singleQueenString);
 
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long occupied = occupied();
 					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
 					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
 
 					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies() ^ empty());
+					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
 
-					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
 					if(closestPos != 64){
@@ -435,7 +446,7 @@ public class Engine {
 						URAttacks = AttackSets.diagRaysUR(i);
 					}
 
-					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
 					closestPos = Long.numberOfTrailingZeros(DRAttacks);
 					closestPos = 63 - closestPos;
 					if(closestPos > 0){
@@ -444,7 +455,7 @@ public class Engine {
 						DRAttacks = AttackSets.diagRaysDR(i);
 					}
 
-					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
 
 					closestPos = Long.numberOfLeadingZeros(ULAttacks);
 					if(closestPos != 64){
@@ -453,7 +464,7 @@ public class Engine {
 						ULAttacks = AttackSets.diagRaysUL(i);
 					}
 
-					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
 
 					closestPos = Long.numberOfTrailingZeros(DLAttacks);
 					closestPos = 63 - closestPos;
@@ -465,7 +476,7 @@ public class Engine {
 					}
 
 					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies() ^ empty());
+					diagAttacks = diagAttacks & (enemies ^ empty);
 					long queenAttacks = queenAttacks1 ^ diagAttacks;
 
 
@@ -489,11 +500,11 @@ public class Engine {
 			//PAWNS-----------------------------------------------------------------------
 			//Push one
 			long BPMoves = board.BP << 8;
-			long legalBPMoves = BPMoves & empty();
+			long legalBPMoves = BPMoves & empty;
 			
 			//Push two
 			long BPMoves2 = legalBPMoves << 8;
-			long legalBPMoves2 = BPMoves2 & empty();
+			long legalBPMoves2 = BPMoves2 & empty;
 			long invalidateDoubleX2 = 4294967295L; //Bitboard to invalidate pawns doing double moves again
 			legalBPMoves2 = invalidateDoubleX2 & legalBPMoves2;
 			
@@ -504,14 +515,14 @@ public class Engine {
 			long BPAttacksR = board.BP & RightColumn0;
 			BPAttacksR = BPAttacksR << 7;
 			
-			BPAttacksR = BPAttacksR & enemies(); //only possible if enemy present
+			BPAttacksR = BPAttacksR & enemies; //only possible if enemy present
 			
 			//Attacks up and to the right
 			long leftColumn0 = 9187201950435737471L;
 			
 			long BPAttacksL = board.BP & leftColumn0;
 			BPAttacksL = BPAttacksL << 9;
-			BPAttacksL = BPAttacksL & enemies(); //only possible if enemy present
+			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
 			
 			long BPAttacks = BPAttacksL | BPAttacksR; //Probably not needed
 			
@@ -615,8 +626,8 @@ public class Engine {
 					String BNAttacksString = Long.toBinaryString(BNAttacks);
 					BNAttacksString = Util.padBinaryString(BNAttacksString);
 					
-					long legalBNMoves2 = BNAttacks & empty();
-					long legalBNMoves3 = BNAttacks & enemies();
+					long legalBNMoves2 = BNAttacks & empty;
+					long legalBNMoves3 = BNAttacks & enemies;
 					
 					long legalBNMoves = legalBNMoves2 | legalBNMoves3;
 					String legalBNMovesString = Long.toBinaryString(legalBNMoves);
@@ -625,7 +636,7 @@ public class Engine {
 					
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
-						if(movesFound == 2)
+						if(movesFound == 6)
 							break;
 						
 						if(legalBNMovesString.charAt(j) == '1') {
@@ -648,13 +659,13 @@ public class Engine {
 					long BKMoves = AttackSets.kingMoves(i);
 					
 					//Remove pseudolegal moves
-					long legalBKMoves2 = BKMoves & empty();
-					long legalBKMoves3 = BKMoves & enemies();
+					long legalBKMoves2 = BKMoves & empty;
+					long legalBKMoves3 = BKMoves & enemies;
 					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
 
 					if(board.BK == AttackSets.BKStart){
 						if(board.castleBKValid){
-							if((occupied() & AttackSets.BKRblockers) == 0){
+							if((occupied & AttackSets.BKRblockers) == 0){
 								if(board.check() == 0) {
 									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
@@ -671,7 +682,7 @@ public class Engine {
 							}
 						}
 						if(board.castleBQValid){
-							if((occupied() & AttackSets.BKLblockers) == 0){
+							if((occupied & AttackSets.BKLblockers) == 0){
 								if(board.check() == 0){
 									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
@@ -729,13 +740,12 @@ public class Engine {
 					long singleRook = Util.stringToLong(singleRookString);
 					
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long occupied = occupied();
 					long horizontalAttacks = (occupied - 2 * singleRook) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleRook));
 					
 					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleRook)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleRook)));
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long rookAttacks = verticalAttacks ^ horizontalAttacks;
-					rookAttacks = rookAttacks & (enemies() ^ empty());
+					rookAttacks = rookAttacks & (enemies ^ empty);
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
@@ -761,7 +771,7 @@ public class Engine {
 
 				if(BBString.charAt(i) == '1') {
 					bishopsFound++;
-					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
 					if(closestPos != 64){
@@ -770,7 +780,7 @@ public class Engine {
 						URAttacks = AttackSets.diagRaysUR(i);
 					}
 
-					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
 					closestPos = Long.numberOfTrailingZeros(DRAttacks);
 					closestPos = 63 - closestPos;
 					if(closestPos > 0){
@@ -779,7 +789,7 @@ public class Engine {
 						DRAttacks = AttackSets.diagRaysDR(i);
 					}
 
-					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
 
 					closestPos = Long.numberOfLeadingZeros(ULAttacks);
 					if(closestPos != 64){
@@ -788,7 +798,7 @@ public class Engine {
 						ULAttacks = AttackSets.diagRaysUL(i);
 					}
 
-					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
 
 					closestPos = Long.numberOfTrailingZeros(DLAttacks);
 					closestPos = 63 - closestPos;
@@ -800,7 +810,7 @@ public class Engine {
 					}
 
 					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies() ^ empty());
+					bishopAttacks = bishopAttacks & (enemies ^ empty);
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
@@ -828,16 +838,15 @@ public class Engine {
 					long singleQueen = Util.stringToLong(singleQueenString);
 
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long occupied = occupied();
 					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
 					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
 
 					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
 					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
 					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies() ^ empty());
+					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
 
-					long URAttacks = occupied() & AttackSets.diagRaysUR(i);
+					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
 					if(closestPos != 64){
@@ -846,7 +855,7 @@ public class Engine {
 						URAttacks = AttackSets.diagRaysUR(i);
 					}
 
-					long DRAttacks = occupied() & AttackSets.diagRaysDR(i);
+					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
 					closestPos = Long.numberOfTrailingZeros(DRAttacks);
 					closestPos = 63 - closestPos;
 					if(closestPos > 0){
@@ -855,7 +864,7 @@ public class Engine {
 						DRAttacks = AttackSets.diagRaysDR(i);
 					}
 
-					long ULAttacks = occupied() & AttackSets.diagRaysUL(i);
+					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
 
 					closestPos = Long.numberOfLeadingZeros(ULAttacks);
 					if(closestPos != 64){
@@ -864,7 +873,7 @@ public class Engine {
 						ULAttacks = AttackSets.diagRaysUL(i);
 					}
 
-					long DLAttacks = occupied() & AttackSets.diagRaysDL(i);
+					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
 
 					closestPos = Long.numberOfTrailingZeros(DLAttacks);
 					closestPos = 63 - closestPos;
@@ -876,7 +885,7 @@ public class Engine {
 					}
 
 					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies() ^ empty());
+					diagAttacks = diagAttacks & (enemies ^ empty);
 					long queenAttacks = queenAttacks1 ^ diagAttacks;
 
 					//generate moveList
@@ -968,12 +977,97 @@ public class Engine {
 	
 	
 	
-	private String search() { //return type?
-		return "";
+	public double search(Board oldBoard, int depth, double alpha, double beta, String player, ArrayList<String> principalVariation, boolean first) { //return type?
+
+		if(depth == 0){
+			return evalPosition(oldBoard);
+		}
+
+		if(player.equals("WHITE")){
+			ArrayList<String> moves = this.findMoveList(oldBoard, "WHITE");
+
+			for(String move : moves){
+				Board simBoard = new Board(oldBoard);
+
+				ArrayList<String> newLine = new ArrayList<String>();
+				if(newLine.size() != 0)
+					newLine.remove(newLine.size());
+				newLine.add(move);
+
+				simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
+
+				double oldAlpha = alpha;
+				alpha = Math.max(alpha, search(simBoard, depth - 1, alpha, beta, "BLACK", principalVariation, false));
+				if(oldAlpha != alpha){
+					principalVariation.addAll(newLine);
+				}
+
+				if(beta <= alpha){
+					break;
+				}
+
+			}
+			return alpha;
+		}else {
+			ArrayList<String> moves = this.findMoveList(oldBoard, "BLACK");
+
+			for(String move : moves){
+				Board simBoard = new Board(oldBoard);
+
+				ArrayList<String> newLine = new ArrayList<String>();
+				if(newLine.size() != 0)
+					newLine.remove(newLine.size());
+				newLine.add(move);
+
+				simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
+
+				double oldBeta = beta;
+				beta = Math.min(beta, search(simBoard, depth - 1, alpha, beta, "WHITE", principalVariation, false));
+				if(oldBeta != beta){
+					principalVariation.addAll(newLine);
+				}
+
+				if(beta <= alpha)
+					break;
+			}
+			return beta;
+		}
 	}
 	
-	private double evalPosition() {
-		return 0;
+	private double evalPosition(Board board) {
+		double points = 0;
+		if(board.checkmate() == 1){
+			return -Double.MAX_VALUE;
+		}else if(board.checkmate() == 2){
+			return Double.MAX_VALUE;
+		}
+
+		for(int i = 0; i < 64; i++){
+			long pos = AttackSets.getPosition(i);
+
+			if((board.WP & pos) != 0) {
+				points += 1;
+			}else if((board.WR & pos) != 0){
+				points += 5;
+			}else if((board.WN & pos) != 0){
+				points += 3;
+			}else if((board.WB & pos) != 0){
+				points += 3;
+			}else if((board.WQ & pos) != 0){
+				points += 9;
+			}else if((board.BP & pos) != 0){
+				points -= 1;
+			}else if((board.BR & pos) != 0){
+				points -= 5;
+			}else if((board.BN & pos) != 0){
+				points -= 3;
+			}else if((board.BB & pos) != 0){
+				points -= 3;
+			}else if((board.BQ & pos) != 0){
+				points -= 9;
+			}
+		}
+		return points;
 	}
 
 	
@@ -1028,10 +1122,5 @@ public class Engine {
         	System.out.println("]");
         }
         System.out.println("-----------------");
-    }
-    
-    
-    public void makeMove(String move) {
-    	
     }
 }

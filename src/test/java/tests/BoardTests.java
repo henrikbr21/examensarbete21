@@ -46,7 +46,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(30, moves.size());
 	}
@@ -66,7 +66,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(47, moves.size());
 	}
@@ -86,7 +86,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(51, moves.size());
 	}
@@ -106,7 +106,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves("WHITE");
+		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
 		assertEquals(3, board.check());
 	}
 
@@ -189,7 +189,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
 
-		assertEquals(7, engine.findMoveList("WHITE").size());
+		assertEquals(7, engine.findMoveList(board,"WHITE").size());
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
 
-		assertEquals(3, engine.findMoveList("WHITE").size());
+		assertEquals(3, engine.findMoveList(board,"WHITE").size());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
 
-		assertEquals(2, engine.findMoveList("WHITE").size());
+		assertEquals(2, engine.findMoveList(board,"WHITE").size());
 	}
 
 	@Test
@@ -243,7 +243,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
 
-		assertEquals(2, engine.findMoveList("BLACK").size());
+		assertEquals(2, engine.findMoveList(board,"BLACK").size());
 	}
 
 	@Test
@@ -261,7 +261,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
 
-		assertEquals(4, engine.findMoveList("BLACK").size());
+		assertEquals(4, engine.findMoveList(board,"BLACK").size());
 	}
 
 	@Test
@@ -279,7 +279,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
 
-		assertEquals(4, engine.findMoveList("BLACK").size());
+		assertEquals(4, engine.findMoveList(board,"BLACK").size());
 	}
 
 	@Test
@@ -297,7 +297,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false);
 
-		assertEquals(2, engine.findMoveList("BLACK").size());
+		assertEquals(2, engine.findMoveList(board,"BLACK").size());
 	}
 
 	@Test
@@ -334,7 +334,7 @@ public class BoardTests {
 		board.makeMove(51, 35);
 		assertEquals(true, board.enPassant);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.findMoveList("WHITE");
+		ArrayList<String> moves = engine.findMoveList(board,"WHITE");
 		String allMoves = new String();
 		for(String move : moves){
 			allMoves += move;

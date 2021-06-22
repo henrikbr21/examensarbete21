@@ -16,10 +16,10 @@ public class Board {
 	public Board() {
 		char[][] board = {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', ' ', 'p', 'p', 'p', 'p'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
 				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
@@ -50,6 +50,26 @@ public class Board {
 		this.castleWQValid = castleWQValid;
 		this.castleBKValid = castleBKValid;
 		this.castleBQValid = castleBKValid;
+	}
+
+	//copying
+	public Board(Board board){
+		this.WP = board.WP;
+		this.WR = board.WR;
+		this.WN = board.WN;
+		this.WB = board.WB;
+		this.WK = board.WK;
+		this.WQ = board.WQ;
+		this.BP = board.BP;
+		this.BR = board.BR;
+		this.BN = board.BN;
+		this.BB = board.BB;
+		this.BK = board.BK;
+		this.BQ = board.BQ;
+		this.castleWKValid = board.castleWKValid;
+		this.castleWQValid = board.castleWQValid;
+		this.castleBKValid = board.castleBKValid;
+		this.castleBQValid = board.castleBKValid;
 	}
 	
 	private long stringToLong(String s) {
@@ -133,8 +153,8 @@ public class Board {
 		Engine engine = new Engine("WHITE", simBoard, true);
 		Engine engine2 = new Engine("BLACK", simBoard, true);
 
-		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
-		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
+		ArrayList<String> whiteMoves = engine.generateMoves(simBoard,"WHITE");
+		ArrayList<String> blackMoves = engine2.generateMoves(simBoard,"BLACK");
 
 		String WKPos = "";
 		for(int i = 0; i < 64; i++){
@@ -177,8 +197,8 @@ public class Board {
 		Engine engine = new Engine("WHITE", this, true);
 		Engine engine2 = new Engine("BLACK", this, true);
 
-		ArrayList<String> whiteMoves = engine.generateMoves("WHITE");
-		ArrayList<String> blackMoves = engine2.generateMoves("BLACK");
+		ArrayList<String> whiteMoves = engine.generateMoves(this,"WHITE");
+		ArrayList<String> blackMoves = engine2.generateMoves(this,"BLACK");
 
 
 		int check = this.check();
@@ -252,8 +272,6 @@ public class Board {
 
 			//en passant move
 			if((to % 8) != (from % 8)){ //if sideways attack
-				Util.draw(toPos);
-				Util.draw(occupied());
 				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
 	 				this.BP = this.BP ^ AttackSets.getPosition(to-8);
 					this.WP = this.WP ^ toPos;
