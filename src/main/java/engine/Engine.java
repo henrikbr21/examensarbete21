@@ -2,6 +2,7 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 public class Engine {
 	private String color; //"BLACK" for black pieces, "WHITE" for white pieces
@@ -22,6 +23,8 @@ public class Engine {
 			AttackSets.initRightRays();
 			AttackSets.initPositions();
 			AttackSets.initEnPassantMoves();
+			AttackSets.initRookAttacksLR();
+			AttackSets.initRookAttacksUD();
 		}
 		time = System.currentTimeMillis() - time;
 		if(!initialized)
@@ -329,14 +332,47 @@ public class Engine {
 					String singleRookString = "0000000000000000000000000000000000000000000000000000000000000000";
 					singleRookString = singleRookString.substring(0, i) + "1" + singleRookString.substring(i+1);
 					long singleRook = Util.stringToLong(singleRookString);
-					
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleRook) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleRook));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
 
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleRook)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleRook)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long rookAttacks = verticalAttacks ^ horizontalAttacks;
+					//up attacks
+					long upAttacks = occupied & AttackSets.rookAttacksU(i);
+					int closestPos = Long.numberOfLeadingZeros(upAttacks);
+					if(closestPos != 64){
+						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
+					}else{
+						upAttacks = AttackSets.rookAttacksU(i);
+					}
+
+					//down attacks
+					long downAttacks = occupied & AttackSets.rookAttacksD(i);
+					closestPos = Long.numberOfTrailingZeros(downAttacks);
+					closestPos = 63-closestPos;
+					if(closestPos > 0){
+						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
+					}else{
+						downAttacks = AttackSets.rookAttacksD(i);
+					}
+
+					//left attacks
+					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
+					closestPos = Long.numberOfTrailingZeros(leftAttacks);
+					closestPos = 63-closestPos;
+					if(closestPos > 0){
+						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
+					}else{
+						leftAttacks = AttackSets.rookAttacksL(i);
+					}
+
+					//right attacks
+					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
+					closestPos = Long.numberOfLeadingZeros(rightAttacks);
+					if(closestPos != 64){
+						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
+					}else{
+						rightAttacks = AttackSets.rookAttacksR(i);
+					}
+
+
+					long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
 					rookAttacks = rookAttacks & (enemies ^ empty);
 
 					//generate moveList
@@ -953,7 +989,7 @@ public class Engine {
 	
 	private long empty() {
 		long empty = 0l;
-		empty = ~(empty & 0); //flip all bits to 1 
+		empty = ~(empty & 0); //flip all bits to 1
 		empty = empty ^ board.WP;
 		empty = empty ^ board.WR;
 		empty = empty ^ board.WN;
@@ -974,64 +1010,61 @@ public class Engine {
 	private long occupied() {
 		return ~empty();
 	}
-	
-	
-	
-	public double search(Board oldBoard, int depth, double alpha, double beta, String player, ArrayList<String> principalVariation, boolean first) { //return type?
 
-		if(depth == 0){
-			return evalPosition(oldBoard);
+
+
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, Stack<String> pv){
+		if(depthLeft == 0){
+			pv.clear();
+			return evalPosition(board);
 		}
 
-		if(player.equals("WHITE")){
-			ArrayList<String> moves = this.findMoveList(oldBoard, "WHITE");
+		ArrayList<String> moves = this.findMoveList(board, "WHITE");
 
-			for(String move : moves){
-				Board simBoard = new Board(oldBoard);
+		for(String move : moves){
+			Board simBoard = new Board(board);
+			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-				ArrayList<String> newLine = new ArrayList<String>();
-				if(newLine.size() != 0)
-					newLine.remove(newLine.size());
-				newLine.add(move);
-
-				simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
-
-				double oldAlpha = alpha;
-				alpha = Math.max(alpha, search(simBoard, depth - 1, alpha, beta, "BLACK", principalVariation, false));
-				if(oldAlpha != alpha){
-					principalVariation.addAll(newLine);
-				}
-
-				if(beta <= alpha){
-					break;
-				}
-
+			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, pv);
+			/*if(score >= beta){
+				System.out.println("max, Beta:" + beta);
+				return beta;
 			}
-			return alpha;
-		}else {
-			ArrayList<String> moves = this.findMoveList(oldBoard, "BLACK");
+			if(score > alpha){
+				pv.push(move);
+				System.out.println("max, Alpha:" + alpha);
+				alpha = score;
 
-			for(String move : moves){
-				Board simBoard = new Board(oldBoard);
-
-				ArrayList<String> newLine = new ArrayList<String>();
-				if(newLine.size() != 0)
-					newLine.remove(newLine.size());
-				newLine.add(move);
-
-				simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
-
-				double oldBeta = beta;
-				beta = Math.min(beta, search(simBoard, depth - 1, alpha, beta, "WHITE", principalVariation, false));
-				if(oldBeta != beta){
-					principalVariation.addAll(newLine);
-				}
-
-				if(beta <= alpha)
-					break;
-			}
-			return beta;
+			}*/
+			System.out.println(score);
 		}
+		return alpha;
+	}
+
+	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, Stack<String> pv){
+		if(depthLeft == 0){
+			pv.clear();
+			return evalPosition(board);
+		}
+
+		ArrayList<String> moves = this.findMoveList(board, "BLACK");
+
+		for(String move : moves){
+			Board simBoard = new Board(board);
+			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
+
+			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, pv);
+			if(score <= alpha){
+				System.out.println("min, Alpha" + alpha);
+				return alpha;
+			}
+			if(score < beta){
+				pv.push(move);
+				System.out.println("min, Beta:" + beta);
+				beta = score;
+			}
+		}
+		return beta;
 	}
 	
 	private double evalPosition(Board board) {

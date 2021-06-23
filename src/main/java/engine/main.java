@@ -2,17 +2,24 @@ package engine;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class main {
 
 	public static void main(String[] args) {
 		Board board = new Board();
-		Engine engine = new Engine("BLACK", board, false);
+		Engine engine = new Engine("WHITE", board, false);
 
+		System.out.println(engine.generateMoves(board, "WHITE"));
 
-		ArrayList<String> var = new ArrayList<String>();
-		double result = engine.search(board, 5, -Double.MAX_VALUE, Double.MAX_VALUE, "WHITE", var, true);
-		System.out.println(var);
+		/*
+		Stack<String> pv = new Stack<String>();
+		double result = engine.alphaBetaMax(board, 2, -Double.MAX_VALUE, Double.MAX_VALUE, pv);
+		while(pv.size() != 0){
+			System.out.println(pv.pop());
+		}
+		System.out.println(result);
+*/
 
 
 
