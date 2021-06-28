@@ -74,16 +74,16 @@ public class Engine {
 		ArrayList<String> moveList = new ArrayList<String>();
 
 		long occupied = occupied();
-		long empty = empty();
+		long empty = empty(board);
 
 		long enemies = 0L;
 		long friends = 0L;
 		if((playerColor == "WHITE" && this.color == "WHITE") || (playerColor == "BLACK" && this.color == "BLACK")){
-			enemies = enemies();
+			enemies = enemies(board);
 			friends = friends();
 		}else if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
 			enemies = friends();
-			friends = enemies();
+			friends = enemies(board);
 		}
 
 		if(playerColor.equals("WHITE")) {
@@ -110,12 +110,12 @@ public class Engine {
 			
 			//Attacks up and to the right
 			long leftColumn0 = 9187201950435737471L;
-			
+
 			long WPAttacksL = board.WP & leftColumn0;
 			WPAttacksL = WPAttacksL >>> 7;
-			
-			WPAttacksL = WPAttacksL & enemies; //only possible if enemy present
-			
+
+			WPAttacksL = WPAttacksL & enemies; //ISSUE?!?!!
+
 			long WPAttacks = WPAttacksL | WPAttacksR; //Probably not needed
 			
 			String WPMovesString = Long.toBinaryString(legalWPMoves);
@@ -595,21 +595,21 @@ public class Engine {
 			
 			String BPString = Long.toBinaryString(board.BP); //need to check the actual board
 			BPString = Util.padBinaryString(BPString);
-			
+
 			for(int i = 0; i<64; i++) {
 				if(BPAttacksLString.charAt(i) == '1') {
 					String move = "";
-					move = move + Util.convertNumToAlph(i-9) + (((i-9)/8)+3);
+					move = move + Util.convertNumToCoord(i+9);
 					
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					move = move + Util.convertNumToCoord(i);
 					moveList.add(move);
 				}
 
 				if(BPAttacksRString.charAt(i) == '1') {
 					String move = "";
-					move = move + Util.convertNumToAlph(i-7) + (((i-7)/8)+3);
-					
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+					move = move + Util.convertNumToCoord(i+7);
+
+					move = move + Util.convertNumToCoord(i);
 					moveList.add(move);
 				}
 			}
@@ -941,7 +941,7 @@ public class Engine {
 		return null;
 	}
 	
-	private long enemies() {
+	private long enemies(Board board) {
 		long enemies = 0L;
 		
 		if(color.equals("WHITE")) {
@@ -960,7 +960,6 @@ public class Engine {
 			enemies = enemies ^ board.WK;
 			enemies = enemies ^ board.WQ;
 		}
-		
 		return enemies;
 	}
 	
@@ -987,7 +986,7 @@ public class Engine {
 		return friends;
 	}
 	
-	private long empty() {
+	private long empty(Board board) {
 		long empty = 0l;
 		empty = ~(empty & 0); //flip all bits to 1
 		empty = empty ^ board.WP;
@@ -1008,7 +1007,7 @@ public class Engine {
 	}
 	
 	private long occupied() {
-		return ~empty();
+		return ~empty(board);
 	}
 
 
@@ -1025,23 +1024,22 @@ public class Engine {
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, pv);
-			/*if(score >= beta){
-				System.out.println("max, Beta:" + beta);
+			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, pv,move.equals("f2e3") || move.equals("d2e3"));
+			if(move.equals("f2e3") || move.equals("d2e3")){
+				System.out.println("HEJ " + score);
+			}
+			if(score >= beta){
 				return beta;
 			}
 			if(score > alpha){
 				pv.push(move);
-				System.out.println("max, Alpha:" + alpha);
 				alpha = score;
-
-			}*/
-			System.out.println(score);
+			}
 		}
 		return alpha;
 	}
 
-	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, Stack<String> pv){
+	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, Stack<String> pv, boolean debug){
 		if(depthLeft == 0){
 			pv.clear();
 			return evalPosition(board);
@@ -1050,17 +1048,21 @@ public class Engine {
 		ArrayList<String> moves = this.findMoveList(board, "BLACK");
 
 		for(String move : moves){
+			if(debug){
+				System.out.println(move);
+			}
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
 			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, pv);
+			if(debug){
+				System.out.println(score);
+			}
 			if(score <= alpha){
-				System.out.println("min, Alpha" + alpha);
 				return alpha;
 			}
 			if(score < beta){
 				pv.push(move);
-				System.out.println("min, Beta:" + beta);
 				beta = score;
 			}
 		}
@@ -1069,6 +1071,7 @@ public class Engine {
 	
 	private double evalPosition(Board board) {
 		double points = 0;
+
 		if(board.checkmate() == 1){
 			return -Double.MAX_VALUE;
 		}else if(board.checkmate() == 2){

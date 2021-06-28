@@ -15,14 +15,14 @@ public class Board {
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', 'b', ' ', 'k', 'b', 'n', ' '},
-				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', ' ', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', 'r', 'P', ' ', 'R', ' ', 'P', 'p'},
-				{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '}
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -204,11 +204,13 @@ public class Board {
 		int check = this.check();
 		boolean allCauseCheckForWhite = true;
 		boolean allCauseCheckForBlack = true;
+
 		if(check == 0){
 			for(String move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				int startPos = Util.convertCoordToNum(move.substring(0, 2));
 				int endPos = Util.convertCoordToNum(move.substring(2));
+
 				simBoard.makeMove(startPos, endPos);
 				if(simBoard.check() == 0){
 					allCauseCheckForWhite = false;
@@ -260,8 +262,6 @@ public class Board {
 		boolean enPassantEnabledThisTurn = false;
 
 		if((this.WP & fromPos) != 0){
-			clearPosition(toPos);
-
 
 			//en passant, make possible
 			if((fromPos & AttackSets.WPStartRow) != 0 && (toPos & AttackSets.WPStartRowPlus2) != 0){
@@ -275,7 +275,11 @@ public class Board {
 				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
 	 				this.BP = this.BP ^ AttackSets.getPosition(to-8);
 					this.WP = this.WP ^ toPos;
-				} //pawn promotion
+				}else {
+					clearPosition(toPos);
+					this.WP = this.WP ^ toPos;
+				}
+				//pawn promotion
 			}else if((toPos & AttackSets.wPromotion) != 0){
 				this.WP = this.WP ^ toPos;
 				this.WQ = this.WQ ^ toPos;
@@ -316,7 +320,6 @@ public class Board {
 			clearPosition(toPos);
 			this.WQ = this.WQ ^ toPos;
 		}else if((this.BP & fromPos) != 0){
-			clearPosition(toPos);
 
 			//en passant, make possible
 			if((fromPos & AttackSets.BPStartRow) != 0 && (toPos & AttackSets.BPStartRowMinus2) != 0){
@@ -330,7 +333,11 @@ public class Board {
 				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
 					this.WP = this.WP ^ AttackSets.getPosition(to+8);
 					this.BP = this.BP ^ toPos;
-				} //pawn promotion
+				}else {
+					clearPosition(toPos);
+					this.BP = this.BP ^ toPos;
+				}
+				//pawn promotion
 			}else if((toPos & AttackSets.bPromotion) != 0){
 				this.BP = this.BP ^ toPos;
 				this.BQ = this.BQ ^ toPos;
@@ -377,6 +384,12 @@ public class Board {
 
 		//remove the old, duplicate piece
 		clearPosition(fromPos);
+
+
+		if(Debug.findDuplicate(this)){
+			this.draw();
+			System.out.println("HERE");
+		}
 	}
 
 	public String castleValid(){
@@ -446,6 +459,7 @@ public class Board {
         for (int i=0;i<8;i++) {
             System.out.println(Arrays.toString(chessBoard2[i]));
         }
+        System.out.println("-----------------------");
     }
 
 	private long empty() {
