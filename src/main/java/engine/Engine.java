@@ -73,7 +73,7 @@ public class Engine {
 		//String moveList = "";
 		ArrayList<String> moveList = new ArrayList<String>();
 
-		long occupied = occupied();
+		long occupied = occupied(board);
 		long empty = empty(board);
 
 		long enemies = 0L;
@@ -174,13 +174,13 @@ public class Engine {
 			long enPassantAttacks = 0L;
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0){
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
 						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
 						moveList.add(enPassantAttack);
 					}
-				}else if(board.enPassantPos % 8 == 7) {
+				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
@@ -188,13 +188,13 @@ public class Engine {
 						moveList.add(enPassantAttack);
 					}
 				}else{
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP ) != 0 && board.enPassantPlayer == 2){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
 						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
 						moveList.add(enPassantAttack);
 					}
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0 && board.enPassantPlayer == 2){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
 						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
@@ -617,14 +617,14 @@ public class Engine {
 			//en passant
 			long enPassantAttacks = 0L;
 			if(board.enPassant){
-				if(board.enPassantPos % 8 == 0){
+				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
 						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
 						moveList.add(enPassantAttack);
 					}
-				}else if(board.enPassantPos % 8 == 7) {
+				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
@@ -632,13 +632,13 @@ public class Engine {
 						moveList.add(enPassantAttack);
 					}
 				}else{
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0 && board.enPassantPlayer == 1){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
 						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
 						moveList.add(enPassantAttack);
 					}
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0 && board.enPassantPlayer == 1){
 						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
 						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
 						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
@@ -1006,7 +1006,7 @@ public class Engine {
 		return empty;
 	}
 	
-	private long occupied() {
+	private long occupied(Board board) {
 		return ~empty(board);
 	}
 
@@ -1069,7 +1069,7 @@ public class Engine {
 		return beta;
 	}
 	
-	private double evalPosition(Board board) {
+	public double evalPosition(Board board) {
 		double points = 0;
 
 		if(board.checkmate() == 1){

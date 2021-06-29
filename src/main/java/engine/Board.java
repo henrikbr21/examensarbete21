@@ -12,6 +12,7 @@ public class Board {
 	public boolean castleBKValid = true;
 	public boolean enPassant = false;
 	public int enPassantPos = -1;
+	public int enPassantPlayer = 0; //1 for white player, 2 for black
 	
 	public Board() {
 		char[][] board = {
@@ -268,6 +269,7 @@ public class Board {
 				enPassant = true;
 				enPassantEnabledThisTurn = true;
 				enPassantPos = to;
+				enPassantPlayer = 1;
 			}
 
 			//en passant move
@@ -326,6 +328,7 @@ public class Board {
 				enPassant = true;
 				enPassantEnabledThisTurn = true;
 				enPassantPos = to;
+				enPassantPlayer = 2;
 			}
 
 			//en passant move

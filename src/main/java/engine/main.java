@@ -10,7 +10,9 @@ public class main {
 		Board board = new Board();
 		Engine engine = new Engine("WHITE", board, false);
 
+
 /*
+
 		int i = 0;
 		ArrayList<String> moves = engine.findMoveList(board, "WHITE");
 		for(String move : moves) {
@@ -21,8 +23,8 @@ public class main {
 			for(String move2 : moves2){
 				Board simBoard2 = new Board(simBoard);
 				simBoard2.makeMove(Util.convertCoordToNum(move2.substring(0, 2)), Util.convertCoordToNum(move2.substring(2)));
-				if(i == 441){
-					System.out.println("HEHJ");
+				if(i == 4005){
+					System.out.println("HEJ");
 				}
 
 				ArrayList<String> moves3 = engine.findMoveList(simBoard2, "WHITE");
@@ -30,9 +32,11 @@ public class main {
 					Board simBoard3 = new Board(simBoard2);
 					simBoard3.makeMove(Util.convertCoordToNum(move3.substring(0, 2)), Util.convertCoordToNum(move3.substring(2)));
 					i++;
-					if(i == 441){
-						System.out.println("HEHJ");
+
+					if(i == 4005){
+						System.out.println("HEJ");
 					}
+					engine.evalPosition(simBoard3);
 				}
 
 			}
