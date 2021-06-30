@@ -1012,57 +1012,57 @@ public class Engine {
 
 
 
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, Stack<String> pv){
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth){
 		if(depthLeft == 0){
 			pv.clear();
 			return evalPosition(board);
 		}
-
+		depth++;
 		ArrayList<String> moves = this.findMoveList(board, "WHITE");
+		boolean first = true;
+		String bestMove = "";
 
 		for(String move : moves){
+
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, pv,move.equals("f2e3") || move.equals("d2e3"));
-			if(move.equals("f2e3") || move.equals("d2e3")){
-				System.out.println("HEJ " + score);
-			}
+			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, pv, depth);
 			if(score >= beta){
 				return beta;
 			}
 			if(score > alpha){
-				pv.push(move);
+				if(depth == 0){
+					bestMove = move;
+					System.out.println(bestMove);
+				}
+				pv.add(move);
 				alpha = score;
 			}
 		}
 		return alpha;
 	}
 
-	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, Stack<String> pv, boolean debug){
+	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth){
 		if(depthLeft == 0){
 			pv.clear();
 			return evalPosition(board);
 		}
-
+		depth++;
 		ArrayList<String> moves = this.findMoveList(board, "BLACK");
+		boolean first = true;
 
 		for(String move : moves){
-			if(debug){
-				System.out.println(move);
-			}
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, pv);
-			if(debug){
-				System.out.println(score);
-			}
+			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, pv, depth);
+
 			if(score <= alpha){
 				return alpha;
 			}
 			if(score < beta){
-				pv.push(move);
+				pv.add(move);
 				beta = score;
 			}
 		}

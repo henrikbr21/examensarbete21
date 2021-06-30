@@ -16,14 +16,14 @@ public class Board {
 	
 	public Board() {
 		char[][] board = {
-				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', ' ', 'p', 'p', 'p'},
+				{'r', 'n', 'b', ' ', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'P', ' ', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
-				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+				{'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', ' ', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		
 		initBitboards(board);
@@ -277,13 +277,16 @@ public class Board {
 				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
 	 				this.BP = this.BP ^ AttackSets.getPosition(to-8);
 					this.WP = this.WP ^ toPos;
-				}else {
+				}else if((toPos & AttackSets.wPromotion) != 0) { //pawn promotion
+					clearPosition(toPos);
+					this.WQ = this.WQ ^ toPos;
+				}else{
 					clearPosition(toPos);
 					this.WP = this.WP ^ toPos;
 				}
+
 				//pawn promotion
 			}else if((toPos & AttackSets.wPromotion) != 0){
-				this.WP = this.WP ^ toPos;
 				this.WQ = this.WQ ^ toPos;
 			}else { //"normal" pawn moves
 				this.WP = this.WP ^ toPos;
@@ -336,13 +339,15 @@ public class Board {
 				if((occupied() & toPos) == 0){ //if doing sideways attack to empty position => en passant move
 					this.WP = this.WP ^ AttackSets.getPosition(to+8);
 					this.BP = this.BP ^ toPos;
-				}else {
+				}else if((toPos & AttackSets.bPromotion) != 0) { //pawn promotion
+					clearPosition(toPos);
+					this.BQ = this.BQ ^ toPos;
+				}else{
 					clearPosition(toPos);
 					this.BP = this.BP ^ toPos;
 				}
 				//pawn promotion
 			}else if((toPos & AttackSets.bPromotion) != 0){
-				this.BP = this.BP ^ toPos;
 				this.BQ = this.BQ ^ toPos;
 			}else { //"normal" pawn moves
 				this.BP = this.BP ^ toPos;
