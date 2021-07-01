@@ -227,7 +227,7 @@ public class Engine {
 
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
-						if(movesFound == 6)
+						if(movesFound == 8)
 							break;
 
 						if(legalWNMovesString.charAt(j) == '1') {
@@ -672,7 +672,7 @@ public class Engine {
 					
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
-						if(movesFound == 6)
+						if(movesFound == 8)
 							break;
 						
 						if(legalBNMovesString.charAt(j) == '1') {
@@ -1037,6 +1037,7 @@ public class Engine {
 				pv.clear();
 				pv.addAll(localPV);
 				pv.add(move);
+
 				alpha = score;
 			}
 		}
@@ -1066,6 +1067,7 @@ public class Engine {
 				pv.clear();
 				pv.addAll(localPV);
 				pv.add(move);
+
 				beta = score;
 			}
 		}
@@ -1076,10 +1078,8 @@ public class Engine {
 		double points = 0;
 
 		if(board.checkmate() == 1){ //optimize here
-			System.out.println("1 is checkmated");
 			return -Double.MAX_VALUE;
 		}else if(board.checkmate() == 2){
-			System.out.println("2 is checkmated");
 			return Double.MAX_VALUE;
 		}
 

@@ -32,17 +32,14 @@ public class main {
 		}
 */
 
-		System.out.println("CHECKMATE: " + board.checkmate());
-		System.out.println(engine.generateMoves(board, "WHITE"));
 
-		/*
 		long time = System.currentTimeMillis();
 		ArrayList<String> pv = new ArrayList<String>();
-		double result = engine.alphaBetaMax(board, 3, -Double.MAX_VALUE, Double.MAX_VALUE, pv, -1);
+		double result = engine.alphaBetaMax(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
 		System.out.println(pv);
 		System.out.println("RESULT: " + result);
 		System.out.println(System.currentTimeMillis()-time);
-*/
+
 
 	}
 
