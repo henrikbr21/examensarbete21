@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.ArrayList;
+
 public abstract class Util {
 
 	public static String convertNumToCoord(int i){
@@ -169,4 +171,12 @@ public abstract class Util {
         }
         System.out.println("-----------------");
     }
+
+    public static ArrayList<String> cloneArrayList(ArrayList<String> pv){
+		ArrayList<String> copy = new ArrayList<String>();
+		for(String move : pv){
+			copy.add(new String(move));
+		}
+		return copy;
+	}
 }

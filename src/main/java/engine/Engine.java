@@ -1020,22 +1020,22 @@ public class Engine {
 		depth++;
 		ArrayList<String> moves = this.findMoveList(board, "WHITE");
 		boolean first = true;
-		String bestMove = "";
+		ArrayList<String> localPV = new ArrayList<String>();
+		if(depth == 0){
+			System.out.println(moves.contains("d1g4"));
+		}
 
 		for(String move : moves){
-
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, pv, depth);
+			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
 			if(score >= beta){
 				return beta;
 			}
 			if(score > alpha){
-				if(depth == 0){
-					bestMove = move;
-					System.out.println(bestMove);
-				}
+				pv.clear();
+				pv.addAll(localPV);
 				pv.add(move);
 				alpha = score;
 			}
@@ -1051,17 +1051,20 @@ public class Engine {
 		depth++;
 		ArrayList<String> moves = this.findMoveList(board, "BLACK");
 		boolean first = true;
+		ArrayList<String> localPV = new ArrayList<String>();
 
 		for(String move : moves){
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, pv, depth);
+			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
 
 			if(score <= alpha){
 				return alpha;
 			}
 			if(score < beta){
+				pv.clear();
+				pv.addAll(localPV);
 				pv.add(move);
 				beta = score;
 			}
@@ -1072,9 +1075,11 @@ public class Engine {
 	public double evalPosition(Board board) {
 		double points = 0;
 
-		if(board.checkmate() == 1){
+		if(board.checkmate() == 1){ //optimize here
+			System.out.println("1 is checkmated");
 			return -Double.MAX_VALUE;
 		}else if(board.checkmate() == 2){
+			System.out.println("2 is checkmated");
 			return Double.MAX_VALUE;
 		}
 
