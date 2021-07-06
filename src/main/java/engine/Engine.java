@@ -80,9 +80,9 @@ public class Engine {
 		long friends = 0L;
 		if((playerColor == "WHITE" && this.color == "WHITE") || (playerColor == "BLACK" && this.color == "BLACK")){
 			enemies = enemies(board);
-			friends = friends();
+			friends = friends(board);
 		}else if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
-			enemies = friends();
+			enemies = friends(board);
 			friends = enemies(board);
 		}
 
@@ -963,7 +963,7 @@ public class Engine {
 		return enemies;
 	}
 	
-	private long friends() {
+	private long friends(Board board) {
 		long friends = 0L;
 		
 		if(color.equals("WHITE")) {
@@ -1021,9 +1021,6 @@ public class Engine {
 		ArrayList<String> moves = this.findMoveList(board, "WHITE");
 		boolean first = true;
 		ArrayList<String> localPV = new ArrayList<String>();
-		if(depth == 0){
-			System.out.println(moves.contains("d1g4"));
-		}
 
 		for(String move : moves){
 			Board simBoard = new Board(board);
@@ -1087,25 +1084,25 @@ public class Engine {
 			long pos = AttackSets.getPosition(i);
 
 			if((board.WP & pos) != 0) {
-				points += 1;
+				points = points + 1;
 			}else if((board.WR & pos) != 0){
-				points += 5;
+				points = points + 5;
 			}else if((board.WN & pos) != 0){
-				points += 3;
+				points = points + 3;
 			}else if((board.WB & pos) != 0){
-				points += 3;
+				points = points + 3;
 			}else if((board.WQ & pos) != 0){
-				points += 9;
+				points = points + 9;
 			}else if((board.BP & pos) != 0){
-				points -= 1;
+				points = points - 1;
 			}else if((board.BR & pos) != 0){
-				points -= 5;
+				points = points - 5;
 			}else if((board.BN & pos) != 0){
-				points -= 3;
+				points = points - 3;
 			}else if((board.BB & pos) != 0){
-				points -= 3;
+				points = points - 3;
 			}else if((board.BQ & pos) != 0){
-				points -= 9;
+				points = points - 9;
 			}
 		}
 		return points;

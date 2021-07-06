@@ -10,6 +10,7 @@ public class main {
 		Board board = new Board();
 		Engine engine = new Engine("WHITE", board, false);
 
+
 		/*
 		ArrayList<String> moves = engine.findMoveList(board, "WHITE");
 		for(String move : moves){
@@ -35,7 +36,7 @@ public class main {
 
 		long time = System.currentTimeMillis();
 		ArrayList<String> pv = new ArrayList<String>();
-		double result = engine.alphaBetaMax(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+		double result = engine.alphaBetaMax(board, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
 		System.out.println(pv);
 		System.out.println("RESULT: " + result);
 		System.out.println(System.currentTimeMillis()-time);
