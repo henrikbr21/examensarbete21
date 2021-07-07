@@ -764,23 +764,57 @@ public class Engine {
 			for(int i = 0; i < 64; i++) {
 				if(rooksFound == 2)
 					break;
-				
+
 				if(BRString.charAt(i) == '1') {
 					rooksFound++;
-					
+
 					//WRString = WRString.substring(i/8, i/8+8);
 					//System.out.println(WRString);
-					
+
 					String singleRookString = "0000000000000000000000000000000000000000000000000000000000000000";
 					singleRookString = singleRookString.substring(0, i) + "1" + singleRookString.substring(i+1);
 					long singleRook = Util.stringToLong(singleRookString);
-					
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleRook) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleRook));
-					
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleRook)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleRook)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long rookAttacks = verticalAttacks ^ horizontalAttacks;
+
+					//up attacks
+					long upAttacks = occupied & AttackSets.rookAttacksU(i);
+					int closestPos = Long.numberOfLeadingZeros(upAttacks);
+					if(closestPos != 64){
+						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
+					}else{
+						upAttacks = AttackSets.rookAttacksU(i);
+					}
+
+					//down attacks
+					long downAttacks = occupied & AttackSets.rookAttacksD(i);
+					closestPos = Long.numberOfTrailingZeros(downAttacks);
+					closestPos = 63-closestPos;
+					if(closestPos > 0){
+						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
+					}else{
+						downAttacks = AttackSets.rookAttacksD(i);
+					}
+
+					//left attacks
+					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
+					closestPos = Long.numberOfTrailingZeros(leftAttacks);
+					closestPos = 63-closestPos;
+					if(closestPos > 0){
+						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
+					}else{
+						leftAttacks = AttackSets.rookAttacksL(i);
+					}
+
+					//right attacks
+					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
+					closestPos = Long.numberOfLeadingZeros(rightAttacks);
+					if(closestPos != 64){
+						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
+					}else{
+						rightAttacks = AttackSets.rookAttacksR(i);
+					}
+
+
+					long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
 					rookAttacks = rookAttacks & (enemies ^ empty);
 
 					//generate moveList
@@ -1012,13 +1046,14 @@ public class Engine {
 
 
 
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth){
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth, int whiteMoves, int blackMoves){
 		if(depthLeft == 0){
 			pv.clear();
-			return evalPosition(board);
+			return evalPosition(board, whiteMoves, blackMoves);
 		}
 		depth++;
 		ArrayList<String> moves = this.findMoveList(board, "WHITE");
+		whiteMoves = moves.size();
 		boolean first = true;
 		ArrayList<String> localPV = new ArrayList<String>();
 
@@ -1026,7 +1061,7 @@ public class Engine {
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
+			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, whiteMoves, blackMoves);
 			if(score >= beta){
 				return beta;
 			}
@@ -1041,13 +1076,14 @@ public class Engine {
 		return alpha;
 	}
 
-	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth){
+	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth, int whiteMoves, int blackMoves){
 		if(depthLeft == 0){
 			pv.clear();
-			return evalPosition(board);
+			return evalPosition(board, whiteMoves, blackMoves);
 		}
 		depth++;
 		ArrayList<String> moves = this.findMoveList(board, "BLACK");
+		blackMoves = moves.size();
 		boolean first = true;
 		ArrayList<String> localPV = new ArrayList<String>();
 
@@ -1055,7 +1091,7 @@ public class Engine {
 			Board simBoard = new Board(board);
 			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
 
-			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
+			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, whiteMoves, blackMoves);
 
 			if(score <= alpha){
 				return alpha;
@@ -1071,7 +1107,7 @@ public class Engine {
 		return beta;
 	}
 	
-	public double evalPosition(Board board) {
+	public double evalPosition(Board board, int whiteMoves, int blackMoves) {
 		double points = 0;
 
 		if(board.checkmate() == 1){ //optimize here
@@ -1085,6 +1121,8 @@ public class Engine {
 
 			if((board.WP & pos) != 0) {
 				points = points + 1;
+				if((board.WP & AttackSets.getPosition(i+8)) != 0)
+					points = points - 0.5; //blocked or doubled pawn
 			}else if((board.WR & pos) != 0){
 				points = points + 5;
 			}else if((board.WN & pos) != 0){
@@ -1095,6 +1133,8 @@ public class Engine {
 				points = points + 9;
 			}else if((board.BP & pos) != 0){
 				points = points - 1;
+				if((board.BP & AttackSets.getPosition(i-8)) != 0)
+					points = points + 0.5; //blocked or doubled pawn
 			}else if((board.BR & pos) != 0){
 				points = points - 5;
 			}else if((board.BN & pos) != 0){
@@ -1105,6 +1145,10 @@ public class Engine {
 				points = points - 9;
 			}
 		}
+
+		//Mobility
+		points = points + (0.01 * (whiteMoves-blackMoves));
+
 		return points;
 	}
 
