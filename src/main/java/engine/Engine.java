@@ -31,35 +31,31 @@ public class Engine {
 			System.out.println("Initialization took " + time + "ms.");
 	}
 
-	public ArrayList<String> findMoveList(Board board, String playerColor){
-		ArrayList<String> legalMoves = new ArrayList<String>();
+	public ArrayList<Move> findMoveList(Board board, String playerColor){
+		ArrayList<Move> legalMoves = new ArrayList<Move>();
 
-		if(playerColor == "WHITE"){
+ 		if(playerColor == "WHITE"){
 			if(board.checkmate() == 1)
-				return new ArrayList<String>();
+				return new ArrayList<Move>();
 			else{
-				ArrayList<String> moves = this.generateMoves(board,"WHITE");
+				ArrayList<Move> moves = this.generateMoves(board,"WHITE");
 
-				for(String move : moves){
+				for(Move move : moves){
 					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-					int startPos = Util.convertCoordToNum(move.substring(0, 2));
-					int endPos = Util.convertCoordToNum(move.substring(2));
-					simBoard.makeMove(startPos, endPos);
+					simBoard.makeMove(move.from, move.to);
 					if(simBoard.check() == 2 || simBoard.check() == 0)
 						legalMoves.add(move);
 				}
 			}
 		}else if(playerColor == "BLACK") {
-			if(board.checkmate() == 2)
-				return new ArrayList<String>();
+ 			if(board.checkmate() == 2)
+				return new ArrayList<Move>();
 			else{
-				ArrayList<String> moves = this.generateMoves(board,"BLACK");
+				ArrayList<Move> moves = this.generateMoves(board,"BLACK");
 
-				for(String move : moves){
+				for(Move move : moves){
 					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-					int startPos = Util.convertCoordToNum(move.substring(0, 2));
-					int endPos = Util.convertCoordToNum(move.substring(2));
-					simBoard.makeMove(startPos, endPos);
+					simBoard.makeMove(move.from, move.to);
 					if(simBoard.check() == 1 || simBoard.check() == 0)
 						legalMoves.add(move);
 				}
@@ -68,10 +64,10 @@ public class Engine {
 		return legalMoves;
 	}
 
-	public ArrayList<String> generateMoves(Board board, String playerColor) {
+	public ArrayList<Move> generateMoves(Board board, String playerColor) {
 
 		//String moveList = "";
-		ArrayList<String> moveList = new ArrayList<String>();
+		ArrayList<Move> moveList = new ArrayList<Move>();
 
 		long occupied = occupied(board);
 		long empty = empty(board);
@@ -83,7 +79,7 @@ public class Engine {
 			friends = friends(board);
 		}else if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
 			enemies = friends(board);
-			friends = enemies(board);
+ 			friends = enemies(board);
 		}
 
 		if(playerColor.equals("WHITE")) {
@@ -117,55 +113,32 @@ public class Engine {
 			WPAttacksL = WPAttacksL & enemies; //ISSUE?!?!!
 
 			long WPAttacks = WPAttacksL | WPAttacksR; //Probably not needed
-			
-			String WPMovesString = Long.toBinaryString(legalWPMoves);
-			WPMovesString = Util.padBinaryString(WPMovesString); //Padding needed for 64-bits
-			
+
 			//Converting bitboards to move string:
 
 			for(int i = 0; i<64; i++) {
-				String move = "";
-				if(WPMovesString.charAt(i) == '1') {
-					move = Util.convertNumToAlph(i) + ((i/8));
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+				if((AttackSets.getPosition(i) & legalWPMoves) != 0) {
+					Move move = new Move(i-8, i);
 					moveList.add(move);
 				}
+
 			}
-			
-			String WPMoves2String = Long.toBinaryString(legalWPMoves2);
-			WPMoves2String = Util.padBinaryString(WPMoves2String);
-			
+
+
 			for(int i = 0; i<64; i++) {
-				String move = "";
-				if(WPMoves2String.charAt(i) == '1') {
-					move = Util.convertNumToAlph(i) + ((i/8)-1);
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+				if((AttackSets.getPosition(i) & legalWPMoves2) != 0) {
+					Move move = new Move(i-16, i);
 					moveList.add(move);
 				}
 			}
-			
-			String WPAttacksLString = Long.toBinaryString(WPAttacksL);
-			WPAttacksLString =  Util.padBinaryString(WPAttacksLString);
-			
-			String WPAttacksRString = Long.toBinaryString(WPAttacksR);
-			WPAttacksRString = Util.padBinaryString(WPAttacksRString);
-			
-			String WPString = Long.toBinaryString(board.WP); //need to check the actual board
-			WPString = Util.padBinaryString(WPString);
-			
+
 			for(int i = 0; i < 64; i++) {
-				String move = "";
-				if(WPAttacksLString.charAt(i) == '1') {
-					move = move + Util.convertNumToAlph(i-7) + (((i-7)/8)+1);
-					
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+				if((AttackSets.getPosition(i) & WPAttacksL) != 0) {
+					Move move = new Move(i-7, i);
 					moveList.add(move);
 				}
-				move = "";
-				if(WPAttacksRString.charAt(i) == '1') {
-					move = move + Util.convertNumToAlph(i-9) + (((i-9)/8)+1);
-					
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+				if((AttackSets.getPosition(i) & WPAttacksR) != 0) {
+					Move move = new Move(i-9, i);
 					moveList.add(move);
 				}
 			}
@@ -175,67 +148,51 @@ public class Engine {
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8);
 						moveList.add(enPassantAttack);
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8);
 						moveList.add(enPassantAttack);
 					}
 				}else{
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP ) != 0 && board.enPassantPlayer == 2){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8);
 						moveList.add(enPassantAttack);
 					}
 					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos+8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
+						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8);
 						moveList.add(enPassantAttack);
 					}
 				}
 			}
 			
 			//KNIGHTS
-			String WNString = Long.toBinaryString(board.WN);
-			WNString = Util.padBinaryString(WNString);
 			
 			int knightsFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(knightsFound == 2)
 					break;
-				if(WNString.charAt(i) == '1') {
+				if((board.WN & AttackSets.getPosition(i)) != 0) {
 					knightsFound++;
 					
 					long WNAttacks = AttackSets.knightMoves(i);
-					String WNAttacksString = Long.toBinaryString(WNAttacks);
-					WNAttacksString = Util.padBinaryString(WNAttacksString);
 					
 					long legalWNMoves2 = WNAttacks & empty;
 					long legalWNMoves3 = WNAttacks & enemies;
 					
 					long legalWNMoves = legalWNMoves2 | legalWNMoves3;
-					String legalWNMovesString = Long.toBinaryString(legalWNMoves);
-					legalWNMovesString = Util.padBinaryString(legalWNMovesString);
 
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
 						if(movesFound == 8)
 							break;
 
-						if(legalWNMovesString.charAt(j) == '1') {
-							String move = "";
+						if((legalWNMoves & AttackSets.getPosition(j)) != 0) {
 							movesFound++;
-							
-							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
-							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
+
+							Move move = new Move(i, j);
 							moveList.add(move);
 						}
 					}
@@ -243,11 +200,9 @@ public class Engine {
 			}
 			
 			//King
-			String WKString = Long.toBinaryString(board.WK);
-			WKString = Util.padBinaryString(WKString);
 			
 			for(int i = 0; i < 64; i++) {
-				if(WKString.charAt(i) == '1') {
+				if((board.WK & AttackSets.getPosition(i)) != 0) {
 					
 					long WKMoves = AttackSets.kingMoves(i);
 					
@@ -292,21 +247,13 @@ public class Engine {
 						}
 					}
 
-					String legalMovesString = Long.toBinaryString(legalWKMoves);
-					legalMovesString = Util.padBinaryString(legalMovesString);
-
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
 						if(movesFound == 8) 
 							break;
 						
-						if(legalMovesString.charAt(j) == '1') {
-							String move = "";
-
-							movesFound++;
-							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
-							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
-
+						if((legalWKMoves & AttackSets.getPosition(j)) != 0) {
+							Move move = new Move(i, j);
 							moveList.add(move);
 						}
 					}
@@ -315,23 +262,13 @@ public class Engine {
 			}
 			
 			//Rook
-			String WRString = Long.toBinaryString(board.WR);
-			WRString = Util.padBinaryString(WRString);
-			
 			int rooksFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(rooksFound == 2)
 					break;
 				
-				if(WRString.charAt(i) == '1') {
+				if((board.WR & AttackSets.getPosition(i)) != 0) {
 					rooksFound++;
-					
-					//WRString = WRString.substring(i/8, i/8+8);
-					//System.out.println(WRString);
-					
-					String singleRookString = "0000000000000000000000000000000000000000000000000000000000000000";
-					singleRookString = singleRookString.substring(0, i) + "1" + singleRookString.substring(i+1);
-					long singleRook = Util.stringToLong(singleRookString);
 
 					//up attacks
 					long upAttacks = occupied & AttackSets.rookAttacksU(i);
@@ -377,10 +314,8 @@ public class Engine {
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
-						if(((rookAttacks>>j)&1)==1){
-							String move = "";
-							move = move + Util.convertNumToCoord(i);
-							move = move + Util.convertNumToCoord(63-j);
+						if((rookAttacks & AttackSets.getPosition(j)) != 0){
+							Move move = new Move(i, j);  // 63-j???
 							moveList.add(move);
 						}
 					}
@@ -388,16 +323,12 @@ public class Engine {
 			}
 
 			//Bishops
-			
-			String WBString = Long.toBinaryString(board.WB);
-			WBString = Util.padBinaryString(WBString);
-			
 			int bishopsFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(bishopsFound == 2)
 					break;
 				
-				if(WBString.charAt(i) == '1') {
+				if((board.WB & AttackSets.getPosition(i)) != 0) {
 					bishopsFound++;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 					
@@ -442,10 +373,8 @@ public class Engine {
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
-						if(((bishopAttacks>>j)&1)==1){
-							String move = "";
-							move = move + Util.convertNumToCoord(i);
-							move = move + Util.convertNumToCoord(63-j);
+						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
+							Move move = new Move(i, j); // 63-j???
 							moveList.add(move);
 						}
 					}
@@ -453,12 +382,8 @@ public class Engine {
 			}
 
 			//Queen
-			String WQString = Long.toBinaryString(board.WQ);
-			WQString = Util.padBinaryString(WQString);
-
 			for(int i = 0; i < 64; i++) {
-
-				if(WQString.charAt(i) == '1') {
+				if((board.WQ & AttackSets.getPosition(i)) != 0) {
 
 					String singleQueenString = "0000000000000000000000000000000000000000000000000000000000000000";
 					singleQueenString = singleQueenString.substring(0, i) + "1" + singleQueenString.substring(i+1);
@@ -515,14 +440,10 @@ public class Engine {
 					diagAttacks = diagAttacks & (enemies ^ empty);
 					long queenAttacks = queenAttacks1 ^ diagAttacks;
 
-
-
 					//generate moveList
 					for(int j = 0; j < 64; j++){
-						if(((queenAttacks>>j)&1)==1){
-							String move = "";
-							move = move + Util.convertNumToCoord(i);
-							move = move + Util.convertNumToCoord(63-j);
+						if((queenAttacks & AttackSets.getPosition(j)) != 0){ //((queenAttacks>>j)&1)==1
+							Move move = new Move(i, j); //63-j??
 							moveList.add(move);
 						}
 					}
@@ -561,55 +482,30 @@ public class Engine {
 			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
 			
 			long BPAttacks = BPAttacksL | BPAttacksR; //Probably not needed
-			
-			String BPMovesString = Long.toBinaryString(legalBPMoves);
-			BPMovesString = Util.padBinaryString(BPMovesString); //Padding needed for 64-bits
-			
+
 			//Converting bitboards to move string:
 			for(int i = 0; i<64; i++) {
-				if(BPMovesString.charAt(i) == '1') {
-					String move = "";
-					move = move + Util.convertNumToAlph(i) + ((i/8)+2);
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+				if((legalBPMoves & AttackSets.getPosition(i)) != 0) {
+					Move move = new Move(i+8, i);
 					moveList.add(move);
 				}
 			}
-			
-			String BPMoves2String = Long.toBinaryString(legalBPMoves2);
-			BPMoves2String = Util.padBinaryString(BPMoves2String);
-			
+
 			for(int i = 0; i<64; i++) {
-				if(BPMoves2String.charAt(i) == '1') {
-					String move = "";
-					move = move + Util.convertNumToAlph(i) + ((i/8)+3);
-					move = move + Util.convertNumToAlph(i) + ((i/8)+1);
+				if((legalBPMoves2 & AttackSets.getPosition(i)) != 0) {
+					Move move = new Move(i+16, i);
 					moveList.add(move);
 				}
 			}
-			
-			String BPAttacksLString = Long.toBinaryString(BPAttacksL);
-			BPAttacksLString =  Util.padBinaryString(BPAttacksLString);
-			
-			String BPAttacksRString = Long.toBinaryString(BPAttacksR);
-			BPAttacksRString = Util.padBinaryString(BPAttacksRString);
-			
-			String BPString = Long.toBinaryString(board.BP); //need to check the actual board
-			BPString = Util.padBinaryString(BPString);
 
 			for(int i = 0; i<64; i++) {
-				if(BPAttacksLString.charAt(i) == '1') {
-					String move = "";
-					move = move + Util.convertNumToCoord(i+9);
-					
-					move = move + Util.convertNumToCoord(i);
+				if((BPAttacksL & AttackSets.getPosition(i)) != 0) {
+					Move move = new Move(i+9, i);
 					moveList.add(move);
 				}
 
-				if(BPAttacksRString.charAt(i) == '1') {
-					String move = "";
-					move = move + Util.convertNumToCoord(i+7);
-
-					move = move + Util.convertNumToCoord(i);
+				if((BPAttacksR & AttackSets.getPosition(i)) != 0) {
+					Move move = new Move(i+7, i);
 					moveList.add(move);
 				}
 			}
@@ -619,78 +515,52 @@ public class Engine {
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
-						moveList.add(enPassantAttack);
+						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8));
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
-						moveList.add(enPassantAttack);
+						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8));
 					}
 				}else{
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos+1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
-						moveList.add(enPassantAttack);
+						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8));
 					}
 					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						String enPassantAttackStart = Util.convertNumToCoord(board.enPassantPos-1);
-						String enPassantAttackEnd = Util.convertNumToCoord(board.enPassantPos-8);
-						String enPassantAttack = enPassantAttackStart + enPassantAttackEnd;
-						moveList.add(enPassantAttack);
+						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8));
 					}
 				}
 			}
 			
 			//KNIGHTS
-			String BNString = Long.toBinaryString(board.BN);
-			BNString = Util.padBinaryString(BNString);
-			
 			int knightsFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(knightsFound == 2)
 					break;
-				if(BNString.charAt(i) == '1') {
+				if((board.BN & AttackSets.getPosition(i)) != 0) {
 					knightsFound++;
 					
 					long BNAttacks = AttackSets.knightMoves(i);
-					String BNAttacksString = Long.toBinaryString(BNAttacks);
-					BNAttacksString = Util.padBinaryString(BNAttacksString);
-					
 					long legalBNMoves2 = BNAttacks & empty;
 					long legalBNMoves3 = BNAttacks & enemies;
 					
 					long legalBNMoves = legalBNMoves2 | legalBNMoves3;
-					String legalBNMovesString = Long.toBinaryString(legalBNMoves);
-					legalBNMovesString = Util.padBinaryString(legalBNMovesString);
-					
-					
+
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
 						if(movesFound == 8)
 							break;
 						
-						if(legalBNMovesString.charAt(j) == '1') {
+						if((legalBNMoves & AttackSets.getPosition(j)) != 0) {
 							movesFound++;
-							String move = "";
-							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
-							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
-							moveList.add(move);
+							moveList.add(new Move(i, j));
 						}
 					}
 				}
 			}
 			
 			//King
-			String BKString = Long.toBinaryString(board.BK);
-			BKString = Util.padBinaryString(BKString);
 			for(int i = 0; i < 64; i++) {
-				if(BKString.charAt(i) == '1') {
+				if((board.BK & AttackSets.getPosition(i)) != 0) {
 					
 					long BKMoves = AttackSets.kingMoves(i);
 					
@@ -735,21 +605,14 @@ public class Engine {
 						}
 					}
 
-					String legalMovesString = Long.toBinaryString(legalBKMoves);
-					legalMovesString = Util.padBinaryString(legalMovesString);
 					
 					int movesFound = 0;
 					for(int j = 0; j < 64; j++) {
 						if(movesFound == 8) 
 							break;
 						
-						if(legalMovesString.charAt(j) == '1') {
-							movesFound++;
-
-							String move = "";
-							move = move + Util.convertNumToAlph(i) + ((i/8)+1);
-							move = move + Util.convertNumToAlph(j) + ((j/8)+1);
-							moveList.add(move);
+						if((legalBKMoves & AttackSets.getPosition(j)) != 0) {
+							moveList.add(new Move(i, j));
 						}
 					}
 					break;
@@ -757,23 +620,13 @@ public class Engine {
 			}
 			
 			//Rook
-			String BRString = Long.toBinaryString(board.BR);
-			BRString = Util.padBinaryString(BRString);
-
 			int rooksFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(rooksFound == 2)
 					break;
 
-				if(BRString.charAt(i) == '1') {
+				if((board.BR & AttackSets.getPosition(i)) != 0) {
 					rooksFound++;
-
-					//WRString = WRString.substring(i/8, i/8+8);
-					//System.out.println(WRString);
-
-					String singleRookString = "0000000000000000000000000000000000000000000000000000000000000000";
-					singleRookString = singleRookString.substring(0, i) + "1" + singleRookString.substring(i+1);
-					long singleRook = Util.stringToLong(singleRookString);
 
 					//up attacks
 					long upAttacks = occupied & AttackSets.rookAttacksU(i);
@@ -819,27 +672,20 @@ public class Engine {
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
-						if(((rookAttacks>>j)&1)==1){
-							String move = "";
-							move = move + Util.convertNumToCoord(i);
-							move = move + Util.convertNumToCoord(63-j);
-							moveList.add(move);
+						if((rookAttacks & AttackSets.getPosition(j)) != 0){
+							moveList.add(new Move(i, j)); //63-j???
 						}
 					}
 				}
 			}
 
 			//Bishops
-
-			String BBString = Long.toBinaryString(board.BB);
-			BBString = Util.padBinaryString(BBString);
-
 			int bishopsFound = 0;
 			for(int i = 0; i < 64; i++) {
 				if(bishopsFound == 2)
 					break;
 
-				if(BBString.charAt(i) == '1') {
+				if((board.BB & AttackSets.getPosition(i)) != 0) {
 					bishopsFound++;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
@@ -884,11 +730,8 @@ public class Engine {
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
-						if(((bishopAttacks>>j)&1)==1){
-							String move = "";
-							move = move + Util.convertNumToCoord(i);
-							move = move + Util.convertNumToCoord(63-j);
-							moveList.add(move);
+						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
+							moveList.add(new Move(i, j)); //63-j????
 						}
 					}
 
@@ -896,12 +739,9 @@ public class Engine {
 			}
 
 			//Queen
-			String BQString = Long.toBinaryString(board.BQ);
-			BQString = Util.padBinaryString(BQString);
-
 			for(int i = 0; i < 64; i++) {
 
-				if(BQString.charAt(i) == '1') {
+				if((board.BQ & AttackSets.getPosition(i)) != 0) {
 
 					String singleQueenString = "0000000000000000000000000000000000000000000000000000000000000000";
 					singleQueenString = singleQueenString.substring(0, i) + "1" + singleQueenString.substring(i+1);
@@ -960,11 +800,8 @@ public class Engine {
 
 					//generate moveList
 					for(int j = 0; j < 64; j++){
-						if(((queenAttacks>>j)&1)==1){
-							String move = "";
-							move = move + Util.convertNumToCoord(i);
-							move = move + Util.convertNumToCoord(63-j);
-							moveList.add(move);
+						if((queenAttacks & AttackSets.getPosition(j)) != 0){
+							moveList.add(new Move(i, j)); //63-j???+?
 						}
 					}
 				}
@@ -1046,20 +883,20 @@ public class Engine {
 
 
 
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth, int whiteMoves, int blackMoves){
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, int whiteMoves, int blackMoves){
 		if(depthLeft == 0){
 			pv.clear();
 			return evalPosition(board, whiteMoves, blackMoves);
 		}
 		depth++;
-		ArrayList<String> moves = this.findMoveList(board, "WHITE");
+		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
 		whiteMoves = moves.size();
 		boolean first = true;
-		ArrayList<String> localPV = new ArrayList<String>();
+		ArrayList<Move> localPV = new ArrayList<Move>();
 
-		for(String move : moves){
+		for(Move move : moves){
 			Board simBoard = new Board(board);
-			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
+			simBoard.makeMove(move.from, move.to);
 
 			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, whiteMoves, blackMoves);
 			if(score >= beta){
@@ -1076,20 +913,20 @@ public class Engine {
 		return alpha;
 	}
 
-	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<String> pv, int depth, int whiteMoves, int blackMoves){
+	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, int whiteMoves, int blackMoves){
 		if(depthLeft == 0){
 			pv.clear();
 			return evalPosition(board, whiteMoves, blackMoves);
 		}
 		depth++;
-		ArrayList<String> moves = this.findMoveList(board, "BLACK");
+		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
 		blackMoves = moves.size();
 		boolean first = true;
-		ArrayList<String> localPV = new ArrayList<String>();
+		ArrayList<Move> localPV = new ArrayList<Move>();
 
-		for(String move : moves){
+		for(Move move : moves){
 			Board simBoard = new Board(board);
-			simBoard.makeMove(Util.convertCoordToNum(move.substring(0, 2)), Util.convertCoordToNum(move.substring(2)));
+			simBoard.makeMove(move.from, move.to);
 
 			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, whiteMoves, blackMoves);
 

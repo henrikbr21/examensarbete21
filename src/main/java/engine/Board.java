@@ -20,11 +20,11 @@ public class Board {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', 'B', ' ', ' ', ' ', ' ', ' ', 'N'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+				{'N', ' ', ' ', ' ', 'B', ' ', 'P', ' '},
+				{'P', ' ', 'P', 'P', 'K', 'Q', 'P', ' '},
+				{'R', ' ', ' ', ' ', ' ', ' ', ' ', 'R'}
 
 		};
 		
@@ -156,31 +156,29 @@ public class Board {
 		Engine engine = new Engine("WHITE", simBoard, true);
 		Engine engine2 = new Engine("BLACK", simBoard, true);
 
-		ArrayList<String> whiteMoves = engine.generateMoves(simBoard,"WHITE");
-		ArrayList<String> blackMoves = engine2.generateMoves(simBoard,"BLACK");
+		ArrayList<Move> whiteMoves = engine.generateMoves(simBoard,"WHITE");
+		ArrayList<Move> blackMoves = engine2.generateMoves(simBoard,"BLACK");
 
-		String WKPos = "";
-		for(int i = 0; i < 64; i++){
-			if(((this.WK>>i)&1)==1){
-				WKPos = Util.convertNumToCoord(63-i);
+		int WKPos = -1;
+  		for(int i = 0; i < 64; i++){
+ 			if((AttackSets.getPosition(i) & this.WK) != 0){
+				WKPos = i;
 			}
 		}
-		String BKPos = "";
+		int BKPos = -1;
 		for(int i = 0; i < 64; i++){
-			if(((this.BK>>i)&1)==1){
-				BKPos = Util.convertNumToCoord(63-i);
+			if((AttackSets.getPosition(i) & this.BK) != 0){
+				BKPos = i;
 			}
 		}
-		for(String move : whiteMoves){
-			String move2 = move.substring(2);
-			if(move2.equals(BKPos)){
+		for(Move move : whiteMoves){
+			if(move.to == BKPos){
 				player2Checked = true;
 				break;
 			}
 		}
-		for(String move : blackMoves){
-			String move2 = move.substring(2);
-			if(move2.equals(WKPos)){
+		for(Move move : blackMoves){
+			if(move.to == WKPos){
 				player1Checked = true;
 				break;
 			}
@@ -200,8 +198,8 @@ public class Board {
 		Engine engine = new Engine("WHITE", this, true);
 		Engine engine2 = new Engine("BLACK", this, true);
 
-		ArrayList<String> whiteMoves = engine.generateMoves(this,"WHITE");
-		ArrayList<String> blackMoves = engine2.generateMoves(this,"BLACK");
+		ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
+		ArrayList<Move> blackMoves = engine2.generateMoves(this,"BLACK");
 
 
 		int check = this.check();
@@ -209,21 +207,16 @@ public class Board {
 		boolean allCauseCheckForBlack = true;
 
 		if(check == 0){
-			for(String move : whiteMoves){
+			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
-				int startPos = Util.convertCoordToNum(move.substring(0, 2));
-				int endPos = Util.convertCoordToNum(move.substring(2));
-
-				simBoard.makeMove(startPos, endPos);
+				simBoard.makeMove(move.from, move.to);
 				if(simBoard.check() == 0){
 					allCauseCheckForWhite = false;
 				}
 			}
-			for(String move : blackMoves){
+			for(Move move : blackMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
-				int startPos = Util.convertCoordToNum(move.substring(0, 2));
-				int endPos = Util.convertCoordToNum(move.substring(2));
-				simBoard.makeMove(startPos, endPos);
+				simBoard.makeMove(move.from, move.to);
 				if(simBoard.check() == 0){
 					allCauseCheckForBlack = false;
 				}
@@ -233,22 +226,18 @@ public class Board {
 		}
 
 		if(check == 1){
-			for(String move : whiteMoves){
+			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
-				int startPos = Util.convertCoordToNum(move.substring(0, 2));
-				int endPos = Util.convertCoordToNum(move.substring(2));
-				simBoard.makeMove(startPos, endPos);
+				simBoard.makeMove(move.from, move.to);
 				if(simBoard.check() == 0){
 					return 0;
 				}
 			}
 			return 1;
 		}else if(check == 2){
-			for(String move : blackMoves){
+			for(Move move : blackMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
-				int startPos = Util.convertCoordToNum(move.substring(0, 2));
-				int endPos = Util.convertCoordToNum(move.substring(2));
-				simBoard.makeMove(startPos, endPos);
+				simBoard.makeMove(move.from, move.to);
 				if(simBoard.check() == 0){
 					return 0;
 				}

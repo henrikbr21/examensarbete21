@@ -46,7 +46,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
+		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(30, moves.size());
 	}
@@ -66,7 +66,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
+		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(47, moves.size());
 	}
@@ -86,7 +86,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
+		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(51, moves.size());
 	}
@@ -106,7 +106,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.generateMoves(board,"WHITE");
+		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
 		assertEquals(3, board.check());
 	}
 
@@ -334,10 +334,11 @@ public class BoardTests {
 		board.makeMove(51, 35);
 		assertEquals(true, board.enPassant);
 		Engine engine = new Engine("WHITE", board, false);
-		ArrayList<String> moves = engine.findMoveList(board,"WHITE");
+		ArrayList<Move> moves = engine.findMoveList(board,"WHITE");
 		String allMoves = new String();
-		for(String move : moves){
-			allMoves += move;
+		for(Move move : moves){
+			allMoves += Util.convertNumToCoord(move.from);
+			allMoves += Util.convertNumToCoord(move.to);
 		}
 		assertThat(allMoves, CoreMatchers.containsString("e5d6"));
 		board.makeMove(36, 43);
