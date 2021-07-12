@@ -151,7 +151,6 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false);
-		System.out.println(engine.findMoveList(board, "BLACK"));
 		assertEquals(1, board.checkmate());
 	}
 

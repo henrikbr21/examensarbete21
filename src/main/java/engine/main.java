@@ -48,19 +48,27 @@ public class main {
 		}
 		System.out.println(moves.size());
 */
+		/*
+		long time = System.currentTimeMillis();
+		for(int i = 0; i < 1000; i++){
+			board.check();
+		}
+		System.out.println(System.currentTimeMillis()-time);
+		*/
+		/*
+		 */
 
-		board.draw();
+
 
 		long time = System.currentTimeMillis();
 		ArrayList<Move> pv = new ArrayList<Move>();
-		double result = engine.alphaBetaMax(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0, 0);
+		double result = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0, 0);
 		System.out.println(System.currentTimeMillis()-time);
 		for(Move move : pv){
 			System.out.print(Util.convertNumToCoord(move.from));
 			System.out.println(Util.convertNumToCoord(move.to));
 		}
 		System.out.println("RESULT: " + result);
-
 
 	}
 

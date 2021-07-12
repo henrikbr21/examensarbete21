@@ -20,11 +20,11 @@ public class Board {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', 'B', ' ', ' ', ' ', ' ', ' ', 'N'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'N', ' ', ' ', ' ', 'B', ' ', 'P', ' '},
-				{'P', ' ', 'P', 'P', 'K', 'Q', 'P', ' '},
-				{'R', ' ', ' ', ' ', ' ', ' ', ' ', 'R'}
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 
 		};
 		
@@ -154,10 +154,8 @@ public class Board {
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
 
 		Engine engine = new Engine("WHITE", simBoard, true);
-		Engine engine2 = new Engine("BLACK", simBoard, true);
 
 		ArrayList<Move> whiteMoves = engine.generateMoves(simBoard,"WHITE");
-		ArrayList<Move> blackMoves = engine2.generateMoves(simBoard,"BLACK");
 
 		int WKPos = -1;
   		for(int i = 0; i < 64; i++){
@@ -171,18 +169,16 @@ public class Board {
 				BKPos = i;
 			}
 		}
-		for(Move move : whiteMoves){
-			if(move.to == BKPos){
-				player2Checked = true;
-				break;
-			}
+
+		if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
+			player2Checked = true;
 		}
-		for(Move move : blackMoves){
-			if(move.to == WKPos){
-				player1Checked = true;
-				break;
-			}
+
+		ArrayList<Move> blackMoves = engine.generateMoves(simBoard,"BLACK");
+		if((AttackSets.currentAttackBoard & AttackSets.getPosition(WKPos)) != 0){
+			player1Checked = true;
 		}
+
 		if(player1Checked && player2Checked)
 			return 3;
 		else if(player1Checked)
@@ -196,10 +192,9 @@ public class Board {
 	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated, returns 4 if stalemate
 	public int checkmate(){
 		Engine engine = new Engine("WHITE", this, true);
-		Engine engine2 = new Engine("BLACK", this, true);
 
 		ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
-		ArrayList<Move> blackMoves = engine2.generateMoves(this,"BLACK");
+		ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
 
 
 		int check = this.check();

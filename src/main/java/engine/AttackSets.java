@@ -17,6 +17,7 @@ public abstract class AttackSets {
 	private static long leftRookAttacks[] = new long[64];
 	private static long upRookAttacks[] = new long[64];
 	private static long downRookAttacks[] = new long[64];
+	public static long currentAttackBoard = 0L;
 
 	//castling boards
 	public static long castleWKL;
