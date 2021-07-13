@@ -26,6 +26,7 @@ public class Engine {
 			AttackSets.initEnPassantMoves();
 			AttackSets.initRookAttacksLR();
 			AttackSets.initRookAttacksUD();
+			AttackSets.initPSTs();
 		}
 		time = System.currentTimeMillis() - time;
 		if(!initialized)
@@ -44,6 +45,8 @@ public class Engine {
 				for(Move move : moves){
 					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 					simBoard.makeMove(move.from, move.to);
+					if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
+						continue;
 					int simCheck = simBoard.check();
 					if(simCheck == 2 || simCheck == 0)
 						legalMoves.add(move);
@@ -58,6 +61,8 @@ public class Engine {
 				for(Move move : moves){
 					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 					simBoard.makeMove(move.from, move.to);
+					if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
+						continue;
 					int simCheck = simBoard.check();
 					if(simCheck == 1 || simCheck == 0)
 						legalMoves.add(move);
@@ -1548,7 +1553,7 @@ public class Engine {
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, int whiteMoves, int blackMoves){
 		if(depthLeft == 0){
 			pv.clear();
-			return evalPosition(board, whiteMoves, blackMoves);
+			return evalPosition(board);
 		}
 		depth++;
 		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
@@ -1578,7 +1583,7 @@ public class Engine {
 	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, int whiteMoves, int blackMoves){
 		if(depthLeft == 0){
 			pv.clear();
-			return evalPosition(board, whiteMoves, blackMoves);
+			return evalPosition(board);
 		}
 		depth++;
 		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
@@ -1606,12 +1611,12 @@ public class Engine {
 		return beta;
 	}
 	
-	public double evalPosition(Board board, int whiteMoves, int blackMoves) {
+	public double evalPosition(Board board) {
 		double points = 0;
 
 		int checkmate = board.checkmate();
 
-		if(checkmate == 1){ //optimize here
+		if(checkmate == 1){
 			return -Double.MAX_VALUE;
 		}else if(checkmate == 2){
 			return Double.MAX_VALUE;
@@ -1621,34 +1626,56 @@ public class Engine {
 			long pos = AttackSets.getPosition(i);
 
 			if((board.WP & pos) != 0) {
-				points = points + 1;
+				points = points + 100;
 				if((board.WP & AttackSets.getPosition(i+8)) != 0)
-					points = points - 0.5; //blocked or doubled pawn
+					points = points - 50; //blocked or doubled pawn
+
+				points = points + AttackSets.wPawnsPST[i];
 			}else if((board.WR & pos) != 0){
-				points = points + 5;
+				points = points + 500;
+
+				points = points + AttackSets.wRookPST[i];
 			}else if((board.WN & pos) != 0){
-				points = points + 3;
+				points = points + 320;
+
+				points = points + AttackSets.wKnightPST[i];
 			}else if((board.WB & pos) != 0){
-				points = points + 3;
+				points = points + 330;
+
+				points = points + AttackSets.wBishopPST[i];
 			}else if((board.WQ & pos) != 0){
-				points = points + 9;
+				points = points + 900;
+
+				points = points + AttackSets.wQueenPST[i];
+			}else if((board.WK & pos) != 0){
+				points = points + AttackSets.wKingPST[i];
+
 			}else if((board.BP & pos) != 0){
-				points = points - 1;
+				points = points - 100;
 				if((board.BP & AttackSets.getPosition(i-8)) != 0)
-					points = points + 0.5; //blocked or doubled pawn
+					points = points + 50; //blocked or doubled pawn
+
+				points = points + AttackSets.bPawnsPST[i];
 			}else if((board.BR & pos) != 0){
-				points = points - 5;
+				points = points - 500;
+
+				points = points + AttackSets.bRookPST[i];
 			}else if((board.BN & pos) != 0){
-				points = points - 3;
+				points = points - 320;
+
+				points = points + AttackSets.bKnightPST[i];
 			}else if((board.BB & pos) != 0){
-				points = points - 3;
+				points = points - 330;
+
+				points = points + AttackSets.bBishopPST[i];
 			}else if((board.BQ & pos) != 0){
-				points = points - 9;
+				points = points - 900;
+
+				points = points + AttackSets.bQueenPST[i];
+			}else if((board.BK & pos) != 0){
+				points = points + AttackSets.bKingPST[i];
 			}
 		}
-
-		//Mobility
-		points = points + (0.01 * (whiteMoves-blackMoves));
 
 		return points;
 	}

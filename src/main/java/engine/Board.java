@@ -170,6 +170,7 @@ public class Board {
 			}
 		}
 
+		//Bug here!!!!!!!!!!!!!!!!!!
 		if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
 			player2Checked = true;
 		}
@@ -205,6 +206,8 @@ public class Board {
 			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
+				if(simBoard.BK == 0L || simBoard.WK == 0L)
+					continue;
 				if(simBoard.check() == 0){
 					allCauseCheckForWhite = false;
 				}
@@ -212,6 +215,8 @@ public class Board {
 			for(Move move : blackMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
+				if(simBoard.BK == 0L || simBoard.WK == 0L)
+					continue;
 				if(simBoard.check() == 0){
 					allCauseCheckForBlack = false;
 				}
@@ -224,6 +229,8 @@ public class Board {
 			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
+				if(simBoard.BK == 0L || simBoard.WK == 0L)
+					continue;
 				if(simBoard.check() == 0){
 					return 0;
 				}
@@ -233,6 +240,8 @@ public class Board {
 			for(Move move : blackMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
+				if(simBoard.BK == 0L || simBoard.WK == 0L)
+					continue;
 				if(simBoard.check() == 0){
 					return 0;
 				}

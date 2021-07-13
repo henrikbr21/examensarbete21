@@ -140,6 +140,19 @@ public abstract class Util {
 		}
 		return moves;
 	}
+
+	public static double[] PSTFromArray(double[][] array){
+		double[] PSTs = new double[64];
+
+		int k = -1;
+		for(int i = 0; i < 8; i++) {
+			for(int j = 7; j >= 0; j--) {
+				k++;
+				PSTs[k] = array[j][i];
+			}
+		}
+		return PSTs;
+	}
 	
 	public static long stringToLong(String s) {
 		if(s.charAt(0) == '0') {
