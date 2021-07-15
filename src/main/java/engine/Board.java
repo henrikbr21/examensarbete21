@@ -170,7 +170,7 @@ public class Board {
 			}
 		}
 
-		//Bug here!!!!!!!!!!!!!!!!!!
+		//Bug here!!!!!!!!!!!!!!!!!! FIXED?
 		if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
 			player2Checked = true;
 		}
@@ -190,12 +190,60 @@ public class Board {
 
 	}
 
+	public int checkColor(String color){
+		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
+		Engine engine = new Engine("WHITE", simBoard, true);
+
+		if(color.equals("BLACK")){
+			int BKPos = -1;
+			for(int i = 0; i < 64; i++){
+				if((AttackSets.getPosition(i) & this.BK) != 0){
+					BKPos = i;
+				}
+			}
+			ArrayList<Move> whiteMoves = engine.generateMoves(simBoard,"WHITE");
+			if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
+				return 2;
+			}else return 0;
+		}else if(color.equals("WHITE")){
+			int WKPos = -1;
+			for(int i = 0; i < 64; i++){
+				if((AttackSets.getPosition(i) & this.WK) != 0){
+					WKPos = i;
+				}
+			}
+			ArrayList<Move> blackMoves = engine.generateMoves(simBoard,"BLACK");
+			if((AttackSets.currentAttackBoard & AttackSets.getPosition(WKPos)) != 0){
+				return 1;
+			}else return 0;
+
+		}
+		return -1;
+	}
+
+	/*
+	public int checkMateColor(String color){
+		Engine engine = new Engine("WHITE", this, true);
+
+		if(color.equals("WHITE")){
+			if(checkColor("WHITE") == 1){
+				ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
+			}else
+				return 0;
+
+		}else if(color.equals("BLACK")){
+			if(checkColor("BLACK") == 2){
+				ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
+			}else
+				return 0;
+		}
+		return -1;
+	}
+	*/
+
 	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated, returns 4 if stalemate
 	public int checkmate(){
 		Engine engine = new Engine("WHITE", this, true);
-
-		ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
-		ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
 
 
 		int check = this.check();
@@ -203,12 +251,14 @@ public class Board {
 		boolean allCauseCheckForBlack = true;
 
 		if(check == 0){
+			ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
+			ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
 			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
-				if(simBoard.check() == 0){
+				if(simBoard.checkColor("WHITE") == 0){
 					allCauseCheckForWhite = false;
 				}
 			}
@@ -217,7 +267,7 @@ public class Board {
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
-				if(simBoard.check() == 0){
+				if(simBoard.checkColor("BLACK") == 0){
 					allCauseCheckForBlack = false;
 				}
 			}
@@ -226,23 +276,25 @@ public class Board {
 		}
 
 		if(check == 1){
+			ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
 			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
-				if(simBoard.check() == 0){
+				if(simBoard.checkColor("WHITE") == 0){
 					return 0;
 				}
 			}
 			return 1;
 		}else if(check == 2){
+			ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
 			for(Move move : blackMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
-				if(simBoard.check() == 0){
+				if(simBoard.checkColor("BLACK") == 0){
 					return 0;
 				}
 			}
@@ -414,8 +466,36 @@ public class Board {
 		}else{
 			stringBuilder.append("castleBQValid == false \n");
 		}
-
 		return stringBuilder.toString();
+	}
+
+	public char getPiece(int pos){
+		if((this.WP & AttackSets.getPosition(pos)) != 0){
+			return 'P';
+		}else if((this.WN & AttackSets.getPosition(pos)) != 0){
+			return 'N';
+		}else if((this.WB & AttackSets.getPosition(pos)) != 0){
+			return 'B';
+		}else if((this.WR & AttackSets.getPosition(pos)) != 0){
+			return 'R';
+		}else if((this.WQ & AttackSets.getPosition(pos)) != 0){
+			return 'Q';
+		}else if((this.WK & AttackSets.getPosition(pos)) != 0){
+			return 'K';
+		}else if((this.BP & AttackSets.getPosition(pos)) != 0){
+			return 'p';
+		}else if((this.BN & AttackSets.getPosition(pos)) != 0){
+			return 'n';
+		}else if((this.BB & AttackSets.getPosition(pos)) != 0){
+			return 'b';
+		}else if((this.BR & AttackSets.getPosition(pos)) != 0){
+			return 'r';
+		}else if((this.BQ & AttackSets.getPosition(pos)) != 0){
+			return 'q';
+		}else if((this.BK & AttackSets.getPosition(pos)) != 0){
+			return 'k';
+		}
+		return '_';
 	}
 
 	public void clearPosition(long pos){

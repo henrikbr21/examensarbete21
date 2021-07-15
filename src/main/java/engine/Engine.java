@@ -3,6 +3,7 @@ package engine;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Stack;
 
 public class Engine {
@@ -47,7 +48,7 @@ public class Engine {
 					simBoard.makeMove(move.from, move.to);
 					if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
 						continue;
-					int simCheck = simBoard.check();
+					int simCheck = simBoard.checkColor("WHITE");
 					if(simCheck == 2 || simCheck == 0)
 						legalMoves.add(move);
 				}
@@ -63,7 +64,7 @@ public class Engine {
 					simBoard.makeMove(move.from, move.to);
 					if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
 						continue;
-					int simCheck = simBoard.check();
+					int simCheck = simBoard.checkColor("BLACK");
 					if(simCheck == 1 || simCheck == 0)
 						legalMoves.add(move);
 				}
@@ -119,19 +120,21 @@ public class Engine {
 			for(int i = 0; i<64; i++) {
 				long pos = AttackSets.getPosition(i);
 				if((pos & legalWPMoves) != 0) {
-					Move move = new Move(i-8, i);
+					Move move = new Move(i-8, i, 'P', '_', false);
 					moveList.add(move);
 				}
 				if((pos & legalWPMoves2) != 0) {
-					Move move = new Move(i-16, i);
+					Move move = new Move(i-16, i, 'P', '_', false);
 					moveList.add(move);
 				}
 				if((pos & WPAttacksL) != 0) {
-					Move move = new Move(i-7, i);
+					char takenPiece = board.getPiece(i);
+					Move move = new Move(i-7, i, 'P', takenPiece, false);
 					moveList.add(move);
 				}
 				if((pos & WPAttacksR) != 0) {
-					Move move = new Move(i-9, i);
+					char takenPiece = board.getPiece(i);
+					Move move = new Move(i-9, i, 'P', takenPiece, false);
 					moveList.add(move);
 				}
 			}
@@ -141,21 +144,21 @@ public class Engine {
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8);
+						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false);
 						moveList.add(enPassantAttack);
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
-						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8);
+						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false);
 						moveList.add(enPassantAttack);
 					}
 				}else{
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP ) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8);
+						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false);
 						moveList.add(enPassantAttack);
 					}
 					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8);
+						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false);
 						moveList.add(enPassantAttack);
 					}
 				}
@@ -178,7 +181,8 @@ public class Engine {
 						if((legalWNMoves & AttackSets.getPosition(j)) != 0) {
 							movesFound++;
 
-							Move move = new Move(i, j);
+							char takenPiece = board.getPiece(j);
+							Move move = new Move(i, j, 'K', takenPiece, false);
 							moveList.add(move);
 						}
 					}
@@ -229,7 +233,9 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-							Move move = new Move(i, j); // 63-j???
+
+							char takenPiece = board.getPiece(j);
+							Move move = new Move(i, j, 'B', takenPiece, false); // 63-j???
 							moveList.add(move);
 						}
 					}
@@ -279,7 +285,9 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-							Move move = new Move(i, j);  // 63-j???
+
+							char takenPiece = board.getPiece(j);
+							Move move = new Move(i, j, 'R', takenPiece, false);  // 63-j???
 							moveList.add(move);
 						}
 					}
@@ -341,7 +349,9 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((queenAttacks & AttackSets.getPosition(j)) != 0){ //((queenAttacks>>j)&1)==1
-							Move move = new Move(i, j); //63-j??
+
+							char takenPiece = board.getPiece(j);
+							Move move = new Move(i, j, 'Q', takenPiece,false); //63-j??
 							moveList.add(move);
 						}
 					}
@@ -397,7 +407,9 @@ public class Engine {
 							break;
 
 						if((legalWKMoves & AttackSets.getPosition(j)) != 0) {
-							Move move = new Move(i, j);
+
+							char takenPiece = board.getPiece(j);
+							Move move = new Move(i, j, 'K', takenPiece, false);
 							moveList.add(move);
 						}
 					}
@@ -434,20 +446,22 @@ public class Engine {
 				long pos = AttackSets.getPosition(i);
 
 				if((legalBPMoves & pos) != 0) {
-					Move move = new Move(i+8, i);
+					Move move = new Move(i+8, i, 'p', '_', false);
 					moveList.add(move);
 				}
 				if((legalBPMoves2 & pos) != 0) {
-					Move move = new Move(i+16, i);
+					Move move = new Move(i+16, i, 'p', '_', false);
 					moveList.add(move);
 				}
 				if((BPAttacksL & pos) != 0) {
-					Move move = new Move(i+9, i);
+					char takenPiece = board.getPiece(i);
+					Move move = new Move(i+9, i, 'p', takenPiece, false);
 					moveList.add(move);
 				}
 
 				if((BPAttacksR & pos) != 0) {
-					Move move = new Move(i+7, i);
+					char takenPiece = board.getPiece(i);
+					Move move = new Move(i+7, i, 'p', takenPiece, false);
 					moveList.add(move);
 				}
 			}
@@ -457,18 +471,18 @@ public class Engine {
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
-						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8));
+						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false));
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
-						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8));
+						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false));
 					}
 				}else{
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8));
+						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false));
 					}
 					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8));
+						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false));
 					}
 				}
 			}
@@ -489,7 +503,9 @@ public class Engine {
 
 						if((legalBNMoves & AttackSets.getPosition(j)) != 0) {
 							movesFound++;
-							moveList.add(new Move(i, j));
+
+							char takenPiece = board.getPiece(j);
+							moveList.add(new Move(i, j, 'n', takenPiece, false));
 						}
 					}
 				}else if((board.BB & AttackSets.getPosition(i)) != 0){
@@ -539,7 +555,9 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-							moveList.add(new Move(i, j)); //63-j????
+
+							char takenPiece = board.getPiece(j);
+							moveList.add(new Move(i, j, 'b', takenPiece, false)); //63-j????
 						}
 					}
 				}else if((board.BR & AttackSets.getPosition(i)) != 0){
@@ -589,7 +607,8 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-							moveList.add(new Move(i, j)); //63-j???
+							char takenPiece = board.getPiece(j);
+							moveList.add(new Move(i, j, 'r', takenPiece, false)); //63-j???
 						}
 					}
 				}else if((board.BQ & AttackSets.getPosition(i)) != 0){
@@ -650,7 +669,8 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((queenAttacks & AttackSets.getPosition(j)) != 0){
-							moveList.add(new Move(i, j)); //63-j???+?
+							char takenPiece = board.getPiece(j);
+							moveList.add(new Move(i, j, 'q', takenPiece, false)); //63-j???+?
 						}
 					}
 				}else if((board.BK & AttackSets.getPosition(i)) != 0){
@@ -705,7 +725,8 @@ public class Engine {
 							break;
 
 						if((legalBKMoves & AttackSets.getPosition(j)) != 0) {
-							moveList.add(new Move(i, j));
+							char takenPiece = board.getPiece(j);
+							moveList.add(new Move(i, j, 'k', takenPiece, false));
 						}
 					}
 				}
@@ -715,770 +736,6 @@ public class Engine {
 		return moveList;
 	}
 
-	public ArrayList<Move> generateMoves2(Board board, String playerColor) {
-
-		//String moveList = "";
-		ArrayList<Move> moveList = new ArrayList<Move>();
-
-		long occupied = occupied(board);
-		long empty = empty(board);
-
-		long enemies = 0L;
-		long friends = 0L;
-		if((playerColor == "WHITE" && this.color == "WHITE") || (playerColor == "BLACK" && this.color == "BLACK")){
-			enemies = enemies(board);
-			friends = friends(board);
-		}else if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
-			enemies = friends(board);
- 			friends = enemies(board);
-		}
-
-		long attackBoard = 0L;
-		if(playerColor.equals("WHITE")) {
-
-			//PAWNS-----------------------------------------------------------------------
-			//Push one
-			long WPMoves = board.WP >>> 8;
-			long legalWPMoves = WPMoves & empty;
-			
-			//Push two
-			long WPMoves2 = legalWPMoves >>> 8;
-			long legalWPMoves2 = WPMoves2 & empty;
-			long invalidateDoubleX2 = 9223372032559808512L; //Bitboard to invalidate pawns doing double moves again
-			legalWPMoves2 = invalidateDoubleX2 & legalWPMoves2;
-			
-			//Attacks up and to the left
-			//long innerColumns = 9114861777597660798L; behövs ej
-			long RightColumn0 = ~(72340172838076673L);
-
-			long WPAttacksR = board.WP & RightColumn0;
-			WPAttacksR = WPAttacksR >>> 9;
-			
-			WPAttacksR = WPAttacksR & enemies; //only possible if enemy present
-			
-			//Attacks up and to the right
-			long leftColumn0 = 9187201950435737471L;
-
-			long WPAttacksL = board.WP & leftColumn0;
-			WPAttacksL = WPAttacksL >>> 7;
-
-			attackBoard = WPAttacksL | WPAttacksR;
-			WPAttacksL = WPAttacksL & enemies; //ISSUE?!?!!
-
-
-			for(int i = 0; i<64; i++) {
-				if((AttackSets.getPosition(i) & legalWPMoves) != 0) {
-					Move move = new Move(i-8, i);
-					moveList.add(move);
-				}
-
-			}
-
-
-			for(int i = 0; i<64; i++) {
-				if((AttackSets.getPosition(i) & legalWPMoves2) != 0) {
-					Move move = new Move(i-16, i);
-					moveList.add(move);
-				}
-			}
-
-			for(int i = 0; i < 64; i++) {
-				if((AttackSets.getPosition(i) & WPAttacksL) != 0) {
-					Move move = new Move(i-7, i);
-					moveList.add(move);
-				}
-				if((AttackSets.getPosition(i) & WPAttacksR) != 0) {
-					Move move = new Move(i-9, i);
-					moveList.add(move);
-				}
-			}
-
-			//en passant
-			long enPassantAttacks = 0L;
-			if(board.enPassant){
-				if(board.enPassantPos % 8 == 0){
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8);
-						moveList.add(enPassantAttack);
-					}
-				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
-					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
-						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8);
-						moveList.add(enPassantAttack);
-					}
-				}else{
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP ) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8);
-						moveList.add(enPassantAttack);
-					}
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8);
-						moveList.add(enPassantAttack);
-					}
-				}
-			}
-			
-			//KNIGHTS
-			
-			int knightsFound = 0;
-			long legalWNMoves = 0L;
-			for(int i = 0; i < 64; i++) {
-				if(knightsFound == 2)
-					break;
-				if((board.WN & AttackSets.getPosition(i)) != 0) {
-					knightsFound++;
-					
-					long WNAttacks = AttackSets.knightMoves(i);
-					
-					long legalWNMoves2 = WNAttacks & empty;
-					long legalWNMoves3 = WNAttacks & enemies;
-					
-					legalWNMoves = legalWNMoves2 | legalWNMoves3;
-					attackBoard = attackBoard | legalWNMoves;
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8)
-							break;
-
-						if((legalWNMoves & AttackSets.getPosition(j)) != 0) {
-							movesFound++;
-
-							Move move = new Move(i, j);
-							moveList.add(move);
-						}
-					}
-				}
-			}
-			
-			//King
-			
-			for(int i = 0; i < 64; i++) {
-				if((board.WK & AttackSets.getPosition(i)) != 0) {
-					
-					long WKMoves = AttackSets.kingMoves(i);
-					
-					//Remove pseudolegal moves
-					long legalWKMoves2 = WKMoves & empty;
-					long legalWKMoves3 = WKMoves & enemies;
-					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
-
-					if(board.WK == AttackSets.WKStart){
-						if(board.castleWKValid){
-							if((occupied & AttackSets.WKRblockers) == 0){
-								if(board.check() == 0) {
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
-									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
-									simBoard.WK = simBoard.WK ^ AttackSets.castleWKR;
-									int simCheck = simBoard.check();
-									if(simCheck == 0){
-										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
-										simBoard.WK = simBoard.WK ^ AttackSets.getPosition(5);
-
-										if(simCheck == 0 && ((friends & AttackSets.wRightRookStart) != 0))
-											legalWKMoves = legalWKMoves | AttackSets.castleWKR;
-									}
-
-								}
-							}
-						}
-						if(board.castleWQValid){
-							if((occupied & AttackSets.WKLblockers) == 0){
-								if(board.check() == 0){
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
-									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
-									simBoard.WK = simBoard.WK ^ AttackSets.castleWKL;
-									int simCheck = simBoard.check();
-									if(simCheck == 0){
-										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
-										simBoard.WK = simBoard.WK ^ AttackSets.getPosition(3);
-										if(simCheck == 0 && ((friends & AttackSets.wLeftRookStart) != 0)){
-											legalWKMoves = legalWKMoves | AttackSets.castleWKL;
-										}
-									}
-								}
-							}
-						}
-					}
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8) 
-							break;
-						
-						if((legalWKMoves & AttackSets.getPosition(j)) != 0) {
-							Move move = new Move(i, j);
-							moveList.add(move);
-						}
-					}
-					break;
-				}
-			}
-			
-			//Rook
-			int rooksFound = 0;
-			long rookAttacks = 0L;
-			for(int i = 0; i < 64; i++) {
-				if(rooksFound == 2)
-					break;
-				
-				if((board.WR & AttackSets.getPosition(i)) != 0) {
-					rooksFound++;
-
-					//up attacks
-					long upAttacks = occupied & AttackSets.rookAttacksU(i);
-					int closestPos = Long.numberOfLeadingZeros(upAttacks);
-					if(closestPos != 64){
-						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
-					}else{
-						upAttacks = AttackSets.rookAttacksU(i);
-					}
-
-					//down attacks
-					long downAttacks = occupied & AttackSets.rookAttacksD(i);
-					closestPos = Long.numberOfTrailingZeros(downAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
-					}else{
-						downAttacks = AttackSets.rookAttacksD(i);
-					}
-
-					//left attacks
-					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
-					closestPos = Long.numberOfTrailingZeros(leftAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
-					}else{
-						leftAttacks = AttackSets.rookAttacksL(i);
-					}
-
-					//right attacks
-					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
-					closestPos = Long.numberOfLeadingZeros(rightAttacks);
-					if(closestPos != 64){
-						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
-					}else{
-						rightAttacks = AttackSets.rookAttacksR(i);
-					}
-
-
-					rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
-					rookAttacks = rookAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | rookAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-							Move move = new Move(i, j);  // 63-j???
-							moveList.add(move);
-						}
-					}
-				}
-			}
-
-			//Bishops
-			long bishopAttacks = 0L;
-			int bishopsFound = 0;
-			for(int i = 0; i < 64; i++) {
-				if(bishopsFound == 2)
-					break;
-				
-				if((board.WB & AttackSets.getPosition(i)) != 0) {
-					bishopsFound++;
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-					
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-					
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-					
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | bishopAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-							Move move = new Move(i, j); // 63-j???
-							moveList.add(move);
-						}
-					}
-				}
-			}
-
-			//Queen
-			long queenAttacks = 0L;
-			for(int i = 0; i < 64; i++) {
-				if((board.WQ & AttackSets.getPosition(i)) != 0) {
-
-					long singleQueen = AttackSets.getPosition(i);
-
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
-
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
-
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies ^ empty);
-					queenAttacks = queenAttacks1 ^ diagAttacks;
-					attackBoard = attackBoard | queenAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((queenAttacks & AttackSets.getPosition(j)) != 0){ //((queenAttacks>>j)&1)==1
-							Move move = new Move(i, j); //63-j??
-							moveList.add(move);
-						}
-					}
-				}
-			}
-			AttackSets.currentAttackBoard = attackBoard;
-			//System.out.println(moveList);
-			return moveList;
-
-		}else if(playerColor.equals("BLACK")){
-			//PAWNS-----------------------------------------------------------------------
-			//Push one
-			long BPMoves = board.BP << 8;
-			long legalBPMoves = BPMoves & empty;
-			
-			//Push two
-			long BPMoves2 = legalBPMoves << 8;
-			long legalBPMoves2 = BPMoves2 & empty;
-			long invalidateDoubleX2 = 4294967295L; //Bitboard to invalidate pawns doing double moves again
-			legalBPMoves2 = invalidateDoubleX2 & legalBPMoves2;
-			
-			//Attacks up and to the left
-			//long innerColumns = 9114861777597660798L; behövs ej FUNKAR HITTILLS
-			long RightColumn0 = ~(72340172838076673L);
-
-			long BPAttacksR = board.BP & RightColumn0;
-			BPAttacksR = BPAttacksR << 7;
-			
-			BPAttacksR = BPAttacksR & enemies; //only possible if enemy present
-			
-			//Attacks up and to the right
-			long leftColumn0 = 9187201950435737471L;
-			
-			long BPAttacksL = board.BP & leftColumn0;
-			BPAttacksL = BPAttacksL << 9;
-
-			attackBoard = BPAttacksL | BPAttacksR;
-			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
-
-			//Converting bitboards to move string:
-			for(int i = 0; i<64; i++) {
-				if((legalBPMoves & AttackSets.getPosition(i)) != 0) {
-					Move move = new Move(i+8, i);
-					moveList.add(move);
-				}
-			}
-
-			for(int i = 0; i<64; i++) {
-				if((legalBPMoves2 & AttackSets.getPosition(i)) != 0) {
-					Move move = new Move(i+16, i);
-					moveList.add(move);
-				}
-			}
-
-			for(int i = 0; i<64; i++) {
-				if((BPAttacksL & AttackSets.getPosition(i)) != 0) {
-					Move move = new Move(i+9, i);
-					moveList.add(move);
-				}
-
-				if((BPAttacksR & AttackSets.getPosition(i)) != 0) {
-					Move move = new Move(i+7, i);
-					moveList.add(move);
-				}
-			}
-
-			//en passant
-			long enPassantAttacks = 0L;
-			if(board.enPassant){
-				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
-						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8));
-					}
-				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
-					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
-						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8));
-					}
-				}else{
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8));
-					}
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8));
-					}
-				}
-			}
-			
-			//KNIGHTS
-			long legalBNMoves = 0L;
-			int knightsFound = 0;
-			for(int i = 0; i < 64; i++) {
-				if(knightsFound == 2)
-					break;
-				if((board.BN & AttackSets.getPosition(i)) != 0) {
-					knightsFound++;
-					
-					long BNAttacks = AttackSets.knightMoves(i);
-					long legalBNMoves2 = BNAttacks & empty;
-					long legalBNMoves3 = BNAttacks & enemies;
-					
-					legalBNMoves = legalBNMoves2 | legalBNMoves3;
-					attackBoard = attackBoard | legalBNMoves;
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8)
-							break;
-						
-						if((legalBNMoves & AttackSets.getPosition(j)) != 0) {
-							movesFound++;
-							moveList.add(new Move(i, j));
-						}
-					}
-				}
-			}
-			
-			//King
-			for(int i = 0; i < 64; i++) {
-				if((board.BK & AttackSets.getPosition(i)) != 0) {
-					
-					long BKMoves = AttackSets.kingMoves(i);
-					
-					//Remove pseudolegal moves
-					long legalBKMoves2 = BKMoves & empty;
-					long legalBKMoves3 = BKMoves & enemies;
-					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
-
-					if(board.BK == AttackSets.BKStart){
-						if(board.castleBKValid){
-							if((occupied & AttackSets.BKRblockers) == 0){
-								if(board.check() == 0) {
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
-									simBoard.BK = simBoard.BK ^ AttackSets.castleBKR;
-									int simCheck = simBoard.check();
-									if(simCheck == 0){
-										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(61);
-
-										if(simCheck == 0 && ((friends & AttackSets.bRightRookStart) != 0))
-											legalBKMoves = legalBKMoves | AttackSets.castleBKR;
-									}
-
-								}
-							}
-						}
-						if(board.castleBQValid){
-							if((occupied & AttackSets.BKLblockers) == 0){
-								if(board.check() == 0){
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
-									simBoard.BK = simBoard.BK ^ AttackSets.castleBKL;
-									int simCheck = simBoard.check();
-									if(simCheck == 0){
-										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(3);
-										if(simCheck == 0 && ((friends & AttackSets.wLeftRookStart) != 0)){
-											legalBKMoves = legalBKMoves | AttackSets.castleBKL;
-										}
-									}
-								}
-							}
-						}
-					}
-
-					
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8) 
-							break;
-						
-						if((legalBKMoves & AttackSets.getPosition(j)) != 0) {
-							moveList.add(new Move(i, j));
-						}
-					}
-					break;
-				}
-			}
-			
-			//Rook
-			long rookAttacks = 0L;
-			int rooksFound = 0;
-			for(int i = 0; i < 64; i++) {
-				if(rooksFound == 2)
-					break;
-
-				if((board.BR & AttackSets.getPosition(i)) != 0) {
-					rooksFound++;
-
-					//up attacks
-					long upAttacks = occupied & AttackSets.rookAttacksU(i);
-					int closestPos = Long.numberOfLeadingZeros(upAttacks);
-					if(closestPos != 64){
-						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
-					}else{
-						upAttacks = AttackSets.rookAttacksU(i);
-					}
-
-					//down attacks
-					long downAttacks = occupied & AttackSets.rookAttacksD(i);
-					closestPos = Long.numberOfTrailingZeros(downAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
-					}else{
-						downAttacks = AttackSets.rookAttacksD(i);
-					}
-
-					//left attacks
-					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
-					closestPos = Long.numberOfTrailingZeros(leftAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
-					}else{
-						leftAttacks = AttackSets.rookAttacksL(i);
-					}
-
-					//right attacks
-					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
-					closestPos = Long.numberOfLeadingZeros(rightAttacks);
-					if(closestPos != 64){
-						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
-					}else{
-						rightAttacks = AttackSets.rookAttacksR(i);
-					}
-
-
-					rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
-					rookAttacks = rookAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | rookAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-							moveList.add(new Move(i, j)); //63-j???
-						}
-					}
-				}
-			}
-
-			//Bishops
-			int bishopsFound = 0;
-			long bishopAttacks = 0L;
-			for(int i = 0; i < 64; i++) {
-				if(bishopsFound == 2)
-					break;
-
-				if((board.BB & AttackSets.getPosition(i)) != 0) {
-					bishopsFound++;
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | bishopAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-							moveList.add(new Move(i, j)); //63-j????
-						}
-					}
-
-				}
-			}
-
-			//Queen
-			long queenAttacks = 0L;
-			for(int i = 0; i < 64; i++) {
-
-				if((board.BQ & AttackSets.getPosition(i)) != 0) {
-
-					long singleQueen = AttackSets.getPosition(i);
-
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
-
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
-
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies ^ empty);
-					queenAttacks = queenAttacks1 ^ diagAttacks;
-					attackBoard = attackBoard | queenAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((queenAttacks & AttackSets.getPosition(j)) != 0){
-							moveList.add(new Move(i, j)); //63-j???+?
-						}
-					}
-				}
-			}
-			AttackSets.currentAttackBoard = attackBoard;
-			//System.out.println(moveList);
-			return moveList;
-		}
-		return null;
-	}
-	
 	private long enemies(Board board) {
 		long enemies = 0L;
 		
@@ -1557,6 +814,7 @@ public class Engine {
 		}
 		depth++;
 		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
+		sort(moves);
 		whiteMoves = moves.size();
 		boolean first = true;
 		ArrayList<Move> localPV = new ArrayList<Move>();
@@ -1587,6 +845,7 @@ public class Engine {
 		}
 		depth++;
 		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
+		sort(moves);
 		blackMoves = moves.size();
 		boolean first = true;
 		ArrayList<Move> localPV = new ArrayList<Move>();
@@ -1609,6 +868,60 @@ public class Engine {
 			}
 		}
 		return beta;
+	}
+
+	public ArrayList<Move> sort(ArrayList<Move> moves){
+		ArrayList<Move> sortedMoves = new ArrayList<Move>();
+
+		for(Move move : moves){
+			int tempScore = 0;
+			if(move.fromPiece == 'P' || move.fromPiece == 'p'){
+				tempScore += -1;
+			}else if(move.fromPiece == 'N' || move.fromPiece == 'n'){
+				tempScore += -3;
+			}else if(move.fromPiece == 'B' || move.fromPiece == 'b'){
+				tempScore += -3;
+			}else if(move.fromPiece == 'R' || move.fromPiece == 'r'){
+				tempScore += -5;
+			}else if(move.fromPiece == 'Q' || move.fromPiece == 'q'){
+				tempScore += -9;
+			}else if(move.fromPiece == 'K' || move.fromPiece == 'k'){
+				tempScore += -10;
+			}
+
+			if(move.toPiece == 'P' || move.toPiece == 'p'){
+				tempScore += 1;
+			}else if(move.toPiece == 'N' || move.toPiece == 'n'){
+				tempScore += 3;
+			}else if(move.toPiece == 'B' || move.toPiece == 'b'){
+				tempScore += 3;
+			}else if(move.toPiece == 'R' || move.toPiece == 'r'){
+				tempScore += 5;
+			}else if(move.toPiece == 'Q' || move.toPiece == 'q'){
+				tempScore += 9;
+			}
+
+			if(tempScore > 0){
+				move.score = tempScore;
+			}else {
+				move.score = 1;
+			}
+		}
+
+		moves.sort(new Comparator<Move>() {
+			@Override
+			public int compare(Move o1, Move o2) {
+				if(o1.score > o2.score){
+					return -1;
+				}else if(o1.score < o2.score){
+					return 1;
+				}else {
+					return 0;
+				}
+
+			}
+		});
+		return sortedMoves;
 	}
 	
 	public double evalPosition(Board board) {
