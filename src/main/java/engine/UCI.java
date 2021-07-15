@@ -1,15 +1,16 @@
 package engine;
 import java.util.*;
 
-public class UCI {
+public class UCI extends Thread {
 
-    public static void com(){
+    @Override
+    public void run() {
+        Scanner scan = new Scanner(System.in);
         while(true){
-            Scanner scan = new Scanner(System.in);
             String input = scan.nextLine();
 
             if(input.equals("uci")){
-                System.out.print("id name Klas 0.1\n");
+                System.out.println("id name Klas 0.1");
                 System.out.println("id author Henrik");
             }else if(input.equals("isready")){
                 System.out.println("readyok");

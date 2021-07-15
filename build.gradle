@@ -16,3 +16,9 @@ test {
 
   dependsOn 'cleanTest'  // This causes tests to always be re-run.
 }
+
+jar {
+  manifest {
+    attributes 'Main-Class' : 'engine.main'
+  }
+}
