@@ -2,6 +2,7 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Board {
 	public long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
@@ -13,6 +14,8 @@ public class Board {
 	public boolean enPassant = false;
 	public int enPassantPos = -1;
 	public int enPassantPlayer = 0; //1 for white player, 2 for black
+	public boolean wHasCastled = false;
+	public boolean bHasCastled = false;
 	
 	public Board() {
 		char[][] board = {
@@ -63,13 +66,15 @@ public class Board {
 		castleWKValid = true;
 		castleBQValid = true;
 		castleBKValid = true;
+		wHasCastled = false;
+		bHasCastled = false;
 	}
 	
 	public Board(char[][] board) {
 		initBitboards(board);
 	}
 
-	//Constructor for copying boards
+	//Constructor for copying boards, possible bug because does not contain boolean wHasCastled
 	public Board(long WP, long WR, long WN, long WB, long WK, long WQ, long BP, long BR, long BN, long BB, long BK, long BQ, boolean castleWKValid, boolean castleWQValid, boolean castleBKValid, boolean castleBQValid) {
 		this.WP = WP;
 		this.WR = WR;
@@ -86,7 +91,7 @@ public class Board {
 		this.castleWKValid = castleWKValid;
 		this.castleWQValid = castleWQValid;
 		this.castleBKValid = castleBKValid;
-		this.castleBQValid = castleBKValid;
+		this.castleBQValid = castleBQValid;
 	}
 
 	//copying
@@ -107,6 +112,8 @@ public class Board {
 		this.castleWQValid = board.castleWQValid;
 		this.castleBKValid = board.castleBKValid;
 		this.castleBQValid = board.castleBKValid;
+		this.wHasCastled = board.wHasCastled;
+		this.bHasCastled = board.bHasCastled;
 	}
 	
 	private long stringToLong(String s) {
@@ -181,6 +188,15 @@ public class Board {
 		boards[10] = BB;
 		boards[11] = BQ;
 	}
+
+	public void playLine(ArrayList<Move> moves){
+		for(Move move : moves){
+			this.makeMove(move.from, move.to);
+		}
+	}
+
+
+
 	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
 	public int check() {
 		boolean player1Checked = false;
@@ -380,9 +396,11 @@ public class Board {
 
 			if(fromPos == AttackSets.WKStart){
 				if(toPos == AttackSets.castleWKL){
+					this.wHasCastled = true;
 					this.WR = this.WR ^ AttackSets.wLeftRookStart;
 					this.WR = this.WR ^ AttackSets.wLeftRookCastle;
 				}else if(toPos == AttackSets.castleWKR){
+					this.wHasCastled = true;
 					this.WR = this.WR ^ AttackSets.wRightRookStart;
 					this.WR = this.WR ^ AttackSets.wRightRookCastle;
 				}
@@ -441,9 +459,11 @@ public class Board {
 
 			if(fromPos == AttackSets.BKStart){
 				if(toPos == AttackSets.castleBKL){
+					this.bHasCastled = true;
 					this.BR = this.BR ^ AttackSets.bLeftRookStart;
 					this.BR = this.BR ^ AttackSets.bLeftRookCastle;
 				}else if(toPos == AttackSets.castleBKR){
+					this.bHasCastled = true;
 					this.BR = this.BR ^ AttackSets.bRightRookStart;
 					this.BR = this.BR ^ AttackSets.bRightRookCastle;
 				}

@@ -1,6 +1,7 @@
 package engine;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public abstract class Util {
 
@@ -191,5 +192,16 @@ public abstract class Util {
 			copy.add(new String(move));
 		}
 		return copy;
+	}
+
+	public static ArrayList<Move> parseMoveString(String moveString){
+		StringTokenizer st = new StringTokenizer(moveString, " ");
+		ArrayList<Move> moves = new ArrayList<Move>();
+
+		while(st.hasMoreTokens()){
+			String singleMove = st.nextToken();
+			moves.add(new Move(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2))));
+		}
+		return moves;
 	}
 }

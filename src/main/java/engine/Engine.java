@@ -357,11 +357,14 @@ public class Engine {
 					}
 				}else if((board.WK & AttackSets.getPosition(i)) != 0){
 					long WKMoves = AttackSets.kingMoves(i);
-
+					Util.draw(WKMoves);
 					//Remove pseudolegal moves
 					long legalWKMoves2 = WKMoves & empty;
+					Util.draw(legalWKMoves2);
 					long legalWKMoves3 = WKMoves & enemies;
+					Util.draw(legalWKMoves3);
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
+					Util.draw(legalWKMoves);
 
 					if(board.WK == AttackSets.WKStart){
 						if(board.castleWKValid){
@@ -968,25 +971,46 @@ public class Engine {
 				if((board.BP & AttackSets.getPosition(i-8)) != 0)
 					points = points + 50; //blocked or doubled pawn
 
-				points = points + AttackSets.bPawnsPST[i];
+				points = points - AttackSets.wPawnsPST[i];
 			}else if((board.BR & pos) != 0){
-				points = points - 500;
+					points = points - 500;
 
-				points = points + AttackSets.bRookPST[i];
+				points = points - AttackSets.wRookPST[i];
 			}else if((board.BN & pos) != 0){
 				points = points - 320;
 
-				points = points + AttackSets.bKnightPST[i];
+				points = points - AttackSets.wKnightPST[i];
 			}else if((board.BB & pos) != 0){
 				points = points - 330;
 
-				points = points + AttackSets.bBishopPST[i];
+				points = points - AttackSets.wBishopPST[i];
 			}else if((board.BQ & pos) != 0){
 				points = points - 900;
 
-				points = points + AttackSets.bQueenPST[i];
+				points = points - AttackSets.wQueenPST[i];
 			}else if((board.BK & pos) != 0){
-				points = points + AttackSets.bKingPST[i];
+				points = points - AttackSets.wKingPST[i];
+			}
+		}
+
+		if(board.wHasCastled){
+			points = points + 125;
+		}else if(!board.wHasCastled){
+			if(board.castleWKValid){
+				points = points + 75;
+			}
+			if(board.castleBQValid){
+				points = points + 25;
+			}
+		}
+		if(board.bHasCastled){
+			points = points - 125;
+		}else if(!board.bHasCastled){
+			if(board.castleBKValid){
+				points = points - 75;
+			}
+			if(board.castleBQValid){
+				points = points - 25;
 			}
 		}
 
