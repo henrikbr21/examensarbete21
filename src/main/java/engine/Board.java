@@ -30,6 +30,40 @@ public class Board {
 		
 		initBitboards(board);
 	}
+
+	public void reset(){
+		this.WP = 0;
+		this.WR = 0;
+		this.WN = 0;
+		this.WB = 0;
+		this.WK = 0;
+		this.WQ = 0;
+		this.BP = 0;
+		this.BR = 0;
+		this.BN = 0;
+		this.BB = 0;
+		this.BK = 0;
+		this.BQ = 0;
+
+		char[][] board = {
+
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+
+		};
+
+		initBitboards(board);
+		castleWQValid = true;
+		castleWKValid = true;
+		castleBQValid = true;
+		castleBKValid = true;
+	}
 	
 	public Board(char[][] board) {
 		initBitboards(board);

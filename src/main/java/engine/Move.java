@@ -1,8 +1,8 @@
 package engine;
 
 public class Move {
-    public int from;
-    public int to;
+    final public int from;
+    final public int to;
     public int score;
     public char fromPiece;
     public char toPiece;
