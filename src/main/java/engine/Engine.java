@@ -360,11 +360,8 @@ public class Engine {
 					Util.draw(WKMoves);
 					//Remove pseudolegal moves
 					long legalWKMoves2 = WKMoves & empty;
-					Util.draw(legalWKMoves2);
 					long legalWKMoves3 = WKMoves & enemies;
-					Util.draw(legalWKMoves3);
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
-					Util.draw(legalWKMoves);
 
 					if(board.WK == AttackSets.WKStart){
 						if(board.castleWKValid){
