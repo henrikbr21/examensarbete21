@@ -336,7 +336,7 @@ public abstract class AttackSets {
 			{'0', '0', '0', '0', '0', '0', '1', '0'},
 			{'0', '0', '0', '0', '0', '0', '1', '1'}
 		};
-		kingMoves[14] = Util.boardFromArray(board);
+		kingMoves[15] = Util.boardFromArray(board);
 		
 		board = new char[][] {
 			{'0', '0', '0', '0', '0', '0', '0', '0'},
@@ -348,7 +348,7 @@ public abstract class AttackSets {
 			{'1', '1', '0', '0', '0', '0', '0', '0'},
 			{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
-		kingMoves[15] = Util.boardFromArray(board);
+		kingMoves[16] = Util.boardFromArray(board);
 		
 		board = new char[][] {
 			{'0', '0', '0', '0', '0', '0', '0', '0'},
@@ -360,7 +360,7 @@ public abstract class AttackSets {
 			{'1', '1', '1', '0', '0', '0', '0', '0'},
 			{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
-		kingMoves[16] = Util.boardFromArray(board);
+		kingMoves[17] = Util.boardFromArray(board);
 		
 		board = new char[][] {
 			{'0', '0', '0', '0', '0', '0', '0', '0'},
@@ -372,7 +372,7 @@ public abstract class AttackSets {
 			{'0', '1', '1', '1', '0', '0', '0', '0'},
 			{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
-		kingMoves[17] = Util.boardFromArray(board);
+		kingMoves[18] = Util.boardFromArray(board);
 		
 		board = new char[][] {
 			{'0', '0', '0', '0', '0', '0', '0', '0'},
@@ -382,18 +382,6 @@ public abstract class AttackSets {
 			{'0', '0', '1', '1', '1', '0', '0', '0'},
 			{'0', '0', '1', '0', '1', '0', '0', '0'},
 			{'0', '0', '1', '1', '1', '0', '0', '0'},
-			{'0', '0', '0', '0', '0', '0', '0', '0'}
-		};
-		kingMoves[18] = Util.boardFromArray(board);
-		
-		board = new char[][] {
-			{'0', '0', '0', '0', '0', '0', '0', '0'},
-			{'0', '0', '0', '0', '0', '0', '0', '0'},
-			{'0', '0', '0', '0', '0', '0', '0', '0'},
-			{'0', '0', '0', '0', '0', '0', '0', '0'},
-			{'0', '0', '0', '1', '1', '1', '0', '0'},
-			{'0', '0', '0', '1', '0', '1', '0', '0'},
-			{'0', '0', '0', '1', '1', '1', '0', '0'},
 			{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
 		kingMoves[19] = Util.boardFromArray(board);
@@ -409,7 +397,7 @@ public abstract class AttackSets {
 			{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
 		kingMoves[20] = Util.boardFromArray(board);
-		
+
 		board = new char[][] {
 			{'0', '0', '0', '0', '0', '0', '0', '0'},
 			{'0', '0', '0', '0', '0', '0', '0', '0'},
