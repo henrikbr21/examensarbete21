@@ -356,10 +356,7 @@ public class Engine {
 					}
 				}else if((board.WK & AttackSets.getPosition(i)) != 0){
 					long WKMoves = AttackSets.kingMoves(i);
-<<<<<<< HEAD
-=======
-					Util.draw(WKMoves);
->>>>>>> fb035d5d2d7d6d6e8849a508ad89a62af2662853
+
 					//Remove pseudolegal moves
 					long legalWKMoves2 = WKMoves & empty;
 					long legalWKMoves3 = WKMoves & enemies;
@@ -808,9 +805,6 @@ public class Engine {
 	private long occupied(Board board) {
 		return ~empty(board);
 	}
-<<<<<<< HEAD
-
-
 
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth){
 		if(depthLeft == 0){
@@ -831,69 +825,10 @@ public class Engine {
 				return beta;
 			}
 			if(score > alpha){
-=======
 
-
-
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, int whiteMoves, int blackMoves){
-		if(depthLeft == 0){
-			pv.clear();
-			return evalPosition(board);
-		}
-		depth++;
-		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
-		sort(moves);
-		whiteMoves = moves.size();
-		boolean first = true;
-		ArrayList<Move> localPV = new ArrayList<Move>();
-
-		for(Move move : moves){
-			Board simBoard = new Board(board);
-			simBoard.makeMove(move.from, move.to);
-
-			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, whiteMoves, blackMoves);
-			if(score >= beta){
-				return beta;
-			}
-			if(score > alpha){
 				pv.clear();
 				pv.addAll(localPV);
 				pv.add(move);
-
-				alpha = score;
-			}
-		}
-		return alpha;
-	}
-
-	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, int whiteMoves, int blackMoves){
-		if(depthLeft == 0){
-			pv.clear();
-			return evalPosition(board);
-		}
-		depth++;
-		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
-		sort(moves);
-		blackMoves = moves.size();
-		boolean first = true;
-		ArrayList<Move> localPV = new ArrayList<Move>();
-
-		for(Move move : moves){
-			Board simBoard = new Board(board);
-			simBoard.makeMove(move.from, move.to);
-
-			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, whiteMoves, blackMoves);
-
-			if(score <= alpha){
-				return alpha;
-			}
-			if(score < beta){
->>>>>>> fb035d5d2d7d6d6e8849a508ad89a62af2662853
-				pv.clear();
-				pv.addAll(localPV);
-				pv.add(move);
-
-<<<<<<< HEAD
 				alpha = score;
 			}
 		}
@@ -917,57 +852,18 @@ public class Engine {
 			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
 			if(score <= alpha){
 				return alpha;
-=======
-				beta = score;
-			}
-		}
-		return beta;
-	}
-
-	public ArrayList<Move> sort(ArrayList<Move> moves){
-		ArrayList<Move> sortedMoves = new ArrayList<Move>();
-
-		for(Move move : moves){
-			int tempScore = 0;
-			if(move.fromPiece == 'P' || move.fromPiece == 'p'){
-				tempScore += -1;
-			}else if(move.fromPiece == 'N' || move.fromPiece == 'n'){
-				tempScore += -3;
-			}else if(move.fromPiece == 'B' || move.fromPiece == 'b'){
-				tempScore += -3;
-			}else if(move.fromPiece == 'R' || move.fromPiece == 'r'){
-				tempScore += -5;
-			}else if(move.fromPiece == 'Q' || move.fromPiece == 'q'){
-				tempScore += -9;
-			}else if(move.fromPiece == 'K' || move.fromPiece == 'k'){
-				tempScore += -10;
->>>>>>> fb035d5d2d7d6d6e8849a508ad89a62af2662853
 			}
 			if(score < beta){
 				pv.clear();
 				pv.addAll(localPV);
 				pv.add(move);
 
-<<<<<<< HEAD
 				beta = score;
-=======
-			if(move.toPiece == 'P' || move.toPiece == 'p'){
-				tempScore += 1;
-			}else if(move.toPiece == 'N' || move.toPiece == 'n'){
-				tempScore += 3;
-			}else if(move.toPiece == 'B' || move.toPiece == 'b'){
-				tempScore += 3;
-			}else if(move.toPiece == 'R' || move.toPiece == 'r'){
-				tempScore += 5;
-			}else if(move.toPiece == 'Q' || move.toPiece == 'q'){
-				tempScore += 9;
->>>>>>> fb035d5d2d7d6d6e8849a508ad89a62af2662853
 			}
 		}
 		return beta;
 	}
 
-<<<<<<< HEAD
 	public ArrayList<Move> sort(ArrayList<Move> moves){
 		ArrayList<Move> sortedMoves = new ArrayList<Move>();
 
@@ -1040,51 +936,6 @@ public class Engine {
 				points = points + 100;
 				if((board.WP & AttackSets.getPosition(i+8)) != 0)
 					points = points - 50; //blocked or doubled pawn
-
-=======
-			if(tempScore > 0){
-				move.score = tempScore;
-			}else {
-				move.score = 1;
-			}
-		}
-
-		moves.sort(new Comparator<Move>() {
-			@Override
-			public int compare(Move o1, Move o2) {
-				if(o1.score > o2.score){
-					return -1;
-				}else if(o1.score < o2.score){
-					return 1;
-				}else {
-					return 0;
-				}
-
-			}
-		});
-		return sortedMoves;
-	}
-	
-	public double evalPosition(Board board) {
-		double points = 0;
-
-		int checkmate = board.checkmate();
-
-		if(checkmate == 1){
-			return -Double.MAX_VALUE;
-		}else if(checkmate == 2){
-			return Double.MAX_VALUE;
-		}
-
-		for(int i = 0; i < 64; i++){
-			long pos = AttackSets.getPosition(i);
-
-			if((board.WP & pos) != 0) {
-				points = points + 100;
-				if((board.WP & AttackSets.getPosition(i+8)) != 0)
-					points = points - 50; //blocked or doubled pawn
-
->>>>>>> fb035d5d2d7d6d6e8849a508ad89a62af2662853
 				points = points + AttackSets.wPawnsPST[i];
 			}else if((board.WR & pos) != 0){
 				points = points + 500;
