@@ -18,9 +18,15 @@ test {
 }
 
 jar {
+<<<<<<< HEAD
     manifest {
         attributes(
                 'Main-Class': 'engine.main'
         )
     }
+=======
+  manifest {
+    attributes 'Main-Class' : 'engine.main'
+  }
+>>>>>>> fb035d5d2d7d6d6e8849a508ad89a62af2662853
 }
