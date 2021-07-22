@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class TPT extends HashMap<Long, TPT.TPTEntry>{
-    long[][] randomNumbers;
     final int WP = 0;
     final int WN = 1;
     final int WB = 2;
@@ -21,11 +20,11 @@ public class TPT extends HashMap<Long, TPT.TPTEntry>{
 
     public class TPTEntry{
         long hash;
-        int score;
+        double score;
         int depth;
         int generation;
 
-        public TPTEntry(long hash, int score, int depth, int generation){
+        public TPTEntry(long hash, double score, int depth, int generation){
             this.hash = hash;
             this.score = score;
             this.depth = depth;
@@ -34,17 +33,7 @@ public class TPT extends HashMap<Long, TPT.TPTEntry>{
     }
 
     public TPT(){
-        randomNumbers = new long[64][12];
-        initZobrist();
-    }
 
-    private void initZobrist(){
-        Random rand = new Random();
-        for(int i = 0; i < 64; i++){
-            for(int j = 0; j < 12; j++){
-                randomNumbers[i][j] = rand.nextLong();
-            }
-        }
     }
 
     public long hash(Board board){
@@ -55,40 +44,40 @@ public class TPT extends HashMap<Long, TPT.TPTEntry>{
             if(piece != '_'){
                 switch(piece){
                     case 'P':
-                        hash = hash ^ randomNumbers[i][0];
+                        hash = hash ^ AttackSets.randomNumbers[i][0];
                         break;
                     case 'N':
-                        hash = hash ^ randomNumbers[i][1];
+                        hash = hash ^ AttackSets.randomNumbers[i][1];
                         break;
                     case 'B':
-                        hash = hash ^ randomNumbers[i][2];
+                        hash = hash ^ AttackSets.randomNumbers[i][2];
                         break;
                     case 'R':
-                        hash = hash ^ randomNumbers[i][3];
+                        hash = hash ^ AttackSets.randomNumbers[i][3];
                         break;
                     case 'Q':
-                        hash = hash ^ randomNumbers[i][4];
+                        hash = hash ^ AttackSets.randomNumbers[i][4];
                         break;
                     case 'K':
-                        hash = hash ^ randomNumbers[i][5];
+                        hash = hash ^ AttackSets.randomNumbers[i][5];
                         break;
                     case 'p':
-                        hash = hash ^ randomNumbers[i][6];
+                        hash = hash ^ AttackSets.randomNumbers[i][6];
                         break;
                     case 'n':
-                        hash = hash ^ randomNumbers[i][7];
+                        hash = hash ^ AttackSets.randomNumbers[i][7];
                         break;
                     case 'b':
-                        hash = hash ^ randomNumbers[i][8];
+                        hash = hash ^ AttackSets.randomNumbers[i][8];
                         break;
                     case 'r':
-                        hash = hash ^ randomNumbers[i][9];
+                        hash = hash ^ AttackSets.randomNumbers[i][9];
                         break;
                     case 'q':
-                        hash = hash ^ randomNumbers[i][10];
+                        hash = hash ^ AttackSets.randomNumbers[i][10];
                         break;
                     case 'k':
-                        hash = hash ^ randomNumbers[i][11];
+                        hash = hash ^ AttackSets.randomNumbers[i][11];
                         break;
                 }
             }

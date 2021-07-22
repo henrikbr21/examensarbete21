@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.Random;
+
 public abstract class AttackSets {
 	private static long knightMoves[] = new long[64];
 	private static long kingMoves[] = new long[64];
@@ -18,6 +20,7 @@ public abstract class AttackSets {
 	private static long upRookAttacks[] = new long[64];
 	private static long downRookAttacks[] = new long[64];
 	public static long currentAttackBoard = 0L;
+	public static long[][] randomNumbers = new long[64][12];
 
 	//castling boards
 	public static long castleWKL;
@@ -7634,6 +7637,15 @@ public abstract class AttackSets {
 				{-30,-40,-40,-50,-50,-40,-40,-30},
 		};
 		bKingPST = Util.PSTFromArray(PST);
+	}
+
+	public static void initZobrist(){
+		Random rand = new Random();
+		for(int i = 0; i < 64; i++){
+			for(int j = 0; j < 12; j++){
+				randomNumbers[i][j] = rand.nextLong();
+			}
+		}
 	}
 
 

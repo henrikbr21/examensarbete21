@@ -194,22 +194,18 @@ public class Board {
 			this.makeMove(move.from, move.to);
 		}
 	}
-
-
-
 	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
 	public int check() {
 		boolean player1Checked = false;
 		boolean player2Checked = false;
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
-
-		Engine engine = new Engine("WHITE", simBoard, true);
+		Engine engine = new Engine("WHITE", simBoard, true, new TPT());
 
 		ArrayList<Move> whiteMoves = engine.generateMoves(simBoard,"WHITE");
 
 		int WKPos = -1;
-  		for(int i = 0; i < 64; i++){
- 			if((AttackSets.getPosition(i) & this.WK) != 0){
+		for(int i = 0; i < 64; i++){
+			if((AttackSets.getPosition(i) & this.WK) != 0){
 				WKPos = i;
 			}
 		}
@@ -242,7 +238,8 @@ public class Board {
 
 	public int checkColor(String color){
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
-		Engine engine = new Engine("WHITE", simBoard, true);
+		TPT tpt = new TPT();
+		Engine engine = new Engine("WHITE", simBoard, true, tpt);
 
 		if(color.equals("BLACK")){
 			int BKPos = -1;
@@ -293,7 +290,8 @@ public class Board {
 
 	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated, returns 4 if stalemate
 	public int checkmate(){
-		Engine engine = new Engine("WHITE", this, true);
+		TPT tpt = new TPT();
+		Engine engine = new Engine("WHITE", this, true, tpt);
 
 
 		int check = this.check();

@@ -9,9 +9,10 @@ import java.util.Stack;
 public class Engine {
 	private String color; //"BLACK" for black pieces, "WHITE" for white pieces
 	private Board board;
-
+	private TPT tpt;
 	
-	public Engine(String color, Board board, boolean initialized){
+	public Engine(String color, Board board, boolean initialized, TPT tpt){
+		this.tpt = tpt;
 		long time = System.currentTimeMillis();
 		this.board = board;
 		this.color = color;
@@ -27,6 +28,7 @@ public class Engine {
 			AttackSets.initRookAttacksLR();
 			AttackSets.initRookAttacksUD();
 			AttackSets.initPSTs();
+			AttackSets.initZobrist();
 		}
 		time = System.currentTimeMillis() - time;
 		if(!initialized)
@@ -808,8 +810,17 @@ public class Engine {
 
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth){
 		if(depthLeft == 0){
+
+			long hash = tpt.hash(board);
+			if(tpt.containsKey(hash)){
+				return tpt.get(hash).score;
+			}
+
+			double score = evalPosition(board);
+			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0));
+
 			pv.clear();
-			return evalPosition(board);
+			return score;
 		}
 		depth++;
 		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
@@ -863,6 +874,7 @@ public class Engine {
 		}
 		return beta;
 	}
+
 
 	public ArrayList<Move> sort(ArrayList<Move> moves){
 		ArrayList<Move> sortedMoves = new ArrayList<Move>();
