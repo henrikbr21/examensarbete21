@@ -39,43 +39,48 @@ public class Engine {
 		ArrayList<Move> legalMoves = new ArrayList<Move>();
 
  		if(playerColor == "WHITE"){
-			if(board.checkmate() == 1)
-				return new ArrayList<Move>();
-			else{
-				ArrayList<Move> moves = this.generateMoves(board,"WHITE");
-
-				for(Move move : moves){
-					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-					simBoard.makeMove(move.from, move.to);
-					if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
-						continue;
-					int simCheck = simBoard.checkColor("WHITE");
-					if(simCheck == 2 || simCheck == 0)
-						legalMoves.add(move);
+			if(board.checkColor("WHITE") == 1){
+				if(board.checkmate() == 1){
+					return new ArrayList<Move>();
 				}
 			}
+
+			ArrayList<Move> moves = this.generateMoves(board,"WHITE");
+
+			for(Move move : moves){
+				Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+				simBoard.makeMove(move.from, move.to);
+				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
+					continue;
+				int simCheck = simBoard.checkColor("WHITE");
+				if(simCheck == 2 || simCheck == 0)
+					legalMoves.add(move);
+				}
+
 		}else if(playerColor == "BLACK") {
- 			if(board.checkmate() == 2)
-				return new ArrayList<Move>();
-			else{
-				ArrayList<Move> moves = this.generateMoves(board,"BLACK");
-
-				for(Move move : moves){
-					Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-					simBoard.makeMove(move.from, move.to);
-					if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
-						continue;
-					int simCheck = simBoard.checkColor("BLACK");
-					if(simCheck == 1 || simCheck == 0)
-						legalMoves.add(move);
+ 			if(board.checkColor("BLACK") == 2){
+ 				if(board.checkmate() == 2){
+					return new ArrayList<Move>();
 				}
 			}
+ 			ArrayList<Move> moves = this.generateMoves(board,"BLACK");
+
+ 			for(Move move : moves){
+ 				Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+ 				simBoard.makeMove(move.from, move.to);
+ 				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
+ 					continue;
+ 				int simCheck = simBoard.checkColor("BLACK");
+ 				if(simCheck == 1 || simCheck == 0)
+ 					legalMoves.add(move);
+ 			}
+
 		}
 		return legalMoves;
 	}
 
 	public ArrayList<Move> generateMoves(Board board, String playerColor){
-		ArrayList<Move> moveList = new ArrayList<Move>();
+		ArrayList<Move> moveList = new ArrayList<Move>(60);
 
 		long occupied = occupied(board);
 		long empty = empty(board);
@@ -116,7 +121,7 @@ public class Engine {
 
 			attackBoard = WPAttacksL | WPAttacksR;
 			WPAttacksL = WPAttacksL & enemies; //ISSUE?!?!!
-
+			int a = 0;
 
 			for(int i = 0; i<64; i++) {
 				long pos = AttackSets.getPosition(i);
@@ -234,7 +239,6 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-
 							char takenPiece = board.getPiece(j);
 							Move move = new Move(i, j, 'B', takenPiece, false); // 63-j???
 							moveList.add(move);
@@ -818,7 +822,6 @@ public class Engine {
 
 			double score = evalPosition(board);
 			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0));
-
 			pv.clear();
 			return score;
 		}
@@ -826,22 +829,49 @@ public class Engine {
 		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
 		sort(moves);
 		ArrayList<Move> localPV = new ArrayList<Move>();
+		if(moves.size()==0){ //stalemate
+			return 0;
+		}
 
 		for(Move move : moves){
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
-			double score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
-			if(score >= beta){
-				return beta;
+			long hash = tpt.hash(simBoard);
+			double score = -Double.MAX_VALUE;
+			boolean TPFound = false;
+			if(tpt.containsKey(hash)){
+				TPT.TPTEntry transposition = tpt.get(hash);
+				if(transposition.depth >= depthLeft){
+					score = tpt.get(hash).score;
+					TPFound = true;
+				}
 			}
-			if(score > alpha){
 
+			if(!TPFound){
+				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
+				hash = tpt.hash(board);
+				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0));
+			}
+			if(score == Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();
 				pv.addAll(localPV);
 				pv.add(move);
+				return score-depth; //prefer earlier checkmate
+			}
+
+			if(score > alpha){
+				pv.clear();
+				pv.addAll(localPV);
+				pv.add(move);
+
 				alpha = score;
 			}
+
+			if(score >= beta){
+				return beta;
+			}
+
 		}
 		return alpha;
 	}
@@ -855,15 +885,38 @@ public class Engine {
 		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
 		sort(moves);
 		ArrayList<Move> localPV = new ArrayList<Move>();
+		if(moves.size()==0){ //stalemate
+			return 0;
+		}
 
 		for(Move move : moves){
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
-			double score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
-			if(score <= alpha){
-				return alpha;
+			long hash = tpt.hash(simBoard);
+			double score = Double.MAX_VALUE;
+			boolean TPFound = false;
+			if(tpt.containsKey(hash)){
+				TPT.TPTEntry transposition = tpt.get(hash);
+				if(transposition.depth >= depthLeft){
+					score = tpt.get(hash).score;
+					TPFound = true;
+				}
 			}
+
+			if(!TPFound){
+				hash = tpt.hash(board);
+				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0));
+				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
+			}
+			if(score == -Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
+				pv.clear();
+				pv.addAll(localPV);
+				pv.add(move);
+				return score+depth; //prefer earlier checkmate
+			}
+
+			//ändrat ordning på ifsatser
 			if(score < beta){
 				pv.clear();
 				pv.addAll(localPV);
@@ -871,6 +924,11 @@ public class Engine {
 
 				beta = score;
 			}
+
+			if(score <= alpha){
+				return alpha;
+			}
+
 		}
 		return beta;
 	}
@@ -896,22 +954,20 @@ public class Engine {
 			}
 
 			if(move.toPiece == 'P' || move.toPiece == 'p'){
-				tempScore += 1;
+				tempScore += 10;
 			}else if(move.toPiece == 'N' || move.toPiece == 'n'){
-				tempScore += 3;
+				tempScore += 30;
 			}else if(move.toPiece == 'B' || move.toPiece == 'b'){
-				tempScore += 3;
+				tempScore += 30;
 			}else if(move.toPiece == 'R' || move.toPiece == 'r'){
-				tempScore += 5;
+				tempScore += 50;
 			}else if(move.toPiece == 'Q' || move.toPiece == 'q'){
-				tempScore += 9;
+				tempScore += 90;
+			}
+			if(move.to == board.lastMovedPos){
+				move.score = 100;
 			}
 
-			if(tempScore > 0){
-				move.score = tempScore;
-			}else {
-				move.score = 1;
-			}
 		}
 
 		moves.sort(new Comparator<Move>() {

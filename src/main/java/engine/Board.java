@@ -16,6 +16,7 @@ public class Board {
 	public int enPassantPlayer = 0; //1 for white player, 2 for black
 	public boolean wHasCastled = false;
 	public boolean bHasCastled = false;
+	public int lastMovedPos = -1;
 	
 	public Board() {
 		char[][] board = {
@@ -153,7 +154,6 @@ public class Board {
 					case 'k':
 						BK += stringToLong(boardString);
 						break;
-						
 					case 'P':
 						WP += stringToLong(boardString);
 						break;
@@ -293,11 +293,10 @@ public class Board {
 		TPT tpt = new TPT();
 		Engine engine = new Engine("WHITE", this, true, tpt);
 
-
 		int check = this.check();
 		boolean allCauseCheckForWhite = true;
 		boolean allCauseCheckForBlack = true;
-
+		/*
 		if(check == 0){
 			ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
 			ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
@@ -323,7 +322,10 @@ public class Board {
 				return 4;
 		}
 
-		if(check == 1){
+		 */
+		if(check == 0){
+			return 0;
+		}else if(check == 1){
 			ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
 			for(Move move : whiteMoves){
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
@@ -356,6 +358,7 @@ public class Board {
 		long fromPos = AttackSets.getPosition(from);
 		long toPos = AttackSets.getPosition(to);
 		boolean enPassantEnabledThisTurn = false;
+		this.lastMovedPos = to;
 
 		if((this.WP & fromPos) != 0){
 

@@ -301,24 +301,6 @@ public class BoardTests {
 	}
 
 	@Test
-	public void testStaleMate(){
-		char[][] testBoard = {
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k'},
-				{' ', ' ', ' ', ' ', 'R', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', 'R', ' '},
-				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
-		};
-		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
-
-		assertEquals(4, board.checkmate());
-	}
-
-	@Test
 	public void testEnPassant(){
 		char[][] testBoard = {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
