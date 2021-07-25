@@ -301,6 +301,110 @@ public class BoardTests {
 	}
 
 	@Test
+	public void testCastlingRemoval8(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', ' ', 'k', 'b', ' ', 'r'},
+				{'p', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', 'R', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false, tpt);
+		ArrayList<Move> moves = engine.findMoveList(board, "BLACK");
+		boolean faultyMoveExists = false;
+		for(Move move : moves){
+			if(move.from == Util.convertCoordToNum("e8")){
+				if(move.to == Util.convertCoordToNum("c8")){
+					faultyMoveExists = true;
+				}
+			}
+		}
+		assertFalse(faultyMoveExists);
+	}
+
+	@Test
+	public void testCastlingRemoval9(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', ' ', 'k', ' ', ' ', 'r'},
+				{'p', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', 'R', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("BLACK", board, false, tpt);
+		ArrayList<Move> moves = engine.findMoveList(board, "BLACK");
+		boolean faultyMoveExists = false;
+		for(Move move : moves){
+			if(move.from == Util.convertCoordToNum("e8")){
+				if(move.to == Util.convertCoordToNum("g8")){
+					faultyMoveExists = true;
+				}
+			}
+		}
+		assertFalse(faultyMoveExists);
+	}
+
+	@Test
+	public void testCastlingRemoval10(){
+		char[][] testBoard = {
+				{' ', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', 'r', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+				{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false, tpt);
+		ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
+		boolean faultyMoveExists = false;
+		for(Move move : moves){
+			if(move.from == Util.convertCoordToNum("e1")){
+				if(move.to == Util.convertCoordToNum("c1")){
+					faultyMoveExists = true;
+				}
+			}
+		}
+		assertFalse(faultyMoveExists);
+	}
+
+	@Test
+	public void testCastlingRemoval11(){
+		char[][] testBoard = {
+				{' ', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', 'r', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+				{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false, tpt);
+		ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
+		boolean faultyMoveExists = false;
+		for(Move move : moves){
+			if(move.from == Util.convertCoordToNum("e1")){
+				if(move.to == Util.convertCoordToNum("g1")){
+					faultyMoveExists = true;
+				}
+			}
+		}
+		assertFalse(faultyMoveExists);
+	}
+
+	@Test
 	public void testEnPassant(){
 		char[][] testBoard = {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},

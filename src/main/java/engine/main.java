@@ -1,10 +1,7 @@
 package engine;
 
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class main {
 
@@ -16,23 +13,27 @@ public class main {
 			final Board board = new Board();
 			final Engine engine = new Engine("WHITE", board, false, tpt);
 			final Engine engine2 = new Engine("BLACK", board, true, tpt);
+			Random rand = new Random();
 
 /*
-			ArrayList<Move> moves = Util.parseMoveString("e2e4 b8c6 d1f3 a7a6 f3c3 g8f6 d2d3 a6a5 c1f4 a8b8 b1d2 d7d6 f4g5 f6g4 f2f3 g4e5 e1c1 f7f6 g5f4 e5g6 f4g3 e7e5 c1b1 c8e6 a2a3 b8a8 h2h4 h7h5 g1e2 c6e7 d3d4 c7c6 d4e5 f6e5 c3e3 e7g8 e3g5 d8g5 h4g5 g8e7 h1h2 h5h4 g3f2 c6c5 e2c3 e6d7 c3b5 d7b5 f1b5 e8d8 d2c4 d8c7 d1d6 a8d8 f2c5 d8d6 c5d6 c7c8 c4b6 c8d8 b6d7 e7c8 d7f8 g6f8 d6e5 f8e6 e5c3 c8d6 b5d3 e6g5 c3g7 h8g8 g7f6 d8e8 e4e5 g5f3 g2f3 g8g1 b1a2 d6c8 h2h4 c8b6 e5e6 b6d7 d3b5 e8f8 e6d7 g1d1 b5d3 f8f7 d7d8q d1d3 c2d3 a5a4 f3f4 b7b5 f4f5 b5b4 a3b4 a4a3 d3d4 a3b2");
+			ArrayList<Move> moves = Util.parseMoveString("c2c3 d7d6 g1f3 c8d7 f3d4 e7e5 d4c2 b8c6 c2b4 g8f6 f2f3 c6b4 c3b4 f6d5 h2h4 d5b4 a2a3 b4d5 d1b3 d5b6 b1c3 d7c6 e2e4 a7a5 f1b5 b6c8 b5c6 b7c6 b3a4 c8e7 d2d4 f7f6 d4e5 d6e5 a4c4 d8d6 c1e3 f6f5");
 			board.playLine(moves);
-			ArrayList<Move> movesAvailable = engine.findMoveList(board, "BLACK");
+			board.draw();
+			Util.draw(board.WK);
+			ArrayList<Move> movesAvailable = engine.generateMoves(board, "WHITE");
+			for(Move move : movesAvailable){
+				System.out.println(Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+			}
 			System.out.println("Checkmate: " + board.checkmate());
 			System.out.println("Available" + movesAvailable.size());
 			board.draw();
 			ArrayList<Move> pv2 = new ArrayList<Move>();
 			long time = System.currentTimeMillis();
 
-			double result2 = engine.alphaBetaMin(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1);
-			System.out.println("Time: " + (System.currentTimeMillis()-time));
+			double result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1);
+			System.out.println("SCORE " + result2);
 			System.out.println("bestmove " + Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
 */
-
-
 			Thread thread;
 			int i = 0;
 			int nbrTokens = 0;
@@ -85,66 +86,80 @@ public class main {
 				}else if(input.startsWith("go")  && (nbrTokens%2==0)){
 					ArrayList<Move> pv = new ArrayList<Move>();
 
-					thread = new Thread(new Runnable()
-					{
-						@Override
-						public void run()
+					if(nbrTokens < 2){
+						ArrayList<Move> startingMoves = new ArrayList<Move>();
+						startingMoves = engine.findMoveList(board, "WHITE");
+						Move move = startingMoves.get(rand.nextInt(20));
+						System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+					}else{
+						thread = new Thread(new Runnable()
 						{
-							try
+							@Override
+							public void run()
 							{
-								ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
-								for(Move move : moves){
-									Board simBoard = new Board(board);
-									simBoard.makeMove(move.from, move.to);
-									if(simBoard.checkmate()==2){
-										System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+								try
+								{
+									ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
+									for(Move move : moves){
+										Board simBoard = new Board(board);
+										simBoard.makeMove(move.from, move.to);
+										if(simBoard.checkmate()==2){
+											System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+										}
 									}
+
+									double result = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+									System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size()-1).from) + Util.convertNumToCoord(pv.get(pv.size()-1).to));
+									System.out.println("Score: " + result);
+
+
 								}
-
-								double result = engine.alphaBetaMax(board, 5, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
-								System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size()-1).from) + Util.convertNumToCoord(pv.get(pv.size()-1).to));
-								System.out.println("Score: " + result);
-
-
+								catch(Exception e)
+								{
+									e.printStackTrace();
+								}
 							}
-							catch(Exception e)
-							{
-								e.printStackTrace();
-							}
-						}
-					});
-					thread.start();
+						});
+						thread.start();
+					}
 
 				}else if(input.startsWith("go")  && ((nbrTokens%2) != 0)){
 					ArrayList<Move> pv = new ArrayList<Move>();
-					thread = new Thread(new Runnable()
-					{
-						@Override
-						public void run()
+					if(nbrTokens < 2){
+						ArrayList<Move> startingMoves = new ArrayList<Move>();
+						startingMoves = engine.findMoveList(board, "BLACK");
+						Move move = startingMoves.get(rand.nextInt(20));
+						System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+					}else {
+						thread = new Thread(new Runnable()
 						{
-							try
+							@Override
+							public void run()
 							{
-								ArrayList<Move> moves = engine.findMoveList(board, "BLACK");
-								for(Move move : moves){
-									Board simBoard = new Board(board);
-									simBoard.makeMove(move.from, move.to);
-									if(simBoard.checkmate()==1){
-										System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+								try
+								{
+									ArrayList<Move> moves = engine.findMoveList(board, "BLACK");
+									for(Move move : moves){
+										Board simBoard = new Board(board);
+										simBoard.makeMove(move.from, move.to);
+										if(simBoard.checkmate()==1){
+											System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+										}
 									}
+
+									double result = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+									System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size()-1).from) + Util.convertNumToCoord(pv.get(pv.size()-1).to));
+									System.out.println("Score: " + result);
+
 								}
-
-								double result = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
-								System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size()-1).from) + Util.convertNumToCoord(pv.get(pv.size()-1).to));
-								System.out.println("Score: " + result);
-
+								catch(Exception e)
+								{
+									e.printStackTrace();
+								}
 							}
-							catch(Exception e)
-							{
-								e.printStackTrace();
-							}
-						}
-					});
-					thread.start();
+						});
+						thread.start();
+					}
 				}
 			}
 /*

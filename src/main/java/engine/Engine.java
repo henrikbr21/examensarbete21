@@ -372,15 +372,17 @@ public class Engine {
 					if(board.WK == AttackSets.WKStart){
 						if(board.castleWKValid){
 							if((occupied & AttackSets.WKRblockers) == 0){
-								if(board.check() == 0) {
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
+								if(board.checkColor("WHITE") == 0) {
+									Board simBoard = new Board(board);
 									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
-									simBoard.WK = simBoard.WK ^ AttackSets.castleWKR;
-									int simCheck = simBoard.check();
+									simBoard.WK = simBoard.WK ^ AttackSets.wRightPasses;
+
+									int simCheck = simBoard.checkColor("WHITE");
 									if(simCheck == 0){
+										/* Behövs detta?
 										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
 										simBoard.WK = simBoard.WK ^ AttackSets.getPosition(5);
-
+										*/
 										if(simCheck == 0 && ((friends & AttackSets.wRightRookStart) != 0))
 											legalWKMoves = legalWKMoves | AttackSets.castleWKR;
 									}
@@ -390,14 +392,17 @@ public class Engine {
 						}
 						if(board.castleWQValid){
 							if((occupied & AttackSets.WKLblockers) == 0){
-								if(board.check() == 0){
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
+								if(board.checkColor("WHITE") == 0){
+									Board simBoard = new Board(board);
 									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
-									simBoard.WK = simBoard.WK ^ AttackSets.castleWKL;
-									int simCheck = simBoard.check();
+									simBoard.WK = simBoard.WK ^ AttackSets.wLeftPasses;
+
+									int simCheck = simBoard.checkColor("WHITE");
 									if(simCheck == 0){
+										/* Behövs detta?
 										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, false, false, false, false);
 										simBoard.WK = simBoard.WK ^ AttackSets.getPosition(3);
+										*/
 										if(simCheck == 0 && ((friends & AttackSets.wLeftRookStart) != 0)){
 											legalWKMoves = legalWKMoves | AttackSets.castleWKL;
 										}
@@ -691,15 +696,16 @@ public class Engine {
 					if(board.BK == AttackSets.BKStart){
 						if(board.castleBKValid){
 							if((occupied & AttackSets.BKRblockers) == 0){
-								if(board.check() == 0) {
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+								if(board.checkColor("BLACK") == 0) {
+									Board simBoard = new Board(board);
 									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
-									simBoard.BK = simBoard.BK ^ AttackSets.castleBKR;
-									int simCheck = simBoard.check();
+									simBoard.BK = simBoard.BK ^ AttackSets.bRightPasses;
+									int simCheck = simBoard.checkColor("BLACK");
 									if(simCheck == 0){
+										/*Behövs detta?
 										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(61);
-
+										*/
 										if(simCheck == 0 && ((friends & AttackSets.bRightRookStart) != 0))
 											legalBKMoves = legalBKMoves | AttackSets.castleBKR;
 									}
@@ -710,14 +716,16 @@ public class Engine {
 						if(board.castleBQValid){
 							if((occupied & AttackSets.BKLblockers) == 0){
 								if(board.check() == 0){
-									Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+									Board simBoard = new Board(board);
 									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
-									simBoard.BK = simBoard.BK ^ AttackSets.castleBKL;
+									simBoard.BK = simBoard.BK ^ AttackSets.bLeftPasses;
 									int simCheck = simBoard.check();
 									if(simCheck == 0){
+										/* Behövs detta?
 										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(3);
-										if(simCheck == 0 && ((friends & AttackSets.wLeftRookStart) != 0)){
+										*/
+										if(simCheck == 0 && ((friends & AttackSets.bLeftRookStart) != 0)){
 											legalBKMoves = legalBKMoves | AttackSets.castleBKL;
 										}
 									}
