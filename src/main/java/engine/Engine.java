@@ -837,8 +837,13 @@ public class Engine {
 		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
 		sort(moves);
 		ArrayList<Move> localPV = new ArrayList<Move>();
-		if(moves.size()==0){ //stalemate
-			return 0;
+
+		if(moves.size()==0){
+			if(board.checkColor("WHITE") == 1)
+				return -Double.MAX_VALUE;
+			else if(board.checkColor("BLACK") == 2)
+				return Double.MAX_VALUE;
+			else return 0;
 		}
 
 		for(Move move : moves){
@@ -893,8 +898,13 @@ public class Engine {
 		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
 		sort(moves);
 		ArrayList<Move> localPV = new ArrayList<Move>();
-		if(moves.size()==0){ //stalemate
-			return 0;
+
+		if(moves.size()==0){
+			if(board.checkColor("WHITE") == 1)
+				return -Double.MAX_VALUE;
+			else if(board.checkColor("BLACK") == 2)
+				return Double.MAX_VALUE;
+			else return 0;
 		}
 
 		for(Move move : moves){

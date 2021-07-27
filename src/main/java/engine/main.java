@@ -16,7 +16,7 @@ public class main {
 			Random rand = new Random();
 
 /*
-			ArrayList<Move> moves = Util.parseMoveString("c2c3 d7d6 g1f3 c8d7 f3d4 e7e5 d4c2 b8c6 c2b4 g8f6 f2f3 c6b4 c3b4 f6d5 h2h4 d5b4 a2a3 b4d5 d1b3 d5b6 b1c3 d7c6 e2e4 a7a5 f1b5 b6c8 b5c6 b7c6 b3a4 c8e7 d2d4 f7f6 d4e5 d6e5 a4c4 d8d6 c1e3 f6f5");
+			ArrayList<Move> moves = Util.parseMoveString("d2d4 e7e5 e2e4 b8c6 g1f3 e5d4 f3d4 f8b4 c1d2 b4d2 d1d2 g8e7 b1c3 e8g8 e1c1 d8e8 d4f5 e7f5 e4f5 e8e7 f1b5 c6d8 b5d7 e7d7 d2d7 c8d7 d1d7 a8c8 h1e1");
 			board.playLine(moves);
 			board.draw();
 			Util.draw(board.WK);
@@ -30,13 +30,14 @@ public class main {
 			ArrayList<Move> pv2 = new ArrayList<Move>();
 			long time = System.currentTimeMillis();
 
-			double result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1);
+			double result2 = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1);
 			System.out.println("SCORE " + result2);
 			System.out.println("bestmove " + Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
 */
 			Thread thread;
 			int i = 0;
 			int nbrTokens = 0;
+
 			while(true){
 			i++;
 			String input = scan.nextLine();
@@ -99,6 +100,8 @@ public class main {
 							{
 								try
 								{
+
+									long time = System.currentTimeMillis();
 									ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
 									for(Move move : moves){
 										Board simBoard = new Board(board);
@@ -107,8 +110,16 @@ public class main {
 											System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
 										}
 									}
+									int depthLeft = 1;
+									double result = 0;
+									while((System.currentTimeMillis()-time)<3000 && depthLeft < 10){
+										time = System.currentTimeMillis();
+										System.out.println("Depth: " + depthLeft);
+										result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+										System.out.println("Time taken: " + (System.currentTimeMillis()-time) + "ms");
+										depthLeft++;
+									}
 
-									double result = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
 									System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size()-1).from) + Util.convertNumToCoord(pv.get(pv.size()-1).to));
 									System.out.println("Score: " + result);
 
