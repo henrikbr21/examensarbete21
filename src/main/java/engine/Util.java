@@ -1,6 +1,9 @@
 package engine;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public abstract class Util {
@@ -194,14 +197,21 @@ public abstract class Util {
 		return copy;
 	}
 
-	public static ArrayList<Move> parseMoveString(String moveString){
+	public static MoveArrayList parseMoveString(String moveString){
 		StringTokenizer st = new StringTokenizer(moveString, " ");
-		ArrayList<Move> moves = new ArrayList<Move>();
+		MoveArrayList moves = MoveArrayListManager.obtainMoveArrayList();
 
 		while(st.hasMoreTokens()){
 			String singleMove = st.nextToken();
-			moves.add(new Move(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2))));
+			moves.add(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2)));
 		}
 		return moves;
+	}
+
+	public static void dumpGCLogs(){
+		List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
+		for (GarbageCollectorMXBean mxBean : gcMXBeans) {
+			System.out.println("Name: " + mxBean.getName() + " Collection count: " + mxBean.getCollectionCount() + " Collection time: " + mxBean.getCollectionTime());
+		}
 	}
 }

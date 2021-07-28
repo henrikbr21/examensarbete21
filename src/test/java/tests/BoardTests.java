@@ -47,7 +47,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
+		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(30, moves.size());
 	}
@@ -67,7 +67,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
+		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(47, moves.size());
 	}
@@ -87,7 +87,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
+		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(51, moves.size());
 	}
@@ -107,7 +107,7 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.generateMoves(board,"WHITE");
+		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 		assertEquals(3, board.check());
 	}
 
@@ -314,9 +314,10 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false, tpt);
-		ArrayList<Move> moves = engine.findMoveList(board, "BLACK");
+		MoveArrayList moves = engine.findMoveList(board, "BLACK");
 		boolean faultyMoveExists = false;
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			if(move.from == Util.convertCoordToNum("e8")){
 				if(move.to == Util.convertCoordToNum("c8")){
 					faultyMoveExists = true;
@@ -340,9 +341,10 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("BLACK", board, false, tpt);
-		ArrayList<Move> moves = engine.findMoveList(board, "BLACK");
+		MoveArrayList moves = engine.findMoveList(board, "BLACK");
 		boolean faultyMoveExists = false;
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			if(move.from == Util.convertCoordToNum("e8")){
 				if(move.to == Util.convertCoordToNum("g8")){
 					faultyMoveExists = true;
@@ -366,9 +368,10 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
+		MoveArrayList moves = engine.findMoveList(board, "WHITE");
 		boolean faultyMoveExists = false;
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			if(move.from == Util.convertCoordToNum("e1")){
 				if(move.to == Util.convertCoordToNum("c1")){
 					faultyMoveExists = true;
@@ -392,9 +395,10 @@ public class BoardTests {
 		};
 		Board board = new Board(testBoard);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.findMoveList(board, "WHITE");
+		MoveArrayList moves = engine.findMoveList(board, "WHITE");
 		boolean faultyMoveExists = false;
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			if(move.from == Util.convertCoordToNum("e1")){
 				if(move.to == Util.convertCoordToNum("g1")){
 					faultyMoveExists = true;
@@ -420,9 +424,10 @@ public class BoardTests {
 		board.makeMove(51, 35);
 		assertEquals(true, board.enPassant);
 		Engine engine = new Engine("WHITE", board, false, tpt);
-		ArrayList<Move> moves = engine.findMoveList(board,"WHITE");
+		MoveArrayList moves = engine.findMoveList(board,"WHITE");
 		String allMoves = new String();
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			allMoves += Util.convertNumToCoord(move.from);
 			allMoves += Util.convertNumToCoord(move.to);
 		}

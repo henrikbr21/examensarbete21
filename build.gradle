@@ -1,11 +1,13 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 repositories {
   mavenCentral()
 }
 
 dependencies {
-  testImplementation 'junit:junit:4.12'
+  implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    testImplementation 'junit:junit:4.12'
 }
 
 test {
@@ -23,4 +25,8 @@ jar {
                 'Main-Class': 'engine.main'
         )
     }
+
+applicationDefaultJvmArgs = ["-XX:+UseSerialGC -verbose:gc"]
+
 }
+

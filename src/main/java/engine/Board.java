@@ -50,7 +50,6 @@ public class Board {
 		this.BQ = 0;
 
 		char[][] board = {
-
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -189,8 +188,9 @@ public class Board {
 		boards[11] = BQ;
 	}
 
-	public void playLine(ArrayList<Move> moves){
-		for(Move move : moves){
+	public void playLine(MoveArrayList moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			this.makeMove(move.from, move.to);
 		}
 	}
@@ -201,7 +201,7 @@ public class Board {
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
 		Engine engine = new Engine("WHITE", simBoard, true, new TPT());
 
-		ArrayList<Move> whiteMoves = engine.generateMoves(simBoard,"WHITE");
+		MoveArrayList whiteMoves = engine.generateMoves(simBoard,"WHITE");
 
 		int WKPos = -1;
 		for(int i = 0; i < 64; i++){
@@ -216,15 +216,17 @@ public class Board {
 			}
 		}
 
-		//Bug here!!!!!!!!!!!!!!!!!! FIXED?
+		//HEBR MULTITHREADING ISSUE
 		if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
 			player2Checked = true;
 		}
+		MoveArrayListManager.renounceMoveArrayList(whiteMoves);
 
-		ArrayList<Move> blackMoves = engine.generateMoves(simBoard,"BLACK");
+		MoveArrayList blackMoves = engine.generateMoves(simBoard,"BLACK");
 		if((AttackSets.currentAttackBoard & AttackSets.getPosition(WKPos)) != 0){
 			player1Checked = true;
 		}
+		MoveArrayListManager.renounceMoveArrayList(blackMoves);
 
 		if(player1Checked && player2Checked)
 			return 3;
@@ -233,7 +235,6 @@ public class Board {
 		else if(player2Checked)
 			return 2;
 		return 0;
-
 	}
 
 	public int checkColor(String color){
@@ -248,7 +249,8 @@ public class Board {
 					BKPos = i;
 				}
 			}
-			ArrayList<Move> whiteMoves = engine.generateMoves(simBoard,"WHITE");
+			MoveArrayList whiteMoves = engine.generateMoves(simBoard,"WHITE");
+			MoveArrayListManager.renounceMoveArrayList(whiteMoves);
 			if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
 				return 2;
 			}else return 0;
@@ -259,7 +261,8 @@ public class Board {
 					WKPos = i;
 				}
 			}
-			ArrayList<Move> blackMoves = engine.generateMoves(simBoard,"BLACK");
+			MoveArrayList blackMoves = engine.generateMoves(simBoard,"BLACK");
+			MoveArrayListManager.renounceMoveArrayList(blackMoves);
 			if((AttackSets.currentAttackBoard & AttackSets.getPosition(WKPos)) != 0){
 				return 1;
 			}else return 0;
@@ -326,28 +329,34 @@ public class Board {
 		if(check == 0){
 			return 0;
 		}else if(check == 1){
-			ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
-			for(Move move : whiteMoves){
+			MoveArrayList whiteMoves = engine.generateMoves(this,"WHITE");
+			for(int i = 0; i < whiteMoves.size(); i++){
+				Move move = whiteMoves.get(i);
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
 				if(simBoard.checkColor("WHITE") == 0){
+					MoveArrayListManager.renounceMoveArrayList(whiteMoves);
 					return 0;
 				}
 			}
+			MoveArrayListManager.renounceMoveArrayList(whiteMoves);
 			return 1;
 		}else if(check == 2){
-			ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
-			for(Move move : blackMoves){
+			MoveArrayList blackMoves = engine.generateMoves(this,"BLACK");
+			for(int i = 0; i < blackMoves.size(); i++){
+				Move move = blackMoves.get(i);
 				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
 				if(simBoard.checkColor("BLACK") == 0){
+					MoveArrayListManager.renounceMoveArrayList(blackMoves);
 					return 0;
 				}
 			}
+			MoveArrayListManager.renounceMoveArrayList(blackMoves);
 			return 2;
 		}
 		return 0;

@@ -35,52 +35,54 @@ public class Engine {
 			System.out.println("Initialization took " + time + "ms.");
 	}
 
-	public ArrayList<Move> findMoveList(Board board, String playerColor){
-		ArrayList<Move> legalMoves = new ArrayList<Move>();
+	public MoveArrayList findMoveList(Board board, String playerColor){
+		MoveArrayList legalMoves = MoveArrayListManager.obtainMoveArrayList();
 
  		if(playerColor == "WHITE"){
 			if(board.checkColor("WHITE") == 1){
 				if(board.checkmate() == 1){
-					return new ArrayList<Move>();
+					return MoveArrayListManager.obtainMoveArrayList();
 				}
 			}
+			MoveArrayList moves = this.generateMoves(board,"WHITE");
 
-			ArrayList<Move> moves = this.generateMoves(board,"WHITE");
-
-			for(Move move : moves){
+			for(int i = 0; i < moves.size(); i++){
+				Move move = moves.get(i);
 				Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
 					continue;
 				int simCheck = simBoard.checkColor("WHITE");
 				if(simCheck == 2 || simCheck == 0)
-					legalMoves.add(move);
-				}
+					legalMoves.add(move.from, move.to, move.fromPiece, move.toPiece, move.checking, move.score);
+			}
+			MoveArrayListManager.renounceMoveArrayList(moves);
 
 		}else if(playerColor == "BLACK") {
  			if(board.checkColor("BLACK") == 2){
  				if(board.checkmate() == 2){
-					return new ArrayList<Move>();
+					return MoveArrayListManager.obtainMoveArrayList();
 				}
 			}
- 			ArrayList<Move> moves = this.generateMoves(board,"BLACK");
+			MoveArrayList moves = this.generateMoves(board,"BLACK");
 
- 			for(Move move : moves){
+ 			for(int i = 0; i < moves.size(); i++){
+ 				Move move = moves.get(i);
  				Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
  				simBoard.makeMove(move.from, move.to);
  				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
  					continue;
  				int simCheck = simBoard.checkColor("BLACK");
  				if(simCheck == 1 || simCheck == 0)
- 					legalMoves.add(move);
+ 					legalMoves.add(move.from, move.to, move.fromPiece, move.toPiece, move.checking, move.score);
  			}
-
+ 			MoveArrayListManager.renounceMoveArrayList(moves);
 		}
 		return legalMoves;
 	}
 
-	public ArrayList<Move> generateMoves(Board board, String playerColor){
-		ArrayList<Move> moveList = new ArrayList<Move>(60);
+	public MoveArrayList generateMoves(Board board, String playerColor){
+		MoveArrayList moveList = MoveArrayListManager.obtainMoveArrayList();
 
 		long occupied = occupied(board);
 		long empty = empty(board);
@@ -126,22 +128,18 @@ public class Engine {
 			for(int i = 0; i<64; i++) {
 				long pos = AttackSets.getPosition(i);
 				if((pos & legalWPMoves) != 0) {
-					Move move = new Move(i-8, i, 'P', '_', false);
-					moveList.add(move);
+					moveList.add(i-8, i, 'P', '_', false, 0);
 				}
 				if((pos & legalWPMoves2) != 0) {
-					Move move = new Move(i-16, i, 'P', '_', false);
-					moveList.add(move);
+					moveList.add(i-16, i, 'P', '_', false, 0);
 				}
 				if((pos & WPAttacksL) != 0) {
 					char takenPiece = board.getPiece(i);
-					Move move = new Move(i-7, i, 'P', takenPiece, false);
-					moveList.add(move);
+					moveList.add(i-7, i, 'P', takenPiece, false, 0);
 				}
 				if((pos & WPAttacksR) != 0) {
 					char takenPiece = board.getPiece(i);
-					Move move = new Move(i-9, i, 'P', takenPiece, false);
-					moveList.add(move);
+					moveList.add(i-9, i, 'P', takenPiece, false, 0);
 				}
 			}
 
@@ -150,22 +148,18 @@ public class Engine {
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false);
-						moveList.add(enPassantAttack);
+						moveList.add(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false, 0);
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
-						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false);
-						moveList.add(enPassantAttack);
+						moveList.add(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false, 0);
 					}
 				}else{
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP ) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false);
-						moveList.add(enPassantAttack);
+						moveList.add(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false, 0);
 					}
 					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						Move enPassantAttack = new Move(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false);
-						moveList.add(enPassantAttack);
+						moveList.add(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false, 0);
 					}
 				}
 			}
@@ -188,8 +182,7 @@ public class Engine {
 							movesFound++;
 
 							char takenPiece = board.getPiece(j);
-							Move move = new Move(i, j, 'K', takenPiece, false);
-							moveList.add(move);
+							moveList.add(i, j, 'K', takenPiece, false, 0);
 						}
 					}
 				}else if((board.WB & AttackSets.getPosition(i)) != 0){
@@ -240,8 +233,7 @@ public class Engine {
 					for(int j = 0; j < 64; j++){
 						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
 							char takenPiece = board.getPiece(j);
-							Move move = new Move(i, j, 'B', takenPiece, false); // 63-j???
-							moveList.add(move);
+							moveList.add(i, j, 'B', takenPiece, false, 0);
 						}
 					}
 				}else if((board.WR & AttackSets.getPosition(i)) != 0){
@@ -290,10 +282,8 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-
 							char takenPiece = board.getPiece(j);
-							Move move = new Move(i, j, 'R', takenPiece, false);  // 63-j???
-							moveList.add(move);
+							moveList.add(i, j, 'R', takenPiece, false, 0);
 						}
 					}
 				}else if((board.WQ & AttackSets.getPosition(i)) != 0){
@@ -354,10 +344,8 @@ public class Engine {
 					//generate moveList
 					for(int j = 0; j < 64; j++){
 						if((queenAttacks & AttackSets.getPosition(j)) != 0){ //((queenAttacks>>j)&1)==1
-
 							char takenPiece = board.getPiece(j);
-							Move move = new Move(i, j, 'Q', takenPiece,false); //63-j??
-							moveList.add(move);
+							moveList.add(i, j, 'Q', takenPiece, false, 0);
 						}
 					}
 				}else if((board.WK & AttackSets.getPosition(i)) != 0){
@@ -420,8 +408,7 @@ public class Engine {
 						if((legalWKMoves & AttackSets.getPosition(j)) != 0) {
 
 							char takenPiece = board.getPiece(j);
-							Move move = new Move(i, j, 'K', takenPiece, false);
-							moveList.add(move);
+							moveList.add(i, j, 'K', takenPiece, false, 0);
 						}
 					}
 				}
@@ -457,23 +444,19 @@ public class Engine {
 				long pos = AttackSets.getPosition(i);
 
 				if((legalBPMoves & pos) != 0) {
-					Move move = new Move(i+8, i, 'p', '_', false);
-					moveList.add(move);
+					moveList.add(i+8, i, 'p', '_', false, 0);
 				}
 				if((legalBPMoves2 & pos) != 0) {
-					Move move = new Move(i+16, i, 'p', '_', false);
-					moveList.add(move);
+					moveList.add(i+16, i, 'p', '_', false, 0);
 				}
 				if((BPAttacksL & pos) != 0) {
 					char takenPiece = board.getPiece(i);
-					Move move = new Move(i+9, i, 'p', takenPiece, false);
-					moveList.add(move);
+					moveList.add(i+9, i, 'p', takenPiece, false, 0);
 				}
 
 				if((BPAttacksR & pos) != 0) {
 					char takenPiece = board.getPiece(i);
-					Move move = new Move(i+7, i, 'p', takenPiece, false);
-					moveList.add(move);
+					moveList.add(i+7, i, 'p', takenPiece, false, 0);
 				}
 			}
 
@@ -482,18 +465,18 @@ public class Engine {
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
-						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false));
+						moveList.add(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false, 0);
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
 					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
-						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false));
+						moveList.add(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false, 0);
 					}
 				}else{
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(new Move(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false));
+						moveList.add(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false, 0);
 					}
 					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(new Move(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false));
+						moveList.add(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false, 0);
 					}
 				}
 			}
@@ -516,7 +499,7 @@ public class Engine {
 							movesFound++;
 
 							char takenPiece = board.getPiece(j);
-							moveList.add(new Move(i, j, 'n', takenPiece, false));
+							moveList.add(i, j, 'n', takenPiece, false, 0);
 						}
 					}
 				}else if((board.BB & AttackSets.getPosition(i)) != 0){
@@ -568,7 +551,7 @@ public class Engine {
 						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
 
 							char takenPiece = board.getPiece(j);
-							moveList.add(new Move(i, j, 'b', takenPiece, false)); //63-j????
+							moveList.add(i, j, 'b', takenPiece, false, 0);
 						}
 					}
 				}else if((board.BR & AttackSets.getPosition(i)) != 0){
@@ -619,7 +602,7 @@ public class Engine {
 					for(int j = 0; j < 64; j++){
 						if((rookAttacks & AttackSets.getPosition(j)) != 0){
 							char takenPiece = board.getPiece(j);
-							moveList.add(new Move(i, j, 'r', takenPiece, false)); //63-j???
+							moveList.add(i, j, 'r', takenPiece, false, 0);
 						}
 					}
 				}else if((board.BQ & AttackSets.getPosition(i)) != 0){
@@ -681,7 +664,7 @@ public class Engine {
 					for(int j = 0; j < 64; j++){
 						if((queenAttacks & AttackSets.getPosition(j)) != 0){
 							char takenPiece = board.getPiece(j);
-							moveList.add(new Move(i, j, 'q', takenPiece, false)); //63-j???+?
+							moveList.add(i, j, 'q', takenPiece, false, 0);
 						}
 					}
 				}else if((board.BK & AttackSets.getPosition(i)) != 0){
@@ -741,7 +724,7 @@ public class Engine {
 
 						if((legalBKMoves & AttackSets.getPosition(j)) != 0) {
 							char takenPiece = board.getPiece(j);
-							moveList.add(new Move(i, j, 'k', takenPiece, false));
+							moveList.add(i, j, 'k', takenPiece, false, 0);
 						}
 					}
 				}
@@ -834,10 +817,10 @@ public class Engine {
 			return score;
 		}
 		depth++;
-		ArrayList<Move> moves = this.findMoveList(board, "WHITE");
+		MoveArrayList moves = this.findMoveList(board, "WHITE");
 		sort(moves);
 		ArrayList<Move> localPV = new ArrayList<Move>();
-
+		
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1)
 				return -Double.MAX_VALUE;
@@ -846,7 +829,8 @@ public class Engine {
 			else return 0;
 		}
 
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
@@ -858,6 +842,8 @@ public class Engine {
 				if(transposition.depth >= depthLeft){
 					score = tpt.get(hash).score;
 					TPFound = true;
+				}else{
+					tpt.remove(hash);
 				}
 			}
 
@@ -895,7 +881,7 @@ public class Engine {
 			return evalPosition(board);
 		}
 		depth++;
-		ArrayList<Move> moves = this.findMoveList(board, "BLACK");
+		MoveArrayList moves = this.findMoveList(board, "BLACK");
 		sort(moves);
 		ArrayList<Move> localPV = new ArrayList<Move>();
 
@@ -907,7 +893,8 @@ public class Engine {
 			else return 0;
 		}
 
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
@@ -919,7 +906,10 @@ public class Engine {
 				if(transposition.depth >= depthLeft){
 					score = tpt.get(hash).score;
 					TPFound = true;
+				}else{
+					tpt.remove(hash);
 				}
+
 			}
 
 			if(!TPFound){
@@ -952,10 +942,10 @@ public class Engine {
 	}
 
 
-	public ArrayList<Move> sort(ArrayList<Move> moves){
-		ArrayList<Move> sortedMoves = new ArrayList<Move>();
+	public void sort(MoveArrayList moves){
 
-		for(Move move : moves){
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
 			int tempScore = 0;
 			if(move.fromPiece == 'P' || move.fromPiece == 'p'){
 				tempScore += -1;
@@ -1001,7 +991,6 @@ public class Engine {
 
 			}
 		});
-		return sortedMoves;
 	}
 	
 	public double evalPosition(Board board) {
