@@ -43,6 +43,7 @@ public class main {
 			System.out.println("bestmove " + Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
 */
 
+
             Thread thread;
             Thread t2;
             Thread t3;
@@ -72,9 +73,11 @@ public class main {
                 } else if (input.equals("isready")) {
                     for (int j = 0; j < 100; j++) {
                         ArrayList<Move> pv = new ArrayList<Move>();
-                        double result = engine.alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+                        double result = engine.alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
                     }
                     System.out.println("readyok");
+                }else if(input.equals("stop")){
+                    Util.dumpGCLogs();
                 } else if (input.equals("ucinewgame")) {
                 } else if (input.startsWith("position startpos ")) {
                     //board.draw();
@@ -99,11 +102,13 @@ public class main {
                 } else if (input.startsWith("go") && (nbrTokens % 2 == 0)) {
                     ArrayList<Move> pv = new ArrayList<Move>();
 
-                    if (nbrTokens < 2) {
+                    if (nbrTokens < 3) {
                         MoveArrayList startingMoves = engine.findMoveList(board, "WHITE");
                         Move move = startingMoves.get(rand.nextInt(20));
                         System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
                     } else {
+
+
                         thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -117,6 +122,7 @@ public class main {
                                         simBoard.makeMove(move.from, move.to);
                                         if (simBoard.checkmate() == 2) {
                                             System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+                                            Util.dumpGCLogs();
                                         }
                                     }
                                     int depthLeft = 1;
@@ -124,26 +130,25 @@ public class main {
                                     while ((System.currentTimeMillis() - time) < 3000 && depthLeft < 10) {
                                         time = System.currentTimeMillis();
                                         System.out.println("Depth: " + depthLeft);
-                                        result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+                                        result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
                                         System.out.println("Time taken: " + (System.currentTimeMillis() - time) + "ms");
                                         depthLeft++;
                                     }
-
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
                                     System.out.println("Score: " + result);
-
-
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
                         });
+
                         thread.start();
+
                     }
 
                 } else if (input.startsWith("go") && ((nbrTokens % 2) != 0)) {
                     ArrayList<Move> pv = new ArrayList<Move>();
-                    if (nbrTokens < 2) {
+                    if (nbrTokens < 3) {
                         MoveArrayList startingMoves = engine.findMoveList(board, "BLACK");
                         Move move = startingMoves.get(rand.nextInt(20));
                         System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
@@ -159,10 +164,11 @@ public class main {
                                         simBoard.makeMove(move.from, move.to);
                                         if (simBoard.checkmate() == 1) {
                                             System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+                                            Util.dumpGCLogs();
                                         }
                                     }
 
-                                    double result = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1);
+                                    double result = engine.alphaBetaMin(board, 5, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
                                     System.out.println("Score: " + result);
 

@@ -803,7 +803,8 @@ public class Engine {
 		return ~empty(board);
 	}
 
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth){
+
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, long prevHash){
 		if(depthLeft == 0){
 
 			long hash = tpt.hash(board);
@@ -834,7 +835,12 @@ public class Engine {
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
-			long hash = tpt.hash(simBoard);
+			long hash;
+			if(prevHash == 0L)
+				hash = tpt.hash(simBoard);
+			else{
+				hash = tpt.updateHash(board, prevHash, move.from, move.to);
+			}
 			double score = -Double.MAX_VALUE;
 			boolean TPFound = false;
 			if(tpt.containsKey(hash)){
@@ -848,7 +854,7 @@ public class Engine {
 			}
 
 			if(!TPFound){
-				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
+				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
 				hash = tpt.hash(board);
 				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0));
 			}
@@ -875,10 +881,17 @@ public class Engine {
 		return alpha;
 	}
 
-	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth){
+	double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, long prevHash){
 		if(depthLeft == 0){
+			long hash = tpt.hash(board);
+
+			if(tpt.containsKey(hash)){
+				return tpt.get(hash).score;
+			}
+			double score = evalPosition(board);
+			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0));
 			pv.clear();
-			return evalPosition(board);
+			return score;
 		}
 		depth++;
 		MoveArrayList moves = this.findMoveList(board, "BLACK");
@@ -898,7 +911,13 @@ public class Engine {
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
-			long hash = tpt.hash(simBoard);
+			long hash;
+			if(prevHash == 0L){
+				hash = tpt.hash(simBoard);
+			}else{
+				hash = tpt.updateHash(board, prevHash, move.from, move.to);
+			}
+
 			double score = Double.MAX_VALUE;
 			boolean TPFound = false;
 			if(tpt.containsKey(hash)){
@@ -915,7 +934,7 @@ public class Engine {
 			if(!TPFound){
 				hash = tpt.hash(board);
 				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0));
-				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth);
+				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
 			}
 			if(score == -Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();

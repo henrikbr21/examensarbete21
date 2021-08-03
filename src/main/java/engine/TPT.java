@@ -36,6 +36,96 @@ public class TPT extends HashMap<Long, TPT.TPTEntry>{
 
     }
 
+    public long updateHash(Board board, long hash, int from, int to){
+        char fromPiece = board.getPiece(from);
+        char toPiece = board.getPiece(to);
+
+        if(fromPiece != '_'){
+            switch(fromPiece){
+                case 'P':
+                    hash = hash ^ AttackSets.randomNumbers[from][0];
+                    break;
+                case 'N':
+                    hash = hash ^ AttackSets.randomNumbers[from][1];
+                    break;
+                case 'B':
+                    hash = hash ^ AttackSets.randomNumbers[from][2];
+                    break;
+                case 'R':
+                    hash = hash ^ AttackSets.randomNumbers[from][3];
+                    break;
+                case 'Q':
+                    hash = hash ^ AttackSets.randomNumbers[from][4];
+                    break;
+                case 'K':
+                    hash = hash ^ AttackSets.randomNumbers[from][5];
+                    break;
+                case 'p':
+                    hash = hash ^ AttackSets.randomNumbers[from][6];
+                    break;
+                case 'n':
+                    hash = hash ^ AttackSets.randomNumbers[from][7];
+                    break;
+                case 'b':
+                    hash = hash ^ AttackSets.randomNumbers[from][8];
+                    break;
+                case 'r':
+                    hash = hash ^ AttackSets.randomNumbers[from][9];
+                    break;
+                case 'q':
+                    hash = hash ^ AttackSets.randomNumbers[from][10];
+                    break;
+                case 'k':
+                    hash = hash ^ AttackSets.randomNumbers[from][11];
+                    break;
+            }
+
+            if(toPiece != '_'){
+                switch(fromPiece){
+                    case 'P':
+                        hash = hash ^ AttackSets.randomNumbers[to][0];
+                        break;
+                    case 'N':
+                        hash = hash ^ AttackSets.randomNumbers[to][1];
+                        break;
+                    case 'B':
+                        hash = hash ^ AttackSets.randomNumbers[to][2];
+                        break;
+                    case 'R':
+                        hash = hash ^ AttackSets.randomNumbers[to][3];
+                        break;
+                    case 'Q':
+                        hash = hash ^ AttackSets.randomNumbers[to][4];
+                        break;
+                    case 'K':
+                        hash = hash ^ AttackSets.randomNumbers[to][5];
+                        break;
+                    case 'p':
+                        hash = hash ^ AttackSets.randomNumbers[to][6];
+                        break;
+                    case 'n':
+                        hash = hash ^ AttackSets.randomNumbers[to][7];
+                        break;
+                    case 'b':
+                        hash = hash ^ AttackSets.randomNumbers[to][8];
+                        break;
+                    case 'r':
+                        hash = hash ^ AttackSets.randomNumbers[to][9];
+                        break;
+                    case 'q':
+                        hash = hash ^ AttackSets.randomNumbers[to][10];
+                        break;
+                    case 'k':
+                        hash = hash ^ AttackSets.randomNumbers[to][11];
+                        break;
+                }
+            }
+
+        }
+        return hash;
+
+    }
+
     public long hash(Board board){
         long hash = 0L;
 

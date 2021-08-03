@@ -9,7 +9,6 @@ import org.junit.Before;
 
 import java.util.Comparator;
 
-
 public class MoveArrayListTest {
     private MoveArrayList arr;
     private Move move0;

@@ -209,9 +209,11 @@ public abstract class Util {
 	}
 
 	public static void dumpGCLogs(){
+		MoveArrayListManager.dumpCounts();
+
 		List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
 		for (GarbageCollectorMXBean mxBean : gcMXBeans) {
-			System.out.println("Name: " + mxBean.getName() + " Collection count: " + mxBean.getCollectionCount() + " Collection time: " + mxBean.getCollectionTime());
+			System.out.println("Name: " + mxBean.getName() + " Collection count: " + mxBean.getCollectionCount() + " Collection time: " + mxBean.getCollectionTime() + "ms.");
 		}
 	}
 }
