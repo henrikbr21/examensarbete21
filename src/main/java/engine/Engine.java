@@ -151,7 +151,7 @@ public class Engine {
 						moveList.add(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false, 0);
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
-					if((AttackSets.getPosition(board.enPassantPos)-1 & board.WP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0){
 						moveList.add(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false, 0);
 					}
 				}else{
@@ -468,7 +468,7 @@ public class Engine {
 						moveList.add(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false, 0);
 					}
 				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
-					if((AttackSets.getPosition(board.enPassantPos)-1 & board.BP) != 0){
+					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0){
 						moveList.add(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false, 0);
 					}
 				}else{
@@ -806,14 +806,13 @@ public class Engine {
 
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, long prevHash){
 		if(depthLeft == 0){
-
 			long hash = tpt.hash(board);
 			if(tpt.containsKey(hash)){
 				return tpt.get(hash).score;
 			}
 
 			double score = evalPosition(board);
-			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0));
+			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0, 1));
 			pv.clear();
 			return score;
 		}
@@ -835,6 +834,17 @@ public class Engine {
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
+			/*
+			StringBuilder str = new StringBuilder();
+			for(int k = 0; k < depth; k++){
+				str.append("  ");
+			}
+			str.append("Considering move: ");
+			str.append(Util.convertNumToCoord(move.from));
+			str.append(Util.convertNumToCoord(move.to));
+			System.out.println(str.toString());
+*/
+
 			long hash;
 			if(prevHash == 0L)
 				hash = tpt.hash(simBoard);
@@ -845,7 +855,7 @@ public class Engine {
 			boolean TPFound = false;
 			if(tpt.containsKey(hash)){
 				TPT.TPTEntry transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft){
+				if(transposition.depth >= depthLeft&& (transposition.turnToMove == 2)){
 					score = tpt.get(hash).score;
 					TPFound = true;
 				}else{
@@ -855,8 +865,8 @@ public class Engine {
 
 			if(!TPFound){
 				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
-				hash = tpt.hash(board);
-				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0));
+				hash = tpt.hash(simBoard);
+				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0, 1));
 			}
 			if(score == Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();
@@ -889,7 +899,7 @@ public class Engine {
 				return tpt.get(hash).score;
 			}
 			double score = evalPosition(board);
-			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0));
+			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0, 2));
 			pv.clear();
 			return score;
 		}
@@ -910,8 +920,18 @@ public class Engine {
 			Move move = moves.get(i);
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
-
+			/*
+			StringBuilder str = new StringBuilder();
+			for(int k = 0; k < depth; k++){
+				str.append("  ");
+			}
+			str.append("Considering move: ");
+			str.append(Util.convertNumToCoord(move.from));
+			str.append(Util.convertNumToCoord(move.to));
+			System.out.println(str.toString());
+			*/
 			long hash;
+
 			if(prevHash == 0L){
 				hash = tpt.hash(simBoard);
 			}else{
@@ -922,7 +942,7 @@ public class Engine {
 			boolean TPFound = false;
 			if(tpt.containsKey(hash)){
 				TPT.TPTEntry transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft){
+				if(transposition.depth >= depthLeft && (transposition.turnToMove == 2)){
 					score = tpt.get(hash).score;
 					TPFound = true;
 				}else{
@@ -932,9 +952,9 @@ public class Engine {
 			}
 
 			if(!TPFound){
-				hash = tpt.hash(board);
-				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0));
 				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
+				hash = tpt.hash(simBoard);
+				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0, 2));
 			}
 			if(score == -Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();
@@ -959,6 +979,7 @@ public class Engine {
 		}
 		return beta;
 	}
+
 
 
 	public void sort(MoveArrayList moves){

@@ -20,7 +20,7 @@ public abstract class AttackSets {
 	private static long upRookAttacks[] = new long[64];
 	private static long downRookAttacks[] = new long[64];
 	public static long currentAttackBoard = 0L;
-	public static long[][] randomNumbers = new long[64][12];
+	public static long[][] randomNumbers = new long[64][13];
 
 	//castling boards
 	public static long castleWKL;
@@ -7694,13 +7694,11 @@ public abstract class AttackSets {
 	public static void initZobrist(){
 		Random rand = new Random();
 		for(int i = 0; i < 64; i++){
-			for(int j = 0; j < 12; j++){
+			for(int j = 0; j < 13; j++){
 				randomNumbers[i][j] = rand.nextLong();
 			}
 		}
 	}
-
-
 
 	public static void initPositions(){
 		positions[63] = 1L;

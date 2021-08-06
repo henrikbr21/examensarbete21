@@ -42,8 +42,33 @@ public class main {
 			System.out.println("SCORE " + result2);
 			System.out.println("bestmove " + Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
 */
+            /*
+            int node = 0;
+            long time = System.currentTimeMillis();
+            MoveArrayList moves = engine.findMoveList(board, "WHITE");
+            for(int i = 0; i < moves.size(); i++){
+                Board simBoard = new Board(board);
+                Move move = moves.get(i);
+                simBoard.makeMove(move.from, move.to);
+                MoveArrayList moves2 = engine.findMoveList(simBoard, "BLACK");
+                for(int k = 0; k < moves2.size(); k++){
+                    Board simBoard2 = new Board(simBoard);
+                    Move move2 = moves2.get(i);
+                    simBoard2.makeMove(move2.from, move2.to);
+                    MoveArrayList moves3 = engine.findMoveList(simBoard2, "WHITE");
 
-
+                    for(int j = 0; j < moves3.size(); j++){
+                        Board simBoard3 = new Board(simBoard2);
+                        Move move3 = moves3.get(i);
+                        simBoard3.makeMove(move3.from, move3.to);
+                        MoveArrayList moves4 = engine.findMoveList(simBoard3, "BLACK");
+                        node++;
+                    }
+                }
+            }
+            System.out.println("NODES: " + node);
+            System.out.println("TIME: " + (System.currentTimeMillis()-time));
+*/
             Thread thread;
             Thread t2;
             Thread t3;
@@ -102,7 +127,7 @@ public class main {
                 } else if (input.startsWith("go") && (nbrTokens % 2 == 0)) {
                     ArrayList<Move> pv = new ArrayList<Move>();
 
-                    if (nbrTokens < 3) {
+                    if (nbrTokens < 2) {
                         MoveArrayList startingMoves = engine.findMoveList(board, "WHITE");
                         Move move = startingMoves.get(rand.nextInt(20));
                         System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
@@ -128,12 +153,12 @@ public class main {
                                     int depthLeft = 1;
                                     double result = 0;
                                     while ((System.currentTimeMillis() - time) < 3000 && depthLeft < 10) {
-                                        time = System.currentTimeMillis();
                                         System.out.println("Depth: " + depthLeft);
                                         result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
                                         System.out.println("Time taken: " + (System.currentTimeMillis() - time) + "ms");
                                         depthLeft++;
                                     }
+                                    System.out.println("TPT SIZE: " + tpt.size());
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
                                     System.out.println("Score: " + result);
                                 } catch (Exception e) {
@@ -141,14 +166,13 @@ public class main {
                                 }
                             }
                         });
-
                         thread.start();
 
                     }
 
                 } else if (input.startsWith("go") && ((nbrTokens % 2) != 0)) {
                     ArrayList<Move> pv = new ArrayList<Move>();
-                    if (nbrTokens < 3) {
+                    if (nbrTokens < 2) {
                         MoveArrayList startingMoves = engine.findMoveList(board, "BLACK");
                         Move move = startingMoves.get(rand.nextInt(20));
                         System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
