@@ -111,6 +111,7 @@ public class Engine {
 			long RightColumn0 = ~(72340172838076673L);
 
 			long WPAttacksR = board.WP & RightColumn0;
+
 			WPAttacksR = WPAttacksR >>> 9;
 
 			WPAttacksR = WPAttacksR & enemies; //only possible if enemy present
@@ -165,7 +166,8 @@ public class Engine {
 			}
 
 			for(int i = 0; i < 64; i++){
-				if((board.WN & AttackSets.getPosition(i)) != 0){
+				long position = AttackSets.getPosition(i);
+				if((board.WN & position) != 0){
 					long WNAttacks = AttackSets.knightMoves(i);
 					long legalWNMoves2 = WNAttacks & empty;
 					long legalWNMoves3 = WNAttacks & enemies;
@@ -185,7 +187,7 @@ public class Engine {
 							moveList.add(i, j, 'K', takenPiece, false, 0);
 						}
 					}
-				}else if((board.WB & AttackSets.getPosition(i)) != 0){
+				}else if((board.WB & position) != 0){
 					long bishopAttacks = 0L;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
@@ -236,7 +238,7 @@ public class Engine {
 							moveList.add(i, j, 'B', takenPiece, false, 0);
 						}
 					}
-				}else if((board.WR & AttackSets.getPosition(i)) != 0){
+				}else if((board.WR & position) != 0){
 					//up attacks
 					long upAttacks = occupied & AttackSets.rookAttacksU(i);
 					int closestPos = Long.numberOfLeadingZeros(upAttacks);
@@ -286,7 +288,7 @@ public class Engine {
 							moveList.add(i, j, 'R', takenPiece, false, 0);
 						}
 					}
-				}else if((board.WQ & AttackSets.getPosition(i)) != 0){
+				}else if((board.WQ & position) != 0){
 					long singleQueen = AttackSets.getPosition(i);
 
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
@@ -348,7 +350,7 @@ public class Engine {
 							moveList.add(i, j, 'Q', takenPiece, false, 0);
 						}
 					}
-				}else if((board.WK & AttackSets.getPosition(i)) != 0){
+				}else if((board.WK & position) != 0){
 					long WKMoves = AttackSets.kingMoves(i);
 
 					//Remove pseudolegal moves
@@ -482,7 +484,8 @@ public class Engine {
 			}
 
 			for(int i = 0; i < 64; i++){
-				if((board.BN & AttackSets.getPosition(i)) != 0){
+				long position = AttackSets.getPosition(i);
+				if((board.BN & position) != 0){
 					long BNAttacks = AttackSets.knightMoves(i);
 					long legalBNMoves2 = BNAttacks & empty;
 					long legalBNMoves3 = BNAttacks & enemies;
@@ -502,7 +505,7 @@ public class Engine {
 							moveList.add(i, j, 'n', takenPiece, false, 0);
 						}
 					}
-				}else if((board.BB & AttackSets.getPosition(i)) != 0){
+				}else if((board.BB & position) != 0){
 					long bishopAttacks = 0L;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
@@ -554,7 +557,7 @@ public class Engine {
 							moveList.add(i, j, 'b', takenPiece, false, 0);
 						}
 					}
-				}else if((board.BR & AttackSets.getPosition(i)) != 0){
+				}else if((board.BR & position) != 0){
 					//up attacks
 					long upAttacks = occupied & AttackSets.rookAttacksU(i);
 					int closestPos = Long.numberOfLeadingZeros(upAttacks);
@@ -605,7 +608,7 @@ public class Engine {
 							moveList.add(i, j, 'r', takenPiece, false, 0);
 						}
 					}
-				}else if((board.BQ & AttackSets.getPosition(i)) != 0){
+				}else if((board.BQ & position) != 0){
 					long singleQueen = AttackSets.getPosition(i);
 
 					//long occupied = occupied() & AttackSets.rowMask(i/8);
@@ -667,7 +670,7 @@ public class Engine {
 							moveList.add(i, j, 'q', takenPiece, false, 0);
 						}
 					}
-				}else if((board.BK & AttackSets.getPosition(i)) != 0){
+				}else if((board.BK & position) != 0){
 					long BKMoves = AttackSets.kingMoves(i);
 
 					//Remove pseudolegal moves
@@ -812,7 +815,7 @@ public class Engine {
 			}
 
 			double score = evalPosition(board);
-			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0, 1));
+			tpt.put(hash, score, 0);
 			pv.clear();
 			return score;
 		}
@@ -855,18 +858,18 @@ public class Engine {
 			boolean TPFound = false;
 			if(tpt.containsKey(hash)){
 				TPT.TPTEntry transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft&& (transposition.turnToMove == 2)){
+				if(transposition.depth >= depthLeft){
 					score = tpt.get(hash).score;
 					TPFound = true;
 				}else{
-					tpt.remove(hash);
+					//tpt.remove(hash);
 				}
 			}
 
 			if(!TPFound){
 				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
 				hash = tpt.hash(simBoard);
-				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0, 1));
+				tpt.put(hash, score, depthLeft);
 			}
 			if(score == Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();
@@ -899,7 +902,7 @@ public class Engine {
 				return tpt.get(hash).score;
 			}
 			double score = evalPosition(board);
-			tpt.put(hash, tpt.new TPTEntry(hash, score, 0, 0, 2));
+			tpt.put(hash, score, 0);
 			pv.clear();
 			return score;
 		}
@@ -942,11 +945,11 @@ public class Engine {
 			boolean TPFound = false;
 			if(tpt.containsKey(hash)){
 				TPT.TPTEntry transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft && (transposition.turnToMove == 2)){
+				if(transposition.depth >= depthLeft){
 					score = tpt.get(hash).score;
 					TPFound = true;
 				}else{
-					tpt.remove(hash);
+					//tpt.remove(hash);
 				}
 
 			}
@@ -954,7 +957,7 @@ public class Engine {
 			if(!TPFound){
 				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
 				hash = tpt.hash(simBoard);
-				tpt.put(hash, tpt.new TPTEntry(hash, score, depthLeft, 0, 2));
+				tpt.put(hash, score, depthLeft);
 			}
 			if(score == -Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();

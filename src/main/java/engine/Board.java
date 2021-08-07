@@ -199,7 +199,7 @@ public class Board {
 		boolean player1Checked = false;
 		boolean player2Checked = false;
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
-		Engine engine = new Engine("WHITE", simBoard, true, new TPT());
+		Engine engine = new Engine("WHITE", simBoard, true, new TPT(0));
 
 		MoveArrayList whiteMoves = engine.generateMoves(simBoard,"WHITE");
 
@@ -239,7 +239,7 @@ public class Board {
 
 	public int checkColor(String color){
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
-		TPT tpt = new TPT();
+		TPT tpt = new TPT(0);
 		Engine engine = new Engine("WHITE", simBoard, true, tpt);
 
 		if(color.equals("BLACK")){
@@ -293,7 +293,7 @@ public class Board {
 
 	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated, returns 4 if stalemate
 	public int checkmate(){
-		TPT tpt = new TPT();
+		TPT tpt = new TPT(0);
 		Engine engine = new Engine("WHITE", this, true, tpt);
 
 		int check = this.check();

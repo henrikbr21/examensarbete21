@@ -1,65 +1,97 @@
 package engine;
 
 import java.util.HashMap;
-import java.util.Random;
 
-public class TPT extends HashMap<Long, TPT.TPTEntry> {
-    final int WP = 0;
-    final int WN = 1;
-    final int WB = 2;
-    final int WR = 3;
-    final int WQ = 4;
-    final int WK = 5;
-    final int BP = 6;
-    final int BN = 7;
-    final int BB = 8;
-    final int BR = 9;
-    final int BQ = 10;
-    final int BK = 11;
-    private int modern = 0;
-    private int size = 0;
+public class TPT {
+    private int nextIndex = 0;
+    public long[] hashes;
+    boolean filled = false;
+    public HashMap<Long, TPTEntry> entries;
+    boolean debug = true;
 
-    public class TPTEntry {
-        long hash;
-        double score;
-        int depth;
-        int generation;
-        int turnToMove;
-
-        public TPTEntry(long hash, double score, int depth, int generation, int turnToMove) {
-            this.hash = hash;
-            this.score = score;
-            this.depth = depth;
-            this.generation = generation;
-            this.turnToMove = turnToMove;
-        }
+    public TPT(int size) {
+        hashes = new long[size];
+        entries = new HashMap<Long, TPTEntry>();
     }
 
     public TPT() {
-
+        hashes = new long[1000000];
+        entries = new HashMap<Long, TPTEntry>();
     }
 
-    public void put(long hash, TPT.TPTEntry tptEntry){
-        if(this.size < 5000000){
-            super.put(hash, tptEntry);
-            size++;
-        }else{
-            this.clear();
-            System.out.println("TPT CLEARED");
-            this.size = 0;
+    public class TPTEntry {
+        public long hash;
+        public double score;
+        public int depth;
+        public int refCount = 1;
+
+        public TPTEntry(long hash, double score, int depth) {
+            this.hash = hash;
+            this.score = score;
+            this.depth = depth;
+        }
+    }
+
+
+    public void put(long hash, double score, int depth) {
+        TPTEntry entryToOverwrite;
+
+        TPTEntry newEntry = entries.get(hash);
+        if (newEntry != null) {
+            updateEntry(newEntry, hash, score, depth, ++newEntry.refCount);
+            if (filled) {
+                TPTEntry oldEntry = entries.get(hashes[nextIndex]);
+                if (--oldEntry.refCount == 0) {
+                    entries.remove(hashes[nextIndex]);
+                }
+            }
+        } else if (filled) {
+            TPTEntry entry = entries.get(hashes[nextIndex]);
+            if (--entry.refCount == 0) {
+                entries.remove(hashes[nextIndex]);
+                entries.put(hash, this.updateEntry(entry, hash, score, depth, 1));
+            } else {
+                entries.put(hash, new TPTEntry(hash, score, depth));
+            }
+        } else {
+            entries.put(hash, new TPTEntry(hash, score, depth));
         }
 
+
+        hashes[nextIndex] = hash;
+
+        if (nextIndex < (hashes.length - 1)) {
+            nextIndex++;
+        } else {
+            nextIndex = 0;
+            filled = true;
+        }
     }
 
-    public void remove(long hash){
-        super.remove(hash);
-        this.size--;
+    private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount) {
+        entryToBeUpdated.hash = newHash;
+        entryToBeUpdated.depth = newDepth;
+        entryToBeUpdated.score = newScore;
+        entryToBeUpdated.refCount = newRefCount;
+
+        return entryToBeUpdated;
+    }
+
+    public TPTEntry get(long hash) {
+        return entries.get(hash);
+    }
+
+    public boolean containsKey(long hash) {
+        if (entries.containsKey(hash))
+            return true;
+        else
+            return false;
     }
 
     public long updateHash(Board board, long hash, int from, int to) {
         char fromPiece = board.getPiece(from);
         char toPiece = board.getPiece(to);
-        int fromPieceIndex = -1;
+        int fromPieceIndex;
 
         hash ^= AttackSets.randomNumbers[from][12];
 
