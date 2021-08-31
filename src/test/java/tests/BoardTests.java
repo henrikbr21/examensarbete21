@@ -175,6 +175,50 @@ public class BoardTests {
 	}
 
 	@Test
+	public void testCheckMate3(){
+
+		char[][] testBoard = {
+				{' ', ' ', ' ', ' ', ' ', 'R', ' ', 'k'},
+				{' ', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
+				{' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+				{'p', ' ', ' ', 'p', ' ', ' ', 'N', ' '},
+				{'P', ' ', 'r', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', 'P', 'b', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', 'B', ' ', ' ', ' ', 'q'},
+				{' ', ' ', 'K', ' ', ' ', ' ', ' ', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false, tpt);
+
+		System.out.println("Moves: " + engine.findMoveList(board, "BLACK"));
+		assertEquals(0, board.checkColor("WHITE"));
+		assertEquals(2, board.checkColor("BLACK"));
+		assertEquals(2, board.checkmate());
+	}
+
+	@Test
+	public void testCheckMate4(){
+
+		char[][] testBoard = {
+				{'r', ' ', ' ', 'k', ' ', 'b', ' ', 'r'},
+				{'p', 'p', 'p', 'Q', ' ', ' ', 'p', 'p'},
+				{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+				{' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', 'K', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'B', ' ', ' ', ' '},
+				{'P', 'P', ' ', ' ', ' ', 'P', ' ', 'P'},
+				{'n', 'N', ' ', ' ', ' ', ' ', 'q', ' '}
+		};
+		Board board = new Board(testBoard);
+		Engine engine = new Engine("WHITE", board, false, tpt);
+
+		System.out.println("Moves: " + engine.findMoveList(board, "BLACK"));
+		assertEquals(0, board.checkColor("WHITE"));
+		assertEquals(2, board.checkColor("BLACK"));
+		assertEquals(2, board.checkmate());
+	}
+
+	@Test
 	public void testCastlingRemoval(){
 		char[][] testBoard = {
 				{'r', 'n', ' ', ' ', 'k', 'b', 'n', 'r'},
@@ -435,6 +479,34 @@ public class BoardTests {
 		assertThat(allMoves, CoreMatchers.containsString("e5d6"));
 		board.makeMove(36, 43);
 		assertEquals(0, board.BP & AttackSets.getPosition(35)); //black pawn removed
+	}
+
+	@Test
+	public void testEnPassant2(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		board.makeMove(Util.convertCoordToNum("f7"), Util.convertCoordToNum("f5"));
+		assertEquals(true, board.enPassant);
+		Engine engine = new Engine("WHITE", board, false, tpt);
+		MoveArrayList moves = engine.findMoveList(board,"WHITE");
+		String allMoves = new String();
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
+			allMoves += Util.convertNumToCoord(move.from);
+			allMoves += Util.convertNumToCoord(move.to);
+		}
+		assertThat(allMoves, CoreMatchers.containsString("e5f6"));
+		board.makeMove(Util.convertCoordToNum("e5"), Util.convertCoordToNum("f6"));
+		assertEquals(0, board.BP & AttackSets.getPosition(Util.convertCoordToNum("f5"))); //black pawn removed
 	}
 
 	@Test

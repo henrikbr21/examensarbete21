@@ -194,6 +194,7 @@ public class Board {
 			this.makeMove(move.from, move.to);
 		}
 	}
+
 	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
 	public int check() {
 		boolean player1Checked = false;
@@ -201,32 +202,14 @@ public class Board {
 		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
 		Engine engine = new Engine("WHITE", simBoard, true, new TPT(0));
 
-		MoveArrayList whiteMoves = engine.generateMoves(simBoard,"WHITE");
 
-		int WKPos = -1;
-		for(int i = 0; i < 64; i++){
-			if((AttackSets.getPosition(i) & this.WK) != 0){
-				WKPos = i;
-			}
-		}
-		int BKPos = -1;
-		for(int i = 0; i < 64; i++){
-			if((AttackSets.getPosition(i) & this.BK) != 0){
-				BKPos = i;
-			}
-		}
-
-		//HEBR MULTITHREADING ISSUE
-		if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
+		if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
 			player2Checked = true;
 		}
-		MoveArrayListManager.renounceMoveArrayList(whiteMoves);
 
-		MoveArrayList blackMoves = engine.generateMoves(simBoard,"BLACK");
-		if((AttackSets.currentAttackBoard & AttackSets.getPosition(WKPos)) != 0){
+		if(engine.isAttackedByOpponent(this, "WHITE", this.WK)){
 			player1Checked = true;
 		}
-		MoveArrayListManager.renounceMoveArrayList(blackMoves);
 
 		if(player1Checked && player2Checked)
 			return 3;
@@ -238,32 +221,15 @@ public class Board {
 	}
 
 	public int checkColor(String color){
-		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
 		TPT tpt = new TPT(0);
-		Engine engine = new Engine("WHITE", simBoard, true, tpt);
+		Engine engine = new Engine("WHITE", this, true, tpt);
 
 		if(color.equals("BLACK")){
-			int BKPos = -1;
-			for(int i = 0; i < 64; i++){
-				if((AttackSets.getPosition(i) & this.BK) != 0){
-					BKPos = i;
-				}
-			}
-			MoveArrayList whiteMoves = engine.generateMoves(simBoard,"WHITE");
-			MoveArrayListManager.renounceMoveArrayList(whiteMoves);
-			if((AttackSets.currentAttackBoard & AttackSets.getPosition(BKPos)) != 0){
+			if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
 				return 2;
 			}else return 0;
 		}else if(color.equals("WHITE")){
-			int WKPos = -1;
-			for(int i = 0; i < 64; i++){
-				if((AttackSets.getPosition(i) & this.WK) != 0){
-					WKPos = i;
-				}
-			}
-			MoveArrayList blackMoves = engine.generateMoves(simBoard,"BLACK");
-			MoveArrayListManager.renounceMoveArrayList(blackMoves);
-			if((AttackSets.currentAttackBoard & AttackSets.getPosition(WKPos)) != 0){
+			if(engine.isAttackedByOpponent(this, "WHITE", this.WK)){
 				return 1;
 			}else return 0;
 
@@ -326,9 +292,11 @@ public class Board {
 		}
 
 		 */
+
 		if(check == 0){
 			return 0;
-		}else if(check == 1){
+		}
+		if(check == 1){
 			MoveArrayList whiteMoves = engine.generateMoves(this,"WHITE");
 			for(int i = 0; i < whiteMoves.size(); i++){
 				Move move = whiteMoves.get(i);
