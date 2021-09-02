@@ -19,13 +19,30 @@ public class main {
             Random rand = new Random();
 
 
-			MoveArrayList moves = Util.parseMoveString("f2f3 e7e5 e2e4 f8c5 g2g3 d8g5 f1g2 b7b5 d2d4 g5g6 c1e3 c5d4 e3d4 e5d4 d1e2 d4d3 e2d3 g6f6 d3e3 c7c6 e3d2 f6b2 g1e2 b2a1 d2f4 a1b1");
+			MoveArrayList moves = Util.parseMoveString("h2h4 g7g6 h4h5 b8c6 h5g6 f7g6 b1a3 g8f6 g1f3 d7d5 a3b5 c8d7");
 			board.playLine(moves);
-			//board.makeMove(Util.convertCoordToNum("b7"), Util.convertCoordToNum("c6"));
             board.draw();
-            ArrayList<Move> pv2 = new ArrayList<Move>();
-            double result2 = engine.alphaBetaMax(board, 5, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
 
+/*
+			MoveArrayList moves2 = engine.generateMoves(board, "BLACK");
+			for(int i = 0; i < moves2.size(); i++){
+			    Move move2 = moves2.get(i);
+			    System.out.println(Util.convertNumToCoord(move2.from) + Util.convertNumToCoord(move2.to));
+            }
+*/
+/*
+            ArrayList<Move> pv2 = new ArrayList<Move>();
+            long time = System.currentTimeMillis();
+            double result2 = 0;
+            result2 = engine.alphaBetaMax(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+
+            System.out.println(System.currentTimeMillis() - time);
+            for(int i = 0; i < pv2.size(); i++){
+                Move move2 = pv2.get(i);
+                System.out.println(Util.convertNumToCoord(move2.from) + Util.convertNumToCoord(move2.to));
+            }
+            System.out.println(result2);
+*/
             /*
             ArrayList<Move> pv2 = new ArrayList<Move>();
             double result2 = engine.alphaBetaMax(board, 5, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
@@ -117,7 +134,7 @@ public class main {
             int i = 0;
             int nbrTokens = 0;
 
-            if (false) {
+            while (true) {
                 i++;
                 String input = scan.nextLine();
 				/*
@@ -191,13 +208,13 @@ public class main {
                                             Util.dumpGCLogs();
                                         }
                                     }
-                                    int depthLeft = 1;
+                                    int depthLeft = 2;
                                     double result = 0;
                                     while ((System.currentTimeMillis() - time) < 3000 && depthLeft < 10) {
                                         System.out.println("Depth: " + depthLeft);
                                         result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
                                         System.out.println("Time taken: " + (System.currentTimeMillis() - time) + "ms");
-                                        depthLeft++;
+                                        depthLeft += 2;
                                     }
                                     board.draw();
                                     Util.dumpGCLogs();

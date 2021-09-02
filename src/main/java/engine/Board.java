@@ -111,7 +111,7 @@ public class Board {
 		this.castleWKValid = board.castleWKValid;
 		this.castleWQValid = board.castleWQValid;
 		this.castleBKValid = board.castleBKValid;
-		this.castleBQValid = board.castleBKValid;
+		this.castleBQValid = board.castleBQValid;
 		this.wHasCastled = board.wHasCastled;
 		this.bHasCastled = board.bHasCastled;
 	}
@@ -482,9 +482,17 @@ public class Board {
 		clearPosition(fromPos);
 
 		if(Debug.findDuplicate(this)){
+			Util.draw(this.BP);
+			Util.draw(this.BN);
+			Util.draw(this.BB);
+			Util.draw(this.BR);
+			Util.draw(this.BQ);
+			Util.draw(this.BK);
 			this.draw();
 			System.out.println("HERE");
 		}
+
+
 	}
 
 	public String castleValid(){

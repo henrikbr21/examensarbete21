@@ -68,7 +68,7 @@ public class Engine {
 
  			for(int i = 0; i < moves.size(); i++){
  				Move move = moves.get(i);
- 				Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+ 				Board simBoard = new Board(board);
  				simBoard.makeMove(move.from, move.to);
  				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
  					continue;
@@ -184,7 +184,7 @@ public class Engine {
 							movesFound++;
 
 							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'K', takenPiece, false, 0);
+							moveList.add(i, j, 'N', takenPiece, false, 0);
 						}
 					}
 				}else if((board.WB & position) != 0){
