@@ -469,6 +469,15 @@ public class Board {
 		if(!enPassantEnabledThisTurn)
 			enPassant = false;
 
+		if((toPos & AttackSets.getPosition(0)) != 0)
+			castleWQValid = false;
+		else if((toPos & AttackSets.getPosition(7)) != 0)
+			castleWKValid = false;
+		else if((toPos & AttackSets.getPosition(56)) != 0)
+			castleBQValid = false;
+		else if((toPos & AttackSets.getPosition(63)) != 0)
+			castleBKValid = false;
+
 		//remove the old, duplicate piece
 		clearPosition(fromPos);
 

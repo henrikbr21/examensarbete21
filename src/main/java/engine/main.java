@@ -18,6 +18,24 @@ public class main {
             final Engine engine2 = new Engine("BLACK", board, true, tpt);
             Random rand = new Random();
 
+
+			MoveArrayList moves = Util.parseMoveString("f2f3 e7e5 e2e4 f8c5 g2g3 d8g5 f1g2 b7b5 d2d4 g5g6 c1e3 c5d4 e3d4 e5d4 d1e2 d4d3 e2d3 g6f6 d3e3 c7c6 e3d2 f6b2 g1e2 b2a1 d2f4 a1b1");
+			board.playLine(moves);
+			//board.makeMove(Util.convertCoordToNum("b7"), Util.convertCoordToNum("c6"));
+            board.draw();
+            ArrayList<Move> pv2 = new ArrayList<Move>();
+            double result2 = engine.alphaBetaMax(board, 5, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+
+            /*
+            ArrayList<Move> pv2 = new ArrayList<Move>();
+            double result2 = engine.alphaBetaMax(board, 5, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+            for(Move move : pv2){
+                System.out.println(Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
+            }
+            System.out.println(result2);
+            System.out.println("bestmove " + Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
+*/
+
             /*
             long time = System.currentTimeMillis();
             long hash = 0L;
@@ -35,19 +53,6 @@ public class main {
             System.out.println("TIME: " + (System.currentTimeMillis()-time));
 */
 
-/*
-			MoveArrayList moves = Util.parseMoveString("e2e4 b7b6 d2d4 g8f6 b1c3 c8b7 e4e5");
-			board.playLine(moves);
-			//board.makeMove(Util.convertCoordToNum("b7"), Util.convertCoordToNum("c6"));
-            board.draw();
-            ArrayList<Move> pv2 = new ArrayList<Move>();
-            double result2 = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
-            for(Move move : pv2){
-                System.out.println(Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
-            }
-            System.out.println(result2);
-            System.out.println("bestmove " + Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
-*/
 
             /*
             MoveArrayList moves2 = engine.findMoveList(board, "WHITE");
@@ -112,7 +117,7 @@ public class main {
             int i = 0;
             int nbrTokens = 0;
 
-            while (true) {
+            if (false) {
                 i++;
                 String input = scan.nextLine();
 				/*

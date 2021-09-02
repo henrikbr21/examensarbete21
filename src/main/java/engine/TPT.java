@@ -24,8 +24,15 @@ public class TPT {
         public double score;
         public int depth;
         public int refCount = 1;
+        public Move bestMove;
 
         public TPTEntry(long hash, double score, int depth) {
+            this.hash = hash;
+            this.score = score;
+            this.depth = depth;
+        }
+
+        public TPTEntry(long hash, double score, int depth, Move bestMove) {
             this.hash = hash;
             this.score = score;
             this.depth = depth;

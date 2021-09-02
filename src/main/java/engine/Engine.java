@@ -1421,8 +1421,10 @@ public class Engine {
 			}else if(move.toPiece == 'Q' || move.toPiece == 'q'){
 				tempScore += 90;
 			}
+			move.score = tempScore;
+
 			if(move.to == board.lastMovedPos){
-				move.score = 100;
+				move.score += 100;
 			}
 
 		}
@@ -1453,6 +1455,8 @@ public class Engine {
 			return Double.MAX_VALUE;
 		}
 
+		int nbrWhiteBishops = 0;
+		int nbrBlackBishops = 0;
 		for(int i = 0; i < 64; i++){
 			long pos = AttackSets.getPosition(i);
 
@@ -1471,6 +1475,7 @@ public class Engine {
 				points = points + AttackSets.wKnightPST[i];
 			}else if((board.WB & pos) != 0){
 				points = points + 330;
+				nbrWhiteBishops++;
 
 				points = points + AttackSets.wBishopPST[i];
 			}else if((board.WQ & pos) != 0){
@@ -1496,6 +1501,7 @@ public class Engine {
 				points = points - AttackSets.wKnightPST[i];
 			}else if((board.BB & pos) != 0){
 				points = points - 330;
+				nbrBlackBishops++;
 
 				points = points - AttackSets.wBishopPST[i];
 			}else if((board.BQ & pos) != 0){
@@ -1506,6 +1512,10 @@ public class Engine {
 				points = points - AttackSets.wKingPST[i];
 			}
 		}
+		if(nbrWhiteBishops == 2)
+			points = points + 30;
+		else if(nbrBlackBishops == 2)
+			points = points - 30;
 
 		if(board.wHasCastled){
 			points = points + 125;
