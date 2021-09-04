@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class TPT {
     private int nextIndex = 0;
     public long[] hashes;
-    boolean filled = false;
+    public boolean filled = false;
     public HashMap<Long, TPTEntry> entries;
     boolean debug = true;
 
@@ -254,6 +254,5 @@ public class TPT {
         }
         return hash;
     }
-
 
 }

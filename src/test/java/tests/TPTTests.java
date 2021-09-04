@@ -7,6 +7,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class TPTTests{
@@ -47,4 +48,5 @@ public class TPTTests{
         System.out.println("RefCount: " + tpt.get(10).refCount);
         assertTrue(tpt.get(10).refCount == 2);
     }
+
 }

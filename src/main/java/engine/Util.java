@@ -216,4 +216,12 @@ public abstract class Util {
 			System.out.println("Name: " + mxBean.getName() + " Collection count: " + mxBean.getCollectionCount() + " Collection time: " + mxBean.getCollectionTime() + "ms.");
 		}
 	}
+
+	public static boolean isEven(int nbr){
+		if(nbr % 2 == 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
