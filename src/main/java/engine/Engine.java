@@ -1,38 +1,16 @@
 package engine;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Stack;
 
 public class Engine {
 	private String color; //"BLACK" for black pieces, "WHITE" for white pieces
 	private Board board;
 	private TPT tpt;
 	
-	public Engine(String color, Board board, boolean initialized, TPT tpt){
+	public Engine(String color, Board board, TPT tpt){
 		this.tpt = tpt;
-		long time = System.currentTimeMillis();
 		this.board = board;
 		this.color = color;
-		if(!initialized){
-			AttackSets.initKnightMoves();
-			AttackSets.initKingMoves();
-			AttackSets.initRookMoves();
-			AttackSets.initLineMasks();
-			AttackSets.initLeftRays();
-			AttackSets.initRightRays();
-			AttackSets.initPositions();
-			AttackSets.initEnPassantMoves();
-			AttackSets.initRookAttacksLR();
-			AttackSets.initRookAttacksUD();
-			AttackSets.initPSTs();
-			AttackSets.initZobrist();
-		}
-		time = System.currentTimeMillis() - time;
-		if(!initialized)
-			System.out.println("Initialization took " + time + "ms.");
 	}
 
 	public MoveArrayList findMoveList(Board board, String playerColor){
@@ -41,14 +19,14 @@ public class Engine {
  		if(playerColor == "WHITE"){
 			if(board.checkColor("WHITE") == 1){
 				if(board.checkmate() == 1){
-					return MoveArrayListManager.obtainMoveArrayList();
+					return legalMoves;
 				}
 			}
 			MoveArrayList moves = this.generateMoves(board,"WHITE");
-
+			//only use moves that don't leave the player's king in check
 			for(int i = 0; i < moves.size(); i++){
 				Move move = moves.get(i);
-				Board simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
+				Board simBoard = new Board(board);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
 					continue;
@@ -61,11 +39,11 @@ public class Engine {
 		}else if(playerColor == "BLACK") {
  			if(board.checkColor("BLACK") == 2){
  				if(board.checkmate() == 2){
-					return MoveArrayListManager.obtainMoveArrayList();
+					return legalMoves;
 				}
 			}
 			MoveArrayList moves = this.generateMoves(board,"BLACK");
-
+ 			//only use moves that don't leave the player's king in check
  			for(int i = 0; i < moves.size(); i++){
  				Move move = moves.get(i);
  				Board simBoard = new Board(board);
@@ -84,18 +62,10 @@ public class Engine {
 	public MoveArrayList generateMoves(Board board, String playerColor){
 		MoveArrayList moveList = MoveArrayListManager.obtainMoveArrayList();
 
-		long occupied = occupied(board);
-		long empty = empty(board);
-
-		long enemies = 0L;
-		long friends = 0L;
-		if((playerColor == "WHITE" && this.color == "WHITE") || (playerColor == "BLACK" && this.color == "BLACK")){
-			enemies = enemies(board);
-			friends = friends(board);
-		}else if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
-			enemies = friends(board);
-			friends = enemies(board);
-		}
+		long occupied = board.occupied();
+		long empty = board.empty();
+		long friends = board.friends(playerColor);
+		long enemies = board.enemies(playerColor);
 
 		long attackBoard = 0L;
 		if(playerColor == "WHITE"){
@@ -123,8 +93,7 @@ public class Engine {
 			WPAttacksL = WPAttacksL >>> 7;
 
 			attackBoard = WPAttacksL | WPAttacksR;
-			WPAttacksL = WPAttacksL & enemies; //ISSUE?!?!!
-			int a = 0;
+			WPAttacksL = WPAttacksL & enemies;
 
 			for(int i = 0; i<64; i++) {
 				long pos = AttackSets.getPosition(i);
@@ -729,18 +698,11 @@ public class Engine {
 		return moveList;
 	}
 	public boolean isAttackedByOpponent(Board board, String playerColor, long square){
-		long occupied = occupied(board);
-		long empty = empty(board);
+		long occupied = board.occupied();
+		long empty = board.empty();
+		long friends = board.friends(playerColor);
+		long enemies = board.enemies(playerColor);
 
-		long enemies = 0L;
-		long friends = 0L;
-		if((playerColor == "BLACK" && this.color == "WHITE") || (playerColor == "WHITE" && this.color == "BLACK")){
-			enemies = enemies(board);
-			friends = friends(board);
-		}else if((playerColor == "WHITE" && this.color == "WHITE") || (playerColor == "BLACK" && this.color == "BLACK")){
-			enemies = friends(board);
-			friends = enemies(board);
-		}
 
 		long attackBoard = 0L;
 		if(playerColor == "BLACK"){
@@ -1144,108 +1106,66 @@ public class Engine {
 		return false;
 	}
 
-	private long enemies(Board board) {
-		long enemies = 0L;
-		
-		if(color.equals("WHITE")) {
-			enemies = enemies ^ board.BP;
-			enemies = enemies ^ board.BR;
-			enemies = enemies ^ board.BN;
-			enemies = enemies ^ board.BB;
-			enemies = enemies ^ board.BK;
-			enemies = enemies ^ board.BQ;
-			
-		}else if(color.equals("BLACK")) {
-			enemies = enemies ^ board.WP;
-			enemies = enemies ^ board.WR;
-			enemies = enemies ^ board.WN;
-			enemies = enemies ^ board.WB;
-			enemies = enemies ^ board.WK;
-			enemies = enemies ^ board.WQ;
-		}
-		return enemies;
-	}
-	
-	private long friends(Board board) {
-		long friends = 0L;
-		
-		if(color.equals("WHITE")) {
-			friends = friends ^ board.WP;
-			friends = friends ^ board.WR;
-			friends = friends ^ board.WN;
-			friends = friends ^ board.WB;
-			friends = friends ^ board.WK;
-			friends = friends ^ board.WQ;
-			
-		}else if(color.equals("BLACK")) {
-			friends = friends ^ board.BP;
-			friends = friends ^ board.BR;
-			friends = friends ^ board.BN;
-			friends = friends ^ board.BB;
-			friends = friends ^ board.BK;
-			friends = friends ^ board.BQ;
-		}
-		
-		return friends;
-	}
-	
-	private long empty(Board board) {
-		long empty = 0l;
-		empty = ~(empty & 0); //flip all bits to 1
-		empty = empty ^ board.WP;
-		empty = empty ^ board.WR;
-		empty = empty ^ board.WN;
-		empty = empty ^ board.WB;
-		empty = empty ^ board.WK;
-		empty = empty ^ board.WQ;
-		
-		empty = empty ^ board.BP;
-		empty = empty ^ board.BR;
-		empty = empty ^ board.BN;
-		empty = empty ^ board.BB;
-		empty = empty ^ board.BK;
-		empty = empty ^ board.BQ;
-		
-		return empty;
-	}
-	
-	private long occupied(Board board) {
-		return ~empty(board);
-	}
-
-
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, long prevHash){
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
 		if(depthLeft == 0){
-			long hash = tpt.hash(board);
+			depth++;
+			//long hash = tpt.hash(board);
+			/*
 			if(tpt.containsKey(hash)){
-					return tpt.get(hash).score;
+				Debug.TPFound(depth);
+				return tpt.get(hash).score;
 			}
+			 */
+			//TPT.TPTEntry entry = tpt.get(hash);
 			double score = evalPosition(board);
-			tpt.put(hash, score, 0);
+			/*
+			if(entry != null && entry.depth == 0 && entry.score != score)
+				System.out.println("ENTRY INCORRECT");
+
+			 */
+			//tpt.put(hash, score, 0);
 			pv.clear();
 			return score;
 		}
 		depth++;
 		MoveArrayList moves = this.findMoveList(board, "WHITE");
-		sort(moves);
-		ArrayList<Move> localPV = new ArrayList<Move>();
-		if(depth == 5){
-			System.out.println("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+
+		PrincipalVariation localPV = new PrincipalVariation();
+
+		if(prevHash == 0L)
+			prevHash = tpt.hash(board);
+		TPT.TPTEntry entry = tpt.get(prevHash);
+
+		if(entry != null)
+			sort(moves, entry.bestMove);
+		else{
+			sort(moves);
+			entry = tpt.new TPTEntry(prevHash, Double.NEGATIVE_INFINITY, depthLeft);
 		}
+
 
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1)
-				return -Double.MAX_VALUE;
+				return -20000+depth;
 			else if(board.checkColor("BLACK") == 2)
-				return Double.MAX_VALUE;
+				return 20000;
 			else return 0;
 		}
+
+		double score = -Double.MAX_VALUE;
+		Move bestMove = null;
 
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
+			if(debug){
+				if(LineDebugger.getMove(depth).equals(move))
+					LineDebugger.match(depth);
+				else
+					LineDebugger.unmatch(depth);
+			}
 /*
 			StringBuilder str = new StringBuilder();
 			if(depth == 0)
@@ -1260,79 +1180,131 @@ public class Engine {
 			System.out.println(str.toString());
 */
 
+/*
 			long hash;
 			if(prevHash == 0L)
 				hash = tpt.hash(simBoard);
 			else{
 				hash = tpt.updateHash(board, prevHash, move.from, move.to);
 			}
-			double score = -Double.MAX_VALUE;
+			 */
+			long hash = tpt.hash(simBoard);
+
 			boolean TPFound = false;
+			TPT.TPTEntry transposition = null;
 			if(tpt.containsKey(hash)){
-				TPT.TPTEntry transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft){
-					score = tpt.get(hash).score;
+				 transposition = tpt.get(hash);
+				if(transposition.depth >= depthLeft-1){
+					Debug.TPFound(depth);
 					TPFound = true;
 				}
 			}
 
-			if(!TPFound){
-				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
-				hash = tpt.hash(simBoard); //unnecessary, already have the hash
-				tpt.put(hash, score, depthLeft-1);
+			if(!TPFound || TPFound){
+				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash, debug);
+				//hash = tpt.hash(simBoard); //unnecessary, already have the hash
+				if(TPFound) {
+					if(score != transposition.score && (transposition.depth == depthLeft-1) && transposition != null){
+						System.out.println("INCORRECT Entry score: " + transposition.score + " Search score: " + score);
+					}
+				}
+
+				if(depthLeft == 1)
+					tpt.put(hash, score, depthLeft-1, move, simBoard, 0);
+
 			}
 			if(score == Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();
-				pv.addAll(localPV);
-				pv.add(move);
+				pv.addAllMoves(localPV);
+				pv.addMove(move);
+				System.out.println("MAXVALUE " + "DepthLeft: " + depthLeft);
 				return score-depth; //prefer earlier checkmate
 			}
 
 			if(score >= beta){
+				if(debug){
+					if(LineDebugger.onLine(depth))
+						System.out.println("BETA CUTOFF AT DEPTH: " + depth);
+				}
+				//tpt.put(prevHash, score, depthLeft, new Move(move));
 				return beta;
 			}
 			if(score > alpha){
+				if(entry != null){
+					bestMove = new Move(move);
+				}
 				pv.clear();
-				pv.addAll(localPV);
-				pv.add(move);
+				pv.addAllMoves(localPV);
+				pv.addMove(move);
 
 				alpha = score;
 			}
 
+
 		}
+		//tpt.put(prevHash, score, depthLeft, bestMove);
 		return alpha;
 	}
 
-	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, ArrayList<Move> pv, int depth, long prevHash){
+	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
 		if(depthLeft == 0){
-			long hash = tpt.hash(board);
+			depth++;
+			//long hash = tpt.hash(board);
 			pv.clear();
+			/*
 			if(tpt.containsKey(hash)){
+				Debug.TPFound(depth);
 				return tpt.get(hash).score;
 			}
+			 */
 			double score = evalPosition(board);
-			tpt.put(hash, score, 0);
+
+			/*
+			TPT.TPTEntry entry = tpt.get(hash);
+			if(entry != null && entry.depth == 0 && entry.score != score)
+				System.out.println("ENTRY INCORRECT");
+*/
+			//tpt.put(hash, score, 0);
 			pv.clear();
 			return score;
 		}
 		depth++;
 		MoveArrayList moves = this.findMoveList(board, "BLACK");
-		sort(moves);
-		ArrayList<Move> localPV = new ArrayList<Move>();
+		PrincipalVariation localPV = new PrincipalVariation();
+
+
+		if(prevHash == 0L)
+			prevHash = tpt.hash(board);
+		TPT.TPTEntry entry = tpt.get(prevHash);
+
+		if(entry != null)
+			sort(moves, entry.bestMove);
+		else{
+			sort(moves);
+			entry = tpt.new TPTEntry(prevHash, Double.NEGATIVE_INFINITY, depthLeft);
+		}
 
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1)
-				return -Double.MAX_VALUE;
+				return -20000;
 			else if(board.checkColor("BLACK") == 2)
-				return Double.MAX_VALUE;
+				return 20000+depth;
 			else return 0;
 		}
 
+		double score = Double.MAX_VALUE;
+		Move bestMove = null;
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
+			if(debug){
+				if(LineDebugger.getMove(depth).equals(move))
+					LineDebugger.match(depth);
+				else
+					LineDebugger.unmatch(depth);
+			}
 			/*
 			StringBuilder str = new StringBuilder();
 			for(int k = 0; k < depth; k++){
@@ -1344,56 +1316,73 @@ public class Engine {
 			System.out.println(str.toString());
 */
 
+/*
 			long hash;
 			if(prevHash == 0L){
 				hash = tpt.hash(simBoard);
 			}else{
 				hash = tpt.updateHash(board, prevHash, move.from, move.to);
 			}
-
-			double score = Double.MAX_VALUE;
+*/
+			long hash = tpt.hash(simBoard);
 			boolean TPFound = false;
+			TPT.TPTEntry transposition = null;
 			if(tpt.containsKey(hash)){
-				TPT.TPTEntry transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft){
-					score = tpt.get(hash).score;
+				transposition = tpt.get(hash);
+				if(transposition.depth >= depthLeft-1){
+					Debug.TPFound(depth);
 					TPFound = true;
 				}
-
 			}
 
-			if(!TPFound){
-				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash);
-				hash = tpt.hash(simBoard); //unnecessary, already have the hash
-				tpt.put(hash, score, depthLeft-1);
+			if(!TPFound || TPFound){
+				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash, debug);
+				//hash = tpt.hash(simBoard); //unnecessary, already have the hash
+				if(TPFound) {
+					if(score != transposition.score && (transposition.depth == depthLeft-1)  && transposition != null) {
+						System.out.println("INCORRECT Entry score: " + transposition.score + " Search score: " + score);
+					}
+				}
+				if(depthLeft == 1)
+					tpt.put(hash, score, depthLeft-1, move, simBoard, 0);
+
+
 			}
 			if(score == -Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
 				pv.clear();
-				pv.addAll(localPV);
-				pv.add(move);
+				pv.addAllMoves(localPV);
+				pv.addMove(move);
 				return score+depth; //prefer earlier checkmate
 			}
 
 			if(score <= alpha){
+				//tpt.put(prevHash, score, depthLeft, new Move(move));
+				if(debug){
+					if(LineDebugger.onLine(depth))
+						System.out.println("ALPHA CUTOFF AT DEPTH: " + depth);
+				}
 				return alpha;
 			}
 
 			//ändrat ordning på ifsatser
 			if(score < beta){
+				if(entry != null){
+					bestMove = new Move(move);
+				}
 				pv.clear();
-				pv.addAll(localPV);
-				pv.add(move);
-
+				pv.addAllMoves(localPV);
+				pv.addMove(move);
 				beta = score;
 			}
 
 		}
+		//tpt.put(prevHash, score, depthLeft, bestMove);
 		return beta;
 	}
 
 
 
-	public void sort(MoveArrayList moves){
+	public void sort(MoveArrayList moves, Move bestMove){
 
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
@@ -1429,7 +1418,67 @@ public class Engine {
 				move.score += 100;
 			}
 
+			if(bestMove != null && move.equals(bestMove)){
+				move.score = 10000;
+			}
 		}
+
+
+		moves.sort(new Comparator<Move>() {
+			@Override
+			public int compare(Move o1, Move o2) {
+				if(o1.score > o2.score){
+					return -1;
+				}else if(o1.score < o2.score){
+					return 1;
+				}else {
+					return 0;
+				}
+
+			}
+		});
+	}
+	public void sort(MoveArrayList moves){
+
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
+			int tempScore = 0;
+			if(move.toPiece == '_')
+				continue;
+
+			if(move.fromPiece == 'P' || move.fromPiece == 'p'){
+				tempScore += -1;
+			}else if(move.fromPiece == 'N' || move.fromPiece == 'n'){
+				tempScore += -3;
+			}else if(move.fromPiece == 'B' || move.fromPiece == 'b'){
+				tempScore += -3;
+			}else if(move.fromPiece == 'R' || move.fromPiece == 'r'){
+				tempScore += -5;
+			}else if(move.fromPiece == 'Q' || move.fromPiece == 'q'){
+				tempScore += -9;
+			}else if(move.fromPiece == 'K' || move.fromPiece == 'k'){
+				tempScore += -10;
+			}
+
+			if(move.toPiece == 'P' || move.toPiece == 'p'){
+				tempScore += 10;
+			}else if(move.toPiece == 'N' || move.toPiece == 'n'){
+				tempScore += 30;
+			}else if(move.toPiece == 'B' || move.toPiece == 'b'){
+				tempScore += 30;
+			}else if(move.toPiece == 'R' || move.toPiece == 'r'){
+				tempScore += 50;
+			}else if(move.toPiece == 'Q' || move.toPiece == 'q'){
+				tempScore += 90;
+			}
+			move.score = tempScore;
+
+			if(move.to == board.lastMovedPos){
+				move.score += 100;
+			}
+
+		}
+
 
 		moves.sort(new Comparator<Move>() {
 			@Override
@@ -1452,9 +1501,9 @@ public class Engine {
 		int checkmate = board.checkmate();
 
 		if(checkmate == 1){
-			return -Double.MAX_VALUE;
+			return -20000;
 		}else if(checkmate == 2){
-			return Double.MAX_VALUE;
+			return 20000;
 		}
 
 		int nbrWhiteBishops = 0;
@@ -1525,7 +1574,7 @@ public class Engine {
 			if(board.castleWKValid){
 				points = points + 75;
 			}
-			if(board.castleBQValid){
+			if(board.castleWQValid){
 				points = points + 25;
 			}
 		}
@@ -1542,59 +1591,4 @@ public class Engine {
 
 		return points;
 	}
-
-	
-	/*
-    public void draw(long bitBoard) {
-        String chessBoard[][]=new String[8][8];
-        for (int i=0;i<64;i++) {
-            chessBoard[i/8][i%8]=" ";
-        }
-        for (int i=0;i<64;i++) {
-            if (((bitBoard>>i)&1)==1) {chessBoard[i/8][i%8] = "1";}
-            
-            if (((WN>>i)&1)==1) {chessBoard[i/8][i%8] = "N";}
-            if (((WB>>i)&1)==1) {chessBoard[i/8][i%8] = "B";}
-            if (((WR>>i)&1)==1) {chessBoard[i/8][i%8] = "R";}
-            if (((WQ>>i)&1)==1) {chessBoard[i/8][i%8] = "Q";}
-            if (((WK>>i)&1)==1) {chessBoard[i/8][i%8] = "K";}
-            if (((BP>>i)&1)==1) {chessBoard[i/8][i%8] = "p";}
-            if (((BN>>i)&1)==1) {chessBoard[i/8][i%8] = "n";}
-            if (((BB>>i)&1)==1) {chessBoard[i/8][i%8] = "b";}
-            if (((BR>>i)&1)==1) {chessBoard[i/8][i%8] = "r";}
-            if (((BQ>>i)&1)==1) {chessBoard[i/8][i%8] = "q";}
-            if (((BK>>i)&1)==1) {chessBoard[i/8][i%8] = "k";}
-            
-        }
-        System.out.println("------------------------");
-        for (int i=0;i<8;i++) {
-            System.out.println(Arrays.toString(chessBoard[i]));
-        }
-    }
-    
-    */
-	
-	public void draw(long bitBoard) {
-		String bitBoardString = Long.toBinaryString(bitBoard);
-		bitBoardString = Util.padBinaryString(bitBoardString);
-		int q = 64;
-		
-        for (int i=0;i<8;i++) {
-        	System.out.print("[");
-        	int k = -1;
-        	q = q - 8;
-        			
-        	for(int j = 0; j < 8; j++) {
-        		k++;
-        		
-            	
-                System.out.print(bitBoardString.charAt(q+k));
-                if(k != 7) 
-                	System.out.print(",");
-        	}
-        	System.out.println("]");
-        }
-        System.out.println("-----------------");
-    }
-
 }

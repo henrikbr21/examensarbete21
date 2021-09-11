@@ -1,9 +1,9 @@
 package engine;
 
 public abstract class Debug {
+    public static int TPHits[] = new int[13];
 
     public static boolean findDuplicate(Board board){
-
 
         for(int i = 0; i < 64; i++){
             int copiesFound = 0;
@@ -54,7 +54,23 @@ public abstract class Debug {
 
         }
         return false;
+    }
 
+    public static void TPFound(int depth){
+        TPHits[depth]++;
+    }
+
+    public static void printTPHits(){
+        System.out.println("TP Hits:");
+        for(int i = 0; i < TPHits.length; i++){
+            System.out.println("Depth " + i + ": " + TPHits[i]);
+        }
+    }
+
+    public static void clearTPHits(){
+        for(int i = 0; i < TPHits.length; i++){
+            TPHits[i] = 0;
+        }
     }
 
 }

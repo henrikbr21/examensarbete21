@@ -25,6 +25,8 @@ public class TPT {
         public int depth;
         public int refCount = 1;
         public Move bestMove;
+        public Board board;
+        public int nodeType = -1; //0 = PV
 
         public TPTEntry(long hash, double score, int depth) {
             this.hash = hash;
@@ -32,16 +34,25 @@ public class TPT {
             this.depth = depth;
         }
 
-        public TPTEntry(long hash, double score, int depth, Move bestMove) {
+        public TPTEntry(long hash, double score, int depth, Board board) {
             this.hash = hash;
             this.score = score;
             this.depth = depth;
+            this.board = new Board(board);
+        }
+
+        public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, int nodeType) {
+            this.hash = hash;
+            this.score = score;
+            this.depth = depth;
+            this.bestMove = bestMove;
+            this.board = new Board(board);
+            this.nodeType = nodeType;
         }
     }
 
 
     public void put(long hash, double score, int depth) {
-        TPTEntry entryToOverwrite;
 
         TPTEntry newEntry = entries.get(hash);
         if (newEntry != null) {
@@ -75,11 +86,57 @@ public class TPT {
         }
     }
 
+    public void put(long hash, double score, int depth, Move bestMove, Board board, int nodeType) {
+
+        TPTEntry newEntry = entries.get(hash);
+        if (newEntry != null) {
+            updateEntry(newEntry, hash, score, depth, ++newEntry.refCount, bestMove, board, nodeType);
+            if (filled) {
+                TPTEntry oldEntry = entries.get(hashes[nextIndex]);
+                if (--oldEntry.refCount == 0) {
+                    entries.remove(hashes[nextIndex]);
+                }
+            }
+        } else if (filled) {
+            TPTEntry entry = entries.get(hashes[nextIndex]);
+            if (--entry.refCount == 0) {
+                entries.remove(hashes[nextIndex]);
+                entries.put(hash, this.updateEntry(entry, hash, score, depth, 1, bestMove, board, nodeType));
+            } else {
+                entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, nodeType));
+            }
+        } else {
+            entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, nodeType));
+        }
+
+
+        hashes[nextIndex] = hash;
+
+        if (nextIndex < (hashes.length - 1)) {
+            nextIndex++;
+        } else {
+            nextIndex = 0;
+            filled = true;
+        }
+    }
+
     private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount) {
         entryToBeUpdated.hash = newHash;
         entryToBeUpdated.depth = newDepth;
         entryToBeUpdated.score = newScore;
         entryToBeUpdated.refCount = newRefCount;
+
+        return entryToBeUpdated;
+    }
+
+    private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount, Move bestMove, Board board, int nodeType) {
+        entryToBeUpdated.hash = newHash;
+        entryToBeUpdated.depth = newDepth;
+        entryToBeUpdated.score = newScore;
+        entryToBeUpdated.refCount = newRefCount;
+        entryToBeUpdated.bestMove = bestMove;
+        entryToBeUpdated.board = board;
+        entryToBeUpdated.nodeType = nodeType;
 
         return entryToBeUpdated;
     }
@@ -99,6 +156,18 @@ public class TPT {
         char fromPiece = board.getPiece(from);
         char toPiece = board.getPiece(to);
         int fromPieceIndex;
+
+        int fromColumn = from % 8;
+        int toColumn = to % 8;
+        if((fromPiece == 'P' || fromPiece == 'p') && toPiece == '_' && fromColumn != toColumn) { //enpassant
+            board.makeMove(from, to);
+            return hash(board);
+        }else if((fromPiece == 'K' || fromPiece == 'k')){
+            if((from == 4 && to == 2) || (from == 4 && to == 6) || (from == 60 && to == 58) || (from == 60 && to == 62)){
+                board.makeMove(from, to);
+                return hash(board);
+            }
+        }
 
         hash ^= AttackSets.randomNumbers[from][12];
 
@@ -249,8 +318,17 @@ public class TPT {
                 case 'k':
                     hash ^= AttackSets.randomNumbers[i][11];
                     break;
-
             }
+        }
+
+        if(!board.castleWKValid){
+            hash ^= AttackSets.randCastleNumbers[0];
+        }else if(!board.castleWQValid){
+            hash ^= AttackSets.randCastleNumbers[1];
+        }else if(!board.castleBKValid){
+            hash ^= AttackSets.randCastleNumbers[2];
+        }else if(!board.castleBQValid){
+            hash ^= AttackSets.randCastleNumbers[3];
         }
         return hash;
     }

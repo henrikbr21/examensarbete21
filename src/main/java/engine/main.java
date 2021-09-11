@@ -10,48 +10,81 @@ public class main {
     public static void main(String[] args) {
 
         try {
+            AttackSets.init();
             Scanner scan = new Scanner(System.in);
             TPT tpt = new TPT(3000000);
             final Board board = new Board();
             MoveArrayListManager.size();
-            final Engine engine = new Engine("WHITE", board, false, tpt);
-            final Engine engine2 = new Engine("BLACK", board, true, tpt);
+            final Engine engine = new Engine("WHITE", board, tpt);
+            final Engine engine2 = new Engine("BLACK", board, tpt);
             Random rand = new Random();
 
-
-
-			MoveArrayList moves = Util.parseMoveString("b2b4 e7e6 c1b2 g8f6 b4b5 c7c6 g1f3 d8a5 b2c3 a5b5 e2e3 b5c5 c3e5 b8a6 f1a6 b7a6 b1c3 c5b6 a1b1 f8b4 e5f6 g7f6 a2a3 b4a3 b1b6 a7b6 c3e4 a3e7 d1a1 e6e5 a1c3 h8g8 c3b3 g8g2 f3h4 g2g4 h4f5 g4e4 f5e7 e8e7 f2f3 e4h4");
+			MoveArrayList moves = Util.parseMoveString("d2d4 d7d5 g1f3 g8f6 b1c3 c7c5 d4c5 e7e6 f3e5 b8c6 e5c6 b7c6 c1g5 d5d4 c3e4 a8b8");
             board.playLine(moves);
+
             board.draw();
 
-            /*
-            double result3 = 0;
-            ArrayList<Move> pv3 = new ArrayList<Move>();;;
-            for(int i = 0; i < 5; i++){
-                if(i % 2 == 0){
-                    pv3 = new ArrayList<Move>();
-                    result3 = engine.alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, 0, 0L);
-                }
-            }
 
+
+            PrincipalVariation pv2 = new PrincipalVariation();
             double result2 = 0;
-            ArrayList<Move> pv2 = new ArrayList<Move>();;
-            long time = System.currentTimeMillis();
-            for(int i = 0; i < 7; i++){
-                if(i % 2 == 0){
-                    pv2 = new ArrayList<Move>();
-                    result2 = engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L);
-                    System.out.println("depth: " + i);
-                }
-            }
+            Debug.printTPHits();
+            Debug.clearTPHits();
 
-            System.out.println(System.currentTimeMillis() - time);
+            ArrayList<Move> debugLine = Util.parseMovesForDebugging("c2c3 b8b2 g5f6 g7f6 c3d4 d8d4");
+            LineDebugger.setLine(debugLine);
+            long time = System.currentTimeMillis();
+            result2 = engine.alphaBetaMax(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, true);
+            System.out.println(result2);
+            System.out.println("Time: " + (System.currentTimeMillis() - time));
+            Debug.printTPHits();
             for(int i = 0; i < pv2.size(); i++){
                 Move move2 = pv2.get(i);
                 System.out.println(Util.convertNumToCoord(move2.from) + Util.convertNumToCoord(move2.to));
             }
-            System.out.println(result2);
+
+            /*
+            long hash = tpt.hash(board);
+            TPT.TPTEntry entry = tpt.get(hash);
+            if(entry == null)
+                System.out.println("NO ENTRY1");
+            else{
+                System.out.println("ENTRY1");
+                System.out.println(entry.hash);
+                System.out.println(entry.score);
+                if(entry.bestMove != null)
+                    System.out.println(Util.convertNumToCoord(entry.bestMove.from) + Util.convertNumToCoord(entry.bestMove.to));
+            }
+            board.makeMove(Util.convertCoordToNum("b1"), Util.convertCoordToNum("a3"));
+            hash = tpt.hash(board);
+            entry = tpt.get(hash);
+            if(entry == null)
+                System.out.println("NO ENTRY2");
+            else{
+                System.out.println("ENTRY2");
+                System.out.println(entry.hash);
+                System.out.println(entry.score);
+                if(entry.bestMove != null)
+                    System.out.println(Util.convertNumToCoord(entry.bestMove.from) + Util.convertNumToCoord(entry.bestMove.to));
+                else
+                    System.out.println("No best move");
+            }
+            board.makeMove(Util.convertCoordToNum("d7"), Util.convertCoordToNum("d5"));
+            hash = tpt.hash(board);
+            entry = tpt.get(hash);
+            if(entry == null)
+                System.out.println("NO ENTRY3");
+            else{
+                System.out.println("ENTRY3");
+                System.out.println(entry.hash);
+                System.out.println(entry.score);
+                if(entry.bestMove != null)
+                    System.out.println(Util.convertNumToCoord(entry.bestMove.from) + Util.convertNumToCoord(entry.bestMove.to));
+                else
+                    System.out.println("No best move");
+            }
 */
+
 /*
 			MoveArrayList moves2 = engine.generateMoves(board, "BLACK");
 			for(int i = 0; i < moves2.size(); i++){
@@ -151,7 +184,7 @@ public class main {
             int i = 0;
             int nbrTokens = 0;
 
-            while (true) {
+            if (false) {
                 i++;
                 String input = scan.nextLine();
 				/*
@@ -172,8 +205,8 @@ public class main {
                     System.out.println("id author Henrik");
                 } else if (input.equals("isready")) {
                     for (int j = 0; j < 100; j++) {
-                        ArrayList<Move> pv = new ArrayList<Move>();
-                        double result = engine.alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+                        PrincipalVariation pv = new PrincipalVariation();
+                        double result = engine.alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L, false);
                     }
                     System.out.println("readyok");
                 }else if(input.equals("stop")){
@@ -200,15 +233,13 @@ public class main {
                     System.out.println("NUMBER OF TOKENS: " + nbrTokens);
 
                 } else if (input.startsWith("go") && (nbrTokens % 2 == 0)) {
-                    ArrayList<Move> pv = new ArrayList<Move>();
+                    PrincipalVariation pv = new PrincipalVariation();
 
                     if (nbrTokens < 2) {
                         MoveArrayList startingMoves = engine.findMoveList(board, "WHITE");
                         Move move = startingMoves.get(rand.nextInt(20));
                         System.out.println("bestmove " + Util.convertNumToCoord(move.from) + Util.convertNumToCoord(move.to));
                     } else {
-
-
                         thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -227,9 +258,10 @@ public class main {
                                     }
                                     int depthLeft = 2;
                                     double result = 0;
-                                    while ((System.currentTimeMillis() - time) < 1000 && depthLeft < 10) {
+                                    PrincipalVariation pv2 = new PrincipalVariation();
+                                    while ((System.currentTimeMillis() - time) < 1000 && depthLeft < 11) {
                                         System.out.println("Depth: " + depthLeft);
-                                        result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+                                        result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L, false);
                                         System.out.println("Time taken: " + (System.currentTimeMillis() - time) + "ms");
                                         depthLeft += 2;
                                     }
@@ -247,7 +279,7 @@ public class main {
                     }
 
                 } else if (input.startsWith("go") && ((nbrTokens % 2) != 0)) {
-                    ArrayList<Move> pv = new ArrayList<Move>();
+                    PrincipalVariation pv = new PrincipalVariation();
                     if (nbrTokens < 2) {
                         MoveArrayList startingMoves = engine.findMoveList(board, "BLACK");
                         Move move = startingMoves.get(rand.nextInt(20));
@@ -268,7 +300,7 @@ public class main {
                                         }
                                     }
                                     board.draw();
-                                    double result = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+                                    double result = engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L, false);
                                     Util.dumpGCLogs();
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
                                     System.out.println("Score: " + result);

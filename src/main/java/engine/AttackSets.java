@@ -21,6 +21,7 @@ public abstract class AttackSets {
 	private static long downRookAttacks[] = new long[64];
 	public static long currentAttackBoard = 0L;
 	public static long[][] randomNumbers = new long[64][13];
+	public static long[] randCastleNumbers = new long[4];
 
 	//castling boards
 	public static long castleWKL;
@@ -70,6 +71,21 @@ public abstract class AttackSets {
 	public static double[] bRookPST = new double[64];
 	public static double[] bQueenPST = new double[64];
 	public static double[] bKingPST = new double[64];
+
+	public static void init(){
+		AttackSets.initKnightMoves();
+		AttackSets.initKingMoves();
+		AttackSets.initRookMoves();
+		AttackSets.initLineMasks();
+		AttackSets.initLeftRays();
+		AttackSets.initRightRays();
+		AttackSets.initPositions();
+		AttackSets.initEnPassantMoves();
+		AttackSets.initRookAttacksLR();
+		AttackSets.initRookAttacksUD();
+		AttackSets.initPSTs();
+		AttackSets.initZobrist();
+	}
 
 
 	//TO DO: move boards to AttackSets class
@@ -7698,6 +7714,9 @@ public abstract class AttackSets {
 				randomNumbers[i][j] = rand.nextLong();
 			}
 		}
+		for(int i = 0; i < 4; i++){
+			randCastleNumbers[i] = rand.nextLong();
+		}
 	}
 
 	public static void initPositions(){
@@ -7708,8 +7727,6 @@ public abstract class AttackSets {
 			pos = pos << 1;
 			positions[62-i] = pos;
 		}
-
-
 	}
 
 	public static long rookAttacksR(int pos){

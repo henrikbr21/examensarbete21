@@ -170,18 +170,14 @@ public abstract class Util {
 		String bitBoardString = Long.toBinaryString(bitBoard);
 		bitBoardString = Util.padBinaryString(bitBoardString);
 		int q = 64;
-		
-        for (int i=0;i<8;i++) {
+
+        for (int i = 0; i < 8; i++) {
         	System.out.print("[");
-        	int k = -1;
         	q = q - 8;
         			
         	for(int j = 0; j < 8; j++) {
-        		k++;
-        		
-            	
-                System.out.print(bitBoardString.charAt(q+k));
-                if(k != 7) 
+                System.out.print(bitBoardString.charAt(q+j));
+                if(j != 7)
                 	System.out.print(",");
         	}
         	System.out.println("]");
@@ -204,6 +200,17 @@ public abstract class Util {
 		while(st.hasMoreTokens()){
 			String singleMove = st.nextToken();
 			moves.add(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2)));
+		}
+		return moves;
+	}
+
+	public static ArrayList<Move> parseMovesForDebugging(String moveString){
+		StringTokenizer st = new StringTokenizer(moveString, " ");
+		ArrayList<Move> moves = new ArrayList<>();
+
+		while(st.hasMoreTokens()){
+			String singleMove = st.nextToken();
+			moves.add(new Move(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2))));
 		}
 		return moves;
 	}

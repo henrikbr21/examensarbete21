@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class TPTTests{
+
     private TPT tpt;
 
     @Before
     public void setUp(){
         tpt = new TPT(10);
+        AttackSets.init();
     }
 
     @Test
@@ -54,8 +56,8 @@ public class TPTTests{
     public void testEntryValidity(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, false, tpt);
-        ArrayList<Move> pv = new ArrayList<>();
+        Engine engine = new Engine("WHITE", board, tpt);
+        PrincipalVariation pv = new PrincipalVariation();
         engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
         assertTrue(pv.size()==4);
 
@@ -86,18 +88,25 @@ public class TPTTests{
     public void testEntryValidity2(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, false, tpt);
-        ArrayList<Move> pv = new ArrayList<>();
-        ArrayList<Move> pv2 = new ArrayList<>();
+        Engine engine = new Engine("WHITE", board, tpt);
+        PrincipalVariation pv = new PrincipalVariation();
+        PrincipalVariation pv2 = new PrincipalVariation();
+        PrincipalVariation pv3 = new PrincipalVariation();
 
+        double result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, -1, 0L);
         engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
 
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+        double result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
 
         for(int i = 0; i < pv.size(); i++){
-            assertTrue(pv.get(i).from == pv2.get(i).from);
-            assertTrue(pv.get(i).to == pv2.get(i).to);
+            System.out.println("pv2: " + Util.convertNumToCoord(pv3.get(i).from) + Util.convertNumToCoord(pv3.get(i).to));
+            System.out.println("pv3: " + Util.convertNumToCoord(pv2.get(i).from) + Util.convertNumToCoord(pv2.get(i).to));
+        }
+
+        for(int i = 0; i < pv.size(); i++){
+            //assertTrue(pv3.get(i).from == pv2.get(i).from);
+            //assertTrue(pv3.get(i).to == pv2.get(i).to);
+            assertTrue(result3 == result2);
         }
     }
 
@@ -105,9 +114,9 @@ public class TPTTests{
     public void testEntryValidity3(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, false, tpt);
-        ArrayList<Move> pv = new ArrayList<>();
-        ArrayList<Move> pv2 = new ArrayList<>();
+        Engine engine = new Engine("WHITE", board, tpt);
+        PrincipalVariation pv = new PrincipalVariation();
+        PrincipalVariation pv2 = new PrincipalVariation();
 
         for(int i = 0; i < 5; i++){
             engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
@@ -120,5 +129,25 @@ public class TPTTests{
             assertTrue(pv.get(i).to == pv2.get(i).to);
         }
     }
+
+    @Test
+    public void testPVOrdering(){
+        Board board = new Board();
+        TPT tpt = new TPT(300000);
+        Engine engine = new Engine("WHITE", board, tpt);
+        PrincipalVariation pv = new PrincipalVariation();
+        PrincipalVariation pv2 = new PrincipalVariation();
+
+        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+        board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
+        engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+        long hash = tpt.hash(board);
+        TPT.TPTEntry entry = tpt.get(hash);
+
+        assertTrue(pv2.get(pv2.size()-1).from == entry.bestMove.from);
+        assertTrue(pv2.get(pv2.size()-1).to == entry.bestMove.to);
+
+    }
+
 
 }

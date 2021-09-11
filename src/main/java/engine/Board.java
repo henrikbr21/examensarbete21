@@ -6,7 +6,6 @@ import java.util.StringTokenizer;
 
 public class Board {
 	public long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
-	long[] boards = new long[12];
 	public boolean castleWQValid = true;
 	public boolean castleWKValid = true;
 	public boolean castleBQValid = true;
@@ -17,22 +16,20 @@ public class Board {
 	public boolean wHasCastled = false;
 	public boolean bHasCastled = false;
 	public int lastMovedPos = -1;
+
+	private static final char[][] defaultBoard = {
+			{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+			{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+			{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+			{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+	};
 	
 	public Board() {
-		char[][] board = {
-
-				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-
-		};
-		
-		initBitboards(board);
+		initBitboards(defaultBoard);
 	}
 
 	public void reset(){
@@ -49,19 +46,7 @@ public class Board {
 		this.BK = 0;
 		this.BQ = 0;
 
-		char[][] board = {
-				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-
-		};
-
-		initBitboards(board);
+		initBitboards(defaultBoard);
 		castleWQValid = true;
 		castleWKValid = true;
 		castleBQValid = true;
@@ -72,26 +57,6 @@ public class Board {
 	
 	public Board(char[][] board) {
 		initBitboards(board);
-	}
-
-	//Constructor for copying boards, possible bug because does not contain boolean wHasCastled
-	public Board(long WP, long WR, long WN, long WB, long WK, long WQ, long BP, long BR, long BN, long BB, long BK, long BQ, boolean castleWKValid, boolean castleWQValid, boolean castleBKValid, boolean castleBQValid) {
-		this.WP = WP;
-		this.WR = WR;
-		this.WN = WN;
-		this.WB = WB;
-		this.WK = WK;
-		this.WQ = WQ;
-		this.BP = BP;
-		this.BR = BR;
-		this.BN = BN;
-		this.BB = BB;
-		this.BK = BK;
-		this.BQ = BQ;
-		this.castleWKValid = castleWKValid;
-		this.castleWQValid = castleWQValid;
-		this.castleBKValid = castleBKValid;
-		this.castleBQValid = castleBQValid;
 	}
 
 	//copying
@@ -174,18 +139,6 @@ public class Board {
 				}
 			}
 		}
-		boards[0] = WK;
-		boards[1] = WP;
-		boards[2] = WR;
-		boards[3] = WN;
-		boards[4] = WB;
-		boards[5] = WQ;
-		boards[6] = BK;
-		boards[7] = BP;
-		boards[8] = BR;
-		boards[9] = BN;
-		boards[10] = BB;
-		boards[11] = BQ;
 	}
 
 	public void playLine(MoveArrayList moves){
@@ -197,32 +150,24 @@ public class Board {
 
 	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
 	public int check() {
-		boolean player1Checked = false;
-		boolean player2Checked = false;
-		Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, false, false, false, false);
-		Engine engine = new Engine("WHITE", simBoard, true, new TPT(0));
+		Board simBoard = new Board(this);
+		Engine engine = new Engine("WHITE", simBoard, new TPT(0));
 
-
+		int ret = 0;
 		if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
-			player2Checked = true;
+			ret |= 2;
 		}
 
 		if(engine.isAttackedByOpponent(this, "WHITE", this.WK)){
-			player1Checked = true;
+			ret |= 1;
 		}
 
-		if(player1Checked && player2Checked)
-			return 3;
-		else if(player1Checked)
-			return 1;
-		else if(player2Checked)
-			return 2;
-		return 0;
+		return ret;
 	}
 
 	public int checkColor(String color){
 		TPT tpt = new TPT(0);
-		Engine engine = new Engine("WHITE", this, true, tpt);
+		Engine engine = new Engine("WHITE", this, tpt);
 
 		if(color.equals("BLACK")){
 			if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
@@ -237,61 +182,48 @@ public class Board {
 		return -1;
 	}
 
-	/*
-	public int checkMateColor(String color){
-		Engine engine = new Engine("WHITE", this, true);
-
-		if(color.equals("WHITE")){
-			if(checkColor("WHITE") == 1){
-				ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
-			}else
-				return 0;
-
-		}else if(color.equals("BLACK")){
-			if(checkColor("BLACK") == 2){
-				ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
-			}else
-				return 0;
-		}
-		return -1;
-	}
-	*/
-
-	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated, returns 4 if stalemate
-	public int checkmate(){
+	//to do
+	public int stalemate(){
 		TPT tpt = new TPT(0);
-		Engine engine = new Engine("WHITE", this, true, tpt);
-
-		int check = this.check();
+		Engine engine = new Engine("WHITE", this, tpt);
 		boolean allCauseCheckForWhite = true;
 		boolean allCauseCheckForBlack = true;
-		/*
-		if(check == 0){
-			ArrayList<Move> whiteMoves = engine.generateMoves(this,"WHITE");
-			ArrayList<Move> blackMoves = engine.generateMoves(this,"BLACK");
-			for(Move move : whiteMoves){
-				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
-				simBoard.makeMove(move.from, move.to);
-				if(simBoard.BK == 0L || simBoard.WK == 0L)
-					continue;
-				if(simBoard.checkColor("WHITE") == 0){
-					allCauseCheckForWhite = false;
-				}
+
+		MoveArrayList whiteMoves = engine.generateMoves(this,"WHITE");
+		for(int i = 0; i < whiteMoves.size(); i++){
+			Move move = whiteMoves.get(i);
+			Board simBoard = new Board(this);
+			simBoard.makeMove(move.from, move.to);
+			if(simBoard.BK == 0L || simBoard.WK == 0L)
+				continue;
+			if(simBoard.checkColor("WHITE") == 0){
+				allCauseCheckForWhite = false;
 			}
-			for(Move move : blackMoves){
-				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
-				simBoard.makeMove(move.from, move.to);
-				if(simBoard.BK == 0L || simBoard.WK == 0L)
-					continue;
-				if(simBoard.checkColor("BLACK") == 0){
-					allCauseCheckForBlack = false;
-				}
-			}
-			if(allCauseCheckForWhite || allCauseCheckForBlack)
-				return 4;
 		}
 
-		 */
+		MoveArrayList blackMoves = engine.generateMoves(this,"BLACK");
+		for(int i = 0; i < blackMoves.size(); i++){
+			Move move = blackMoves.get(i);
+			Board simBoard = new Board(this);
+			simBoard.makeMove(move.from, move.to);
+			if(simBoard.BK == 0L || simBoard.WK == 0L)
+				continue;
+			if(simBoard.checkColor("BLACK") == 0){
+				allCauseCheckForBlack = false;
+			}
+		}
+		if(allCauseCheckForWhite || allCauseCheckForBlack)
+			return 4;
+
+		return 0;
+	}
+
+	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
+	public int checkmate(){
+		TPT tpt = new TPT(0);
+		Engine engine = new Engine("WHITE", this, tpt);
+
+		int check = this.check();
 
 		if(check == 0){
 			return 0;
@@ -300,7 +232,7 @@ public class Board {
 			MoveArrayList whiteMoves = engine.generateMoves(this,"WHITE");
 			for(int i = 0; i < whiteMoves.size(); i++){
 				Move move = whiteMoves.get(i);
-				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
+				Board simBoard = new Board(this);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
@@ -315,7 +247,7 @@ public class Board {
 			MoveArrayList blackMoves = engine.generateMoves(this,"BLACK");
 			for(int i = 0; i < blackMoves.size(); i++){
 				Move move = blackMoves.get(i);
-				Board simBoard = new Board(this.WP, this.WR,this.WN, this.WB, this.WK, this.WQ, this.BP, this.BR, this.BN, this.BB, this.BK, this.BQ, this.castleWKValid, this.castleWQValid, this.castleBKValid, this.castleWQValid);
+				Board simBoard = new Board(this);
 				simBoard.makeMove(move.from, move.to);
 				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
@@ -338,7 +270,6 @@ public class Board {
 		this.lastMovedPos = to;
 
 		if((this.WP & fromPos) != 0){
-
 			//en passant, make possible
 			if((fromPos & AttackSets.WPStartRow) != 0 && (toPos & AttackSets.WPStartRowPlus2) != 0){
 				enPassant = true;
@@ -491,56 +422,33 @@ public class Board {
 			this.draw();
 			System.out.println("HERE");
 		}
-
-
-	}
-
-	public String castleValid(){
-		StringBuilder stringBuilder = new StringBuilder();
-		if(castleWKValid){
-			stringBuilder.append("castleWKValid == true \n");
-		}else{
-			stringBuilder.append("castleWKValid == false \n");
-		}if(castleWQValid){
-			stringBuilder.append("castleWQValid == true \n");
-		}else{
-			stringBuilder.append("castleWQValid == false \n");
-		}if(castleBKValid){
-			stringBuilder.append("castleBKValid == true \n");
-		}else{
-			stringBuilder.append("castleBKValid == false \n");
-		}if(castleBQValid){
-			stringBuilder.append("castleBQValid == true \n");
-		}else{
-			stringBuilder.append("castleBQValid == false \n");
-		}
-		return stringBuilder.toString();
 	}
 
 	public char getPiece(int pos){
-		if((this.WP & AttackSets.getPosition(pos)) != 0){
+		long position = AttackSets.getPosition(pos);
+		if((this.WP & position) != 0){
 			return 'P';
-		}else if((this.WN & AttackSets.getPosition(pos)) != 0){
+		}else if((this.WN & position) != 0){
 			return 'N';
-		}else if((this.WB & AttackSets.getPosition(pos)) != 0){
+		}else if((this.WB & position) != 0){
 			return 'B';
-		}else if((this.WR & AttackSets.getPosition(pos)) != 0){
+		}else if((this.WR & position) != 0){
 			return 'R';
-		}else if((this.WQ & AttackSets.getPosition(pos)) != 0){
+		}else if((this.WQ & position) != 0){
 			return 'Q';
-		}else if((this.WK & AttackSets.getPosition(pos)) != 0){
+		}else if((this.WK & position) != 0){
 			return 'K';
-		}else if((this.BP & AttackSets.getPosition(pos)) != 0){
+		}else if((this.BP & position) != 0){
 			return 'p';
-		}else if((this.BN & AttackSets.getPosition(pos)) != 0){
+		}else if((this.BN & position) != 0){
 			return 'n';
-		}else if((this.BB & AttackSets.getPosition(pos)) != 0){
+		}else if((this.BB & position) != 0){
 			return 'b';
-		}else if((this.BR & AttackSets.getPosition(pos)) != 0){
+		}else if((this.BR & position) != 0){
 			return 'r';
-		}else if((this.BQ & AttackSets.getPosition(pos)) != 0){
+		}else if((this.BQ & position) != 0){
 			return 'q';
-		}else if((this.BK & AttackSets.getPosition(pos)) != 0){
+		}else if((this.BK & position) != 0){
 			return 'k';
 		}
 		return '_';
@@ -586,14 +494,15 @@ public class Board {
 				chessBoard2[i][7-j] = chessBoard[i][j];
 			}
 		}
-
         for (int i=0;i<8;i++) {
             System.out.println(Arrays.toString(chessBoard2[i]));
         }
         System.out.println("-----------------------");
+        System.out.println("WK: " + castleWKValid + " WQ: " + castleWQValid + " BK: " + castleBKValid + " BQ: " + castleBQValid);
+		System.out.println("wHasCastled: " + wHasCastled + " bHasCastled" + bHasCastled);
     }
 
-	private long empty() {
+	public long empty() {
 		long empty = 0L;
 		empty = ~(empty & 0); //flip all bits to 1
 		empty = empty ^ WP;
@@ -613,7 +522,52 @@ public class Board {
 		return empty;
 	}
 
-	private long occupied() {
+	public long occupied() {
 		return ~empty();
+	}
+
+	public long friends(String color){
+		long friends = 0L;
+
+		if(color.equals("WHITE")) {
+			friends = friends ^ this.WP;
+			friends = friends ^ this.WR;
+			friends = friends ^ this.WN;
+			friends = friends ^ this.WB;
+			friends = friends ^ this.WK;
+			friends = friends ^ this.WQ;
+
+		}else if(color.equals("BLACK")) {
+			friends = friends ^ this.BP;
+			friends = friends ^ this.BR;
+			friends = friends ^ this.BN;
+			friends = friends ^ this.BB;
+			friends = friends ^ this.BK;
+			friends = friends ^ this.BQ;
+		}
+
+		return friends;
+	}
+
+	public long enemies(String color){
+		long enemies = 0L;
+
+		if(color.equals("WHITE")) {
+			enemies = enemies ^ this.BP;
+			enemies = enemies ^ this.BR;
+			enemies = enemies ^ this.BN;
+			enemies = enemies ^ this.BB;
+			enemies = enemies ^ this.BK;
+			enemies = enemies ^ this.BQ;
+
+		}else if(color.equals("BLACK")) {
+			enemies = enemies ^ this.WP;
+			enemies = enemies ^ this.WR;
+			enemies = enemies ^ this.WN;
+			enemies = enemies ^ this.WB;
+			enemies = enemies ^ this.WK;
+			enemies = enemies ^ this.WQ;
+		}
+		return enemies;
 	}
 }

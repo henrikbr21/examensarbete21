@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import engine.*;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.Before;
 import org.junit.Test;
 
 import engine.Engine;
@@ -14,6 +15,10 @@ import java.util.ArrayList;
 public class BoardTests {
 	TPT tpt = new TPT();
 
+	@Before
+	public void setUp(){
+		AttackSets.init();
+	}
 	@Test
 	public void test() {
 		char[][] board = new char[][] {
@@ -46,7 +51,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(30, moves.size());
@@ -66,7 +71,7 @@ public class BoardTests {
 				{' ', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(47, moves.size());
@@ -86,7 +91,7 @@ public class BoardTests {
 				{'R', ' ', ' ', ' ', ' ', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 
 		assertEquals(51, moves.size());
@@ -106,7 +111,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', ' ', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.generateMoves(board,"WHITE");
 		assertEquals(3, board.check());
 	}
@@ -125,7 +130,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		board.makeMove(0, 1);
 		assertEquals(false, board.castleWQValid);
@@ -151,7 +156,7 @@ public class BoardTests {
 				{' ', 'r', ' ', ' ', 'K', 'B', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		assertEquals(1, board.checkmate());
 	}
 
@@ -169,7 +174,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		assertEquals(2, board.checkmate());
 	}
@@ -188,7 +193,7 @@ public class BoardTests {
 				{' ', ' ', 'K', ' ', ' ', ' ', ' ', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		System.out.println("Moves: " + engine.findMoveList(board, "BLACK"));
 		assertEquals(0, board.checkColor("WHITE"));
@@ -210,7 +215,7 @@ public class BoardTests {
 				{'n', 'N', ' ', ' ', ' ', ' ', 'q', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		System.out.println("Moves: " + engine.findMoveList(board, "BLACK"));
 		assertEquals(0, board.checkColor("WHITE"));
@@ -231,7 +236,7 @@ public class BoardTests {
 				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		assertEquals(7, engine.findMoveList(board,"WHITE").size());
 	}
@@ -249,7 +254,7 @@ public class BoardTests {
 				{'R', 'N', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		assertEquals(3, engine.findMoveList(board,"WHITE").size());
 	}
@@ -267,7 +272,7 @@ public class BoardTests {
 				{'R', 'N', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 
 		assertEquals(2, engine.findMoveList(board,"WHITE").size());
 	}
@@ -286,7 +291,7 @@ public class BoardTests {
 		};
 
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
+		Engine engine = new Engine("BLACK", board, tpt);
 
 		assertEquals(2, engine.findMoveList(board,"BLACK").size());
 	}
@@ -304,7 +309,7 @@ public class BoardTests {
 				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
+		Engine engine = new Engine("BLACK", board, tpt);
 
 		assertEquals(4, engine.findMoveList(board,"BLACK").size());
 	}
@@ -322,7 +327,7 @@ public class BoardTests {
 				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
+		Engine engine = new Engine("BLACK", board, tpt);
 
 		assertEquals(4, engine.findMoveList(board,"BLACK").size());
 	}
@@ -340,7 +345,7 @@ public class BoardTests {
 				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
+		Engine engine = new Engine("BLACK", board, tpt);
 
 		assertEquals(2, engine.findMoveList(board,"BLACK").size());
 	}
@@ -358,7 +363,7 @@ public class BoardTests {
 				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
+		Engine engine = new Engine("BLACK", board, tpt);
 		MoveArrayList moves = engine.findMoveList(board, "BLACK");
 		boolean faultyMoveExists = false;
 		for(int i = 0; i < moves.size(); i++){
@@ -385,7 +390,7 @@ public class BoardTests {
 				{' ', 'N', 'B', 'Q', 'K', 'B', 'N', ' '}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("BLACK", board, false, tpt);
+		Engine engine = new Engine("BLACK", board, tpt);
 		MoveArrayList moves = engine.findMoveList(board, "BLACK");
 		boolean faultyMoveExists = false;
 		for(int i = 0; i < moves.size(); i++){
@@ -412,7 +417,7 @@ public class BoardTests {
 				{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.findMoveList(board, "WHITE");
 		boolean faultyMoveExists = false;
 		for(int i = 0; i < moves.size(); i++){
@@ -439,7 +444,7 @@ public class BoardTests {
 				{'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'}
 		};
 		Board board = new Board(testBoard);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.findMoveList(board, "WHITE");
 		boolean faultyMoveExists = false;
 		for(int i = 0; i < moves.size(); i++){
@@ -468,7 +473,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		board.makeMove(51, 35);
 		assertEquals(true, board.enPassant);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.findMoveList(board,"WHITE");
 		String allMoves = new String();
 		for(int i = 0; i < moves.size(); i++){
@@ -496,7 +501,7 @@ public class BoardTests {
 		Board board = new Board(testBoard);
 		board.makeMove(Util.convertCoordToNum("f7"), Util.convertCoordToNum("f5"));
 		assertEquals(true, board.enPassant);
-		Engine engine = new Engine("WHITE", board, false, tpt);
+		Engine engine = new Engine("WHITE", board, tpt);
 		MoveArrayList moves = engine.findMoveList(board,"WHITE");
 		String allMoves = new String();
 		for(int i = 0; i < moves.size(); i++){
@@ -600,4 +605,199 @@ public class BoardTests {
 
 	}
 
+	@Test
+	public void testEnPassantHash(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', ' ', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		char[][] testBoard2 = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', ' ', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', ' ', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Board board2 = new Board(testBoard2);
+		int moveFrom = Util.convertCoordToNum("e7");
+		int moveTo = Util.convertCoordToNum("e5");
+		board.makeMove(moveFrom, moveTo);
+		board.makeMove(Util.convertCoordToNum("f5"), Util.convertCoordToNum("e6"));
+		board.draw();
+		board2.draw();
+
+		long hash = tpt.hash(board);
+		long hash2 = tpt.hash(board2);
+		System.out.println("HASH1: " + hash);
+		System.out.println("HASH2: " + hash2);
+		assertTrue(hash == hash2);
+	}
+
+	@Test
+	public void testCastlingHash1(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{' ', ' ', 'K', 'R', ' ', 'B', 'N', 'R'}
+		};
+		char[][] testBoard2 = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', ' ', ' ', ' ', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Board board2 = new Board(testBoard2);
+
+		int moveFrom = Util.convertCoordToNum("e1");
+		int moveTo = Util.convertCoordToNum("c1");
+		board2.makeMove(moveFrom, moveTo);
+
+		long hash = tpt.hash(board);
+		long hash2 = tpt.hash(board2);
+		assertTrue(hash != hash2);
+
+		board.castleWQValid = false;
+		board.castleWKValid = false;
+		hash = tpt.hash(board);
+		assertTrue(hash == hash2);
+	}
+
+	@Test
+	public void testCastlingHash2(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', ' ', 'R', 'K', ' '}
+		};
+		char[][] testBoard2 = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Board board2 = new Board(testBoard2);
+
+		int moveFrom = Util.convertCoordToNum("e1");
+		int moveTo = Util.convertCoordToNum("g1");
+		board2.makeMove(moveFrom, moveTo);
+
+		long hash = tpt.hash(board);
+		long hash2 = tpt.hash(board2);
+		assertTrue(hash != hash2);
+
+		board.castleWQValid = false;
+		board.castleWKValid = false;
+		hash = tpt.hash(board);
+		assertTrue(hash == hash2);
+
+	}
+
+	@Test
+	public void testCastlingHash3(){
+		char[][] testBoard = {
+				{' ', ' ', 'k', 'r', ' ', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		char[][] testBoard2 = {
+				{'r', ' ', ' ', ' ', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Board board2 = new Board(testBoard2);
+
+		int moveFrom = Util.convertCoordToNum("e8");
+		int moveTo = Util.convertCoordToNum("c8");
+		board2.makeMove(moveFrom, moveTo);
+
+		long hash = tpt.hash(board);
+		long hash2 = tpt.hash(board2);
+		assertTrue(hash != hash2);
+
+		board.castleBQValid = false;
+		board.castleBKValid = false;
+		hash = tpt.hash(board);
+		assertTrue(hash == hash2);
+	}
+
+	@Test
+	public void testCastlingHash4(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		char[][] testBoard2 = {
+				{'r', 'n', 'b', 'q', 'k', ' ', ' ', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		Board board2 = new Board(testBoard2);
+
+		int moveFrom = Util.convertCoordToNum("e8");
+		int moveTo = Util.convertCoordToNum("g8");
+		board2.makeMove(moveFrom, moveTo);
+
+		long hash = tpt.hash(board);
+		long hash2 = tpt.hash(board2);
+		assertTrue(hash != hash2);
+
+		board.castleBQValid = false;
+		board.castleBKValid = false;
+		hash = tpt.hash(board);
+		assertTrue(hash == hash2);
+
+	}
 }

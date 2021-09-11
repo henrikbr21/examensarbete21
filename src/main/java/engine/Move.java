@@ -25,5 +25,21 @@ public class Move {
         this.checking = checking;
         this.score = score;
     }
+
+    public Move(Move move){
+        this.from = move.from;
+        this.to = move.to;
+        this.fromPiece = move.fromPiece;
+        this.toPiece = move.toPiece;
+        this.checking = move.checking;
+        this.score = move.score;
+    }
+
+    public boolean equals(Move move){
+        if(this.from == move.from && this.to == move.to)
+            return true;
+        return false;
+    }
+
 }
 
