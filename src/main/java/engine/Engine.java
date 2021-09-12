@@ -3,14 +3,10 @@ package engine;
 import java.util.Comparator;
 
 public class Engine {
-	private String color; //"BLACK" for black pieces, "WHITE" for white pieces
-	private Board board;
 	private TPT tpt;
 	
 	public Engine(String color, Board board, TPT tpt){
 		this.tpt = tpt;
-		this.board = board;
-		this.color = color;
 	}
 
 	public MoveArrayList findMoveList(Board board, String playerColor){
@@ -1082,44 +1078,32 @@ public class Engine {
 		return false;
 	}
 
+	public MoveArrayList getSortedMoves(String color, TPT.TPTEntry entry, Board board){
+		MoveArrayList moves = this.findMoveList(board, color);
+		if(entry != null)
+			sort(moves, entry.bestMove, board);
+		else{
+			sort(moves);
+		}
+		return moves;
+	}
+
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
 		if(depthLeft == 0){
 			depth++;
-			//long hash = tpt.hash(board);
-			/*
-			if(tpt.containsKey(hash)){
-				Debug.TPFound(depth);
-				return tpt.get(hash).score;
-			}
-			 */
-			//TPT.TPTEntry entry = tpt.get(hash);
 			double score = evalPosition(board);
-			/*
-			if(entry != null && entry.depth == 0 && entry.score != score)
-				System.out.println("ENTRY INCORRECT");
-
-			 */
-			//tpt.put(hash, score, 0);
 			pv.clear();
 			return score;
 		}
 		depth++;
-		MoveArrayList moves = this.findMoveList(board, "WHITE");
 
 		PrincipalVariation localPV = new PrincipalVariation();
 
-		if(prevHash == 0L)
-			prevHash = tpt.hash(board);
-		TPT.TPTEntry entry = tpt.get(prevHash);
-
-		if(entry != null)
-			sort(moves, entry.bestMove);
-		else{
-			sort(moves);
-			entry = tpt.new TPTEntry(prevHash, Double.NEGATIVE_INFINITY, depthLeft);
-		}
+		TPT.TPTEntry entry = tpt.get(tpt.hash(board));
+		MoveArrayList moves = getSortedMoves("WHITE", entry, board);
 
 
+		//Alternate end condition
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1)
 				return -20000+depth;
@@ -1142,61 +1126,22 @@ public class Engine {
 				else
 					LineDebugger.unmatch(depth);
 			}
-/*
-			StringBuilder str = new StringBuilder();
-			if(depth == 0)
-				str.append("ROOT");
-			for(int k = 0; k < depth; k++){
-				str.append(k);
-				str.append("  ");
-			}
-			str.append("Considering move: ");
-			str.append(Util.convertNumToCoord(move.from));
-			str.append(Util.convertNumToCoord(move.to));
-			System.out.println(str.toString());
-*/
 
-/*
-			long hash;
-			if(prevHash == 0L)
-				hash = tpt.hash(simBoard);
-			else{
-				hash = tpt.updateHash(board, prevHash, move.from, move.to);
-			}
-			 */
 			long hash = tpt.hash(simBoard);
-
-			boolean TPFound = false;
-			TPT.TPTEntry transposition = null;
-			if(tpt.containsKey(hash)){
-				 transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft-1){
-					Debug.TPFound(depth);
-					TPFound = true;
-				}
+			TPT.TPTEntry transposition = tpt.get(hash);
+			if(transposition != null && transposition.depth >= depthLeft-1){
+				Debug.TPFound(depth);
 			}
 
-			if(!TPFound || TPFound){
+			if(transposition == null){
 				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash, debug);
-				//hash = tpt.hash(simBoard); //unnecessary, already have the hash
-				if(TPFound) {
-					if(score != transposition.score && (transposition.depth == depthLeft-1) && transposition != null){
-						System.out.println("INCORRECT Entry score: " + transposition.score + " Search score: " + score);
-					}
-				}
-
+				/*
 				if(depthLeft == 1)
-					tpt.put(hash, score, depthLeft-1, move, simBoard, 0);
-
-			}
-			if(score == Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
-				pv.clear();
-				pv.addAllMoves(localPV);
-				pv.addMove(move);
-				System.out.println("MAXVALUE " + "DepthLeft: " + depthLeft);
-				return score-depth; //prefer earlier checkmate
+					//tpt.put(hash, score, depthLeft-1, move, simBoard, TPT.EntryType.NONE);
+					*/
 			}
 
+			//Beta-cutoff
 			if(score >= beta){
 				if(debug){
 					if(LineDebugger.onLine(depth))
@@ -1205,6 +1150,8 @@ public class Engine {
 				//tpt.put(prevHash, score, depthLeft, new Move(move));
 				return beta;
 			}
+
+			//Score updates alpha, possible PV-node
 			if(score > alpha){
 				if(entry != null){
 					bestMove = new Move(move);
@@ -1223,41 +1170,18 @@ public class Engine {
 	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
 		if(depthLeft == 0){
 			depth++;
-			//long hash = tpt.hash(board);
-			pv.clear();
-			/*
-			if(tpt.containsKey(hash)){
-				Debug.TPFound(depth);
-				return tpt.get(hash).score;
-			}
-			 */
 			double score = evalPosition(board);
 
-			/*
-			TPT.TPTEntry entry = tpt.get(hash);
-			if(entry != null && entry.depth == 0 && entry.score != score)
-				System.out.println("ENTRY INCORRECT");
-*/
-			//tpt.put(hash, score, 0);
 			pv.clear();
 			return score;
 		}
 		depth++;
-		MoveArrayList moves = this.findMoveList(board, "BLACK");
 		PrincipalVariation localPV = new PrincipalVariation();
 
+		TPT.TPTEntry entry = tpt.get(tpt.hash(board));
+		MoveArrayList moves = getSortedMoves("BLACK", entry, board);
 
-		if(prevHash == 0L)
-			prevHash = tpt.hash(board);
-		TPT.TPTEntry entry = tpt.get(prevHash);
-
-		if(entry != null)
-			sort(moves, entry.bestMove);
-		else{
-			sort(moves);
-			entry = tpt.new TPTEntry(prevHash, Double.NEGATIVE_INFINITY, depthLeft);
-		}
-
+		//Alternate end condition
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1)
 				return -20000;
@@ -1279,58 +1203,25 @@ public class Engine {
 				else
 					LineDebugger.unmatch(depth);
 			}
-			/*
-			StringBuilder str = new StringBuilder();
-			for(int k = 0; k < depth; k++){
-				str.append("  ");
-			}
-			str.append("Considering move: ");
-			str.append(Util.convertNumToCoord(move.from));
-			str.append(Util.convertNumToCoord(move.to));
-			System.out.println(str.toString());
-*/
 
-/*
-			long hash;
-			if(prevHash == 0L){
-				hash = tpt.hash(simBoard);
-			}else{
-				hash = tpt.updateHash(board, prevHash, move.from, move.to);
-			}
-*/
 			long hash = tpt.hash(simBoard);
-			boolean TPFound = false;
-			TPT.TPTEntry transposition = null;
-			if(tpt.containsKey(hash)){
-				transposition = tpt.get(hash);
-				if(transposition.depth >= depthLeft-1){
-					Debug.TPFound(depth);
-					TPFound = true;
-				}
+			TPT.TPTEntry transposition = tpt.get(hash);
+			if(transposition != null && transposition.depth >= depthLeft-1){
+				Debug.TPFound(depth);
 			}
 
-			if(!TPFound || TPFound){
+			if(transposition == null){
 				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash, debug);
-				//hash = tpt.hash(simBoard); //unnecessary, already have the hash
-				if(TPFound) {
-					if(score != transposition.score && (transposition.depth == depthLeft-1)  && transposition != null) {
-						System.out.println("INCORRECT Entry score: " + transposition.score + " Search score: " + score);
-					}
-				}
+
+				/*
 				if(depthLeft == 1)
-					tpt.put(hash, score, depthLeft-1, move, simBoard, 0);
+					tpt.put(hash, score, depthLeft-1, move, simBoard, TPT.EntryType.NONE);
 
-
-			}
-			if(score == -Double.MAX_VALUE){ //checkmate is best possible, no other moves need be considered
-				pv.clear();
-				pv.addAllMoves(localPV);
-				pv.addMove(move);
-				return score+depth; //prefer earlier checkmate
+				 */
 			}
 
+			//Alpha-cutoff
 			if(score <= alpha){
-				//tpt.put(prevHash, score, depthLeft, new Move(move));
 				if(debug){
 					if(LineDebugger.onLine(depth))
 						System.out.println("ALPHA CUTOFF AT DEPTH: " + depth);
@@ -1338,7 +1229,7 @@ public class Engine {
 				return alpha;
 			}
 
-			//ändrat ordning på ifsatser
+			//Updating beta, new possible PV-node
 			if(score < beta){
 				if(entry != null){
 					bestMove = new Move(move);
@@ -1356,7 +1247,7 @@ public class Engine {
 
 
 
-	public void sort(MoveArrayList moves, Move bestMove){
+	public void sort(MoveArrayList moves, Move bestMove, Board board){
 
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
@@ -1412,6 +1303,7 @@ public class Engine {
 			}
 		});
 	}
+
 	public void sort(MoveArrayList moves){
 
 		for(int i = 0; i < moves.size(); i++){
@@ -1446,11 +1338,6 @@ public class Engine {
 				tempScore += 90;
 			}
 			move.score = tempScore;
-
-			if(move.to == board.lastMovedPos){
-				move.score += 100;
-			}
-
 		}
 
 

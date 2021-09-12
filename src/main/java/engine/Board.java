@@ -415,12 +415,6 @@ public class Board {
 		clearPosition(fromPos);
 
 		if(Debug.findDuplicate(this)){
-			Util.draw(this.BP);
-			Util.draw(this.BN);
-			Util.draw(this.BB);
-			Util.draw(this.BR);
-			Util.draw(this.BQ);
-			Util.draw(this.BK);
 			this.draw();
 			System.out.println("HERE");
 		}

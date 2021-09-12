@@ -19,6 +19,10 @@ public class TPT {
         entries = new HashMap<Long, TPTEntry>();
     }
 
+    public enum EntryType{
+        PVNODE, CUTNODE, ALLNODE, NONE
+    }
+
     public class TPTEntry {
         public long hash;
         public double score;
@@ -26,7 +30,7 @@ public class TPT {
         public int refCount = 1;
         public Move bestMove;
         public Board board;
-        public int nodeType = -1; //0 = PV
+        public EntryType nodeType = EntryType.NONE; //0 = PV
 
         public TPTEntry(long hash, double score, int depth) {
             this.hash = hash;
@@ -41,22 +45,21 @@ public class TPT {
             this.board = new Board(board);
         }
 
-        public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, int nodeType) {
+        public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, EntryType type) {
             this.hash = hash;
             this.score = score;
             this.depth = depth;
             this.bestMove = bestMove;
             this.board = new Board(board);
-            this.nodeType = nodeType;
+            this.nodeType = type;
         }
     }
 
-
-    public void put(long hash, double score, int depth) {
+    public void put(long hash, double score, int depth, Move bestMove, Board board, EntryType type) {
 
         TPTEntry newEntry = entries.get(hash);
         if (newEntry != null) {
-            updateEntry(newEntry, hash, score, depth, ++newEntry.refCount);
+            updateEntry(newEntry, hash, score, depth, ++newEntry.refCount, bestMove, board, type);
             if (filled) {
                 TPTEntry oldEntry = entries.get(hashes[nextIndex]);
                 if (--oldEntry.refCount == 0) {
@@ -67,12 +70,12 @@ public class TPT {
             TPTEntry entry = entries.get(hashes[nextIndex]);
             if (--entry.refCount == 0) {
                 entries.remove(hashes[nextIndex]);
-                entries.put(hash, this.updateEntry(entry, hash, score, depth, 1));
+                entries.put(hash, this.updateEntry(entry, hash, score, depth, 1, bestMove, board, type));
             } else {
-                entries.put(hash, new TPTEntry(hash, score, depth));
+                entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, type));
             }
         } else {
-            entries.put(hash, new TPTEntry(hash, score, depth));
+            entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, type));
         }
 
 
@@ -86,57 +89,14 @@ public class TPT {
         }
     }
 
-    public void put(long hash, double score, int depth, Move bestMove, Board board, int nodeType) {
-
-        TPTEntry newEntry = entries.get(hash);
-        if (newEntry != null) {
-            updateEntry(newEntry, hash, score, depth, ++newEntry.refCount, bestMove, board, nodeType);
-            if (filled) {
-                TPTEntry oldEntry = entries.get(hashes[nextIndex]);
-                if (--oldEntry.refCount == 0) {
-                    entries.remove(hashes[nextIndex]);
-                }
-            }
-        } else if (filled) {
-            TPTEntry entry = entries.get(hashes[nextIndex]);
-            if (--entry.refCount == 0) {
-                entries.remove(hashes[nextIndex]);
-                entries.put(hash, this.updateEntry(entry, hash, score, depth, 1, bestMove, board, nodeType));
-            } else {
-                entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, nodeType));
-            }
-        } else {
-            entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, nodeType));
-        }
-
-
-        hashes[nextIndex] = hash;
-
-        if (nextIndex < (hashes.length - 1)) {
-            nextIndex++;
-        } else {
-            nextIndex = 0;
-            filled = true;
-        }
-    }
-
-    private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount) {
-        entryToBeUpdated.hash = newHash;
-        entryToBeUpdated.depth = newDepth;
-        entryToBeUpdated.score = newScore;
-        entryToBeUpdated.refCount = newRefCount;
-
-        return entryToBeUpdated;
-    }
-
-    private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount, Move bestMove, Board board, int nodeType) {
+    private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount, Move bestMove, Board board, EntryType type) {
         entryToBeUpdated.hash = newHash;
         entryToBeUpdated.depth = newDepth;
         entryToBeUpdated.score = newScore;
         entryToBeUpdated.refCount = newRefCount;
         entryToBeUpdated.bestMove = bestMove;
         entryToBeUpdated.board = board;
-        entryToBeUpdated.nodeType = nodeType;
+        entryToBeUpdated.nodeType = type;
 
         return entryToBeUpdated;
     }
