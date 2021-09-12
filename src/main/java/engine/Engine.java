@@ -1089,19 +1089,25 @@ public class Engine {
 	}
 
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
+		TPT.TPTEntry entry = tpt.get(prevHash);
+		if(entry != null && entry.depth >= depthLeft){
+			if(entry.nodeType == TPT.EntryType.PVNODE){
+				Debug.TPFound(depth);
+				pv.addMove(entry.bestMove);
+				return entry.score;
+			}
+		}
+
+		//End condition
 		if(depthLeft == 0){
 			depth++;
 			double score = evalPosition(board);
 			pv.clear();
 			return score;
 		}
-		depth++;
-
 		PrincipalVariation localPV = new PrincipalVariation();
 
-		TPT.TPTEntry entry = tpt.get(tpt.hash(board));
 		MoveArrayList moves = getSortedMoves("WHITE", entry, board);
-
 
 		//Alternate end condition
 		if(moves.size()==0){
@@ -1113,7 +1119,9 @@ public class Engine {
 		}
 
 		double score = -Double.MAX_VALUE;
+		boolean exceededAlpha = false;
 		Move bestMove = null;
+		double bestScore = Double.NEGATIVE_INFINITY;
 
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
@@ -1121,25 +1129,14 @@ public class Engine {
 			simBoard.makeMove(move.from, move.to);
 
 			if(debug){
-				if(LineDebugger.getMove(depth).equals(move))
-					LineDebugger.match(depth);
+				if(LineDebugger.getMove(depth+1).equals(move))
+					LineDebugger.match(depth+1);
 				else
-					LineDebugger.unmatch(depth);
+					LineDebugger.unmatch(depth+1);
 			}
 
 			long hash = tpt.hash(simBoard);
-			TPT.TPTEntry transposition = tpt.get(hash);
-			if(transposition != null && transposition.depth >= depthLeft-1){
-				Debug.TPFound(depth);
-			}
-
-			if(transposition == null){
-				score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash, debug);
-				/*
-				if(depthLeft == 1)
-					//tpt.put(hash, score, depthLeft-1, move, simBoard, TPT.EntryType.NONE);
-					*/
-			}
+			score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug);
 
 			//Beta-cutoff
 			if(score >= beta){
@@ -1147,23 +1144,30 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("BETA CUTOFF AT DEPTH: " + depth);
 				}
-				//tpt.put(prevHash, score, depthLeft, new Move(move));
+				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE);
 				return beta;
 			}
-
+			//(ALL-NODE: all children have score < beta)
+			//(CUT-NODE: at least one child has score >= beta)
+			//(PV-NODE all children have alpha < score < beta)
 			//Score updates alpha, possible PV-node
 			if(score > alpha){
-				if(entry != null){
-					bestMove = new Move(move);
-				}
 				pv.clear();
 				pv.addAllMoves(localPV);
 				pv.addMove(move);
 
+				exceededAlpha = true;
 				alpha = score;
 			}
+			if(score > bestScore){
+				bestMove = new Move(move);
+				bestScore = score;
+			}
 		}
-		//tpt.put(prevHash, score, depthLeft, bestMove);
+		if(!exceededAlpha)
+			tpt.put(prevHash, alpha, depthLeft, bestMove, board, TPT.EntryType.ALLNODE); //Maybe there's a bestMove here
+		else
+			tpt.put(prevHash, score, depthLeft, bestMove, board, TPT.EntryType.PVNODE);
 		return alpha;
 	}
 
@@ -1175,10 +1179,9 @@ public class Engine {
 			pv.clear();
 			return score;
 		}
-		depth++;
 		PrincipalVariation localPV = new PrincipalVariation();
 
-		TPT.TPTEntry entry = tpt.get(tpt.hash(board));
+		TPT.TPTEntry entry = null; //tpt.get(tpt.hash(board));
 		MoveArrayList moves = getSortedMoves("BLACK", entry, board);
 
 		//Alternate end condition
@@ -1191,27 +1194,26 @@ public class Engine {
 		}
 
 		double score = Double.MAX_VALUE;
-		Move bestMove = null;
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
 			Board simBoard = new Board(board);
 			simBoard.makeMove(move.from, move.to);
 
 			if(debug){
-				if(LineDebugger.getMove(depth).equals(move))
-					LineDebugger.match(depth);
+				if(LineDebugger.getMove(depth+1).equals(move))
+					LineDebugger.match(depth+1);
 				else
-					LineDebugger.unmatch(depth);
+					LineDebugger.unmatch(depth+1);
 			}
 
 			long hash = tpt.hash(simBoard);
-			TPT.TPTEntry transposition = tpt.get(hash);
+			TPT.TPTEntry transposition = null; // tpt.get(hash);
 			if(transposition != null && transposition.depth >= depthLeft-1){
 				Debug.TPFound(depth);
 			}
 
 			if(transposition == null){
-				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth, hash, debug);
+				score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug);
 
 				/*
 				if(depthLeft == 1)
@@ -1231,9 +1233,6 @@ public class Engine {
 
 			//Updating beta, new possible PV-node
 			if(score < beta){
-				if(entry != null){
-					bestMove = new Move(move);
-				}
 				pv.clear();
 				pv.addAllMoves(localPV);
 				pv.addMove(move);
