@@ -700,9 +700,8 @@ public class Engine {
 	public boolean isAttackedByOpponent(Board board, String playerColor, long square){
 		long occupied = board.occupied();
 		long empty = board.empty();
-		long friends = board.friends(playerColor);
-		long enemies = board.enemies(playerColor);
-
+		long enemies = board.friends(playerColor);
+		long friends = board.enemies(playerColor);
 
 		long attackBoard = 0L;
 		if(playerColor == "BLACK"){

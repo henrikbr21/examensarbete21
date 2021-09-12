@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class TPTTests{
-
+/*
     private TPT tpt;
 
     @Before
@@ -149,5 +149,7 @@ public class TPTTests{
 
     }
 
+
+ */
 
 }
