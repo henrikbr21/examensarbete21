@@ -16,7 +16,7 @@ public class Engine {
 	public MoveArrayList findMoveList(Board board, String playerColor){
 		MoveArrayList legalMoves = MoveArrayListManager.obtainMoveArrayList();
 
- 		if(playerColor == "WHITE"){
+ 		if(playerColor.equals("WHITE")){
 			if(board.checkColor("WHITE") == 1){
 				if(board.checkmate() == 1){
 					return legalMoves;
@@ -36,7 +36,7 @@ public class Engine {
 			}
 			MoveArrayListManager.renounceMoveArrayList(moves);
 
-		}else if(playerColor == "BLACK") {
+		}else if(playerColor.equals("BLACK")) {
  			if(board.checkColor("BLACK") == 2){
  				if(board.checkmate() == 2){
 					return legalMoves;
@@ -68,7 +68,7 @@ public class Engine {
 		long enemies = board.enemies(playerColor);
 
 		long attackBoard = 0L;
-		if(playerColor == "WHITE"){
+		if(playerColor.equals("WHITE")){
 			long WPMoves = board.WP >>> 8;
 			long legalWPMoves = WPMoves & empty;
 
@@ -114,7 +114,6 @@ public class Engine {
 			}
 
 			//en passant
-			long enPassantAttacks = 0L;
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
@@ -157,7 +156,6 @@ public class Engine {
 						}
 					}
 				}else if((board.WB & position) != 0){
-					long bishopAttacks = 0L;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
@@ -196,7 +194,7 @@ public class Engine {
 						DLAttacks = AttackSets.diagRaysDL(i);
 					}
 
-					bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
 					bishopAttacks = bishopAttacks & (enemies ^ empty);
 					attackBoard = attackBoard | bishopAttacks;
 
@@ -322,7 +320,7 @@ public class Engine {
 				}else if((board.WK & position) != 0){
 					long WKMoves = AttackSets.kingMoves(i);
 
-					//Remove pseudolegal moves
+					//Remove pseudo-legal moves
 					long legalWKMoves2 = WKMoves & empty;
 					long legalWKMoves3 = WKMoves & enemies;
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
@@ -338,7 +336,7 @@ public class Engine {
 
 									int simCheck = simBoard.checkColor("WHITE");
 									if(simCheck == 0){
-										if(simCheck == 0 && ((friends & AttackSets.wRightRookStart) != 0))
+										if((friends & AttackSets.wRightRookStart) != 0)
 											legalWKMoves = legalWKMoves | AttackSets.castleWKR;
 									}
 
@@ -354,7 +352,7 @@ public class Engine {
 
 									int simCheck = simBoard.checkColor("WHITE");
 									if(simCheck == 0){
-										if(simCheck == 0 && ((friends & AttackSets.wLeftRookStart) != 0)){
+										if((friends & AttackSets.wLeftRookStart) != 0){
 											legalWKMoves = legalWKMoves | AttackSets.castleWKL;
 										}
 									}
@@ -369,14 +367,14 @@ public class Engine {
 							break;
 
 						if((legalWKMoves & AttackSets.getPosition(j)) != 0) {
-
+							movesFound++;
 							char takenPiece = board.getPiece(j);
 							moveList.add(i, j, 'K', takenPiece, false, 0);
 						}
 					}
 				}
 			}
-		}else if(playerColor == "BLACK"){
+		}else if(playerColor.equals("BLACK")){
 			long BPMoves = board.BP << 8;
 			long legalBPMoves = BPMoves & empty;
 
@@ -424,7 +422,6 @@ public class Engine {
 			}
 
 			//en passant
-			long enPassantAttacks = 0L;
 			if(board.enPassant){
 				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
 					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
@@ -467,7 +464,6 @@ public class Engine {
 						}
 					}
 				}else if((board.BB & position) != 0){
-					long bishopAttacks = 0L;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
@@ -506,7 +502,7 @@ public class Engine {
 						DLAttacks = AttackSets.diagRaysDL(i);
 					}
 
-					bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
 					bishopAttacks = bishopAttacks & (enemies ^ empty);
 					attackBoard = attackBoard | bishopAttacks;
 
@@ -634,7 +630,7 @@ public class Engine {
 				}else if((board.BK & position) != 0){
 					long BKMoves = AttackSets.kingMoves(i);
 
-					//Remove pseudolegal moves
+					//Remove pseudo-legal moves
 					long legalBKMoves2 = BKMoves & empty;
 					long legalBKMoves3 = BKMoves & enemies;
 					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
@@ -653,7 +649,7 @@ public class Engine {
 										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(61);
 										*/
-										if(simCheck == 0 && ((friends & AttackSets.bRightRookStart) != 0))
+										if((friends & AttackSets.bRightRookStart) != 0)
 											legalBKMoves = legalBKMoves | AttackSets.castleBKR;
 									}
 
@@ -672,7 +668,7 @@ public class Engine {
 										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
 										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(3);
 										*/
-										if(simCheck == 0 && ((friends & AttackSets.bLeftRookStart) != 0)){
+										if((friends & AttackSets.bLeftRookStart) != 0){
 											legalBKMoves = legalBKMoves | AttackSets.castleBKL;
 										}
 									}
@@ -687,6 +683,7 @@ public class Engine {
 							break;
 
 						if((legalBKMoves & AttackSets.getPosition(j)) != 0) {
+							movesFound++;
 							char takenPiece = board.getPiece(j);
 							moveList.add(i, j, 'k', takenPiece, false, 0);
 						}
@@ -701,17 +698,8 @@ public class Engine {
 		long occupied = board.occupied();
 		long empty = board.empty();
 		long enemies = board.friends(playerColor);
-		long friends = board.enemies(playerColor);
 
-		long attackBoard = 0L;
-		if(playerColor == "BLACK"){
-			long WPMoves = board.WP >>> 8;
-			long legalWPMoves = WPMoves & empty;
-
-			long WPMoves2 = legalWPMoves >>> 8;
-			long legalWPMoves2 = WPMoves2 & empty;
-			long invalidateDoubleX2 = 9223372032559808512L; //Bitboard to invalidate pawns doing double moves again
-			legalWPMoves2 = invalidateDoubleX2 & legalWPMoves2;
+		if(playerColor.equals("BLACK")){
 
 			//Attacks up and to the left
 			long RightColumn0 = ~(72340172838076673L);
@@ -728,7 +716,7 @@ public class Engine {
 			long WPAttacksL = board.WP & leftColumn0;
 			WPAttacksL = WPAttacksL >>> 7;
 
-			WPAttacksL = WPAttacksL & enemies; //ISSUE?!?!!
+			WPAttacksL = WPAttacksL & enemies;
 			if((WPAttacksR & square) != 0)
 				return true;
 			if((WPAttacksL & square) != 0)
@@ -746,7 +734,6 @@ public class Engine {
 						return true;
 
 				}else if((board.WB & position) != 0){
-					long bishopAttacks = 0L;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
@@ -785,7 +772,7 @@ public class Engine {
 						DLAttacks = AttackSets.diagRaysDL(i);
 					}
 
-					bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
 					bishopAttacks = bishopAttacks & (enemies ^ empty);
 
 					if((bishopAttacks & square) != 0)
@@ -837,7 +824,7 @@ public class Engine {
 				}else if((board.WQ & position) != 0){
 					long singleQueen = AttackSets.getPosition(i);
 
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
+
 					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
 					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
 
@@ -902,15 +889,7 @@ public class Engine {
 						return true;
 				}
 			}
-		}else if(playerColor == "WHITE"){
-			long BPMoves = board.BP << 8;
-			long legalBPMoves = BPMoves & empty;
-
-			long BPMoves2 = legalBPMoves << 8;
-			long legalBPMoves2 = BPMoves2 & empty;
-			long invalidateDoubleX2 = 4294967295L; //Bitboard to invalidate pawns doing double moves again
-			legalBPMoves2 = invalidateDoubleX2 & legalBPMoves2;
-
+		}else if(playerColor.equals("WHITE")){
 			//Attacks up and to the left
 			long RightColumn0 = ~(72340172838076673L);
 
@@ -925,7 +904,6 @@ public class Engine {
 			long BPAttacksL = board.BP & leftColumn0;
 			BPAttacksL = BPAttacksL << 9;
 
-			attackBoard = BPAttacksL | BPAttacksR;
 			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
 
 			if((BPAttacksL & square) != 0)
@@ -945,7 +923,6 @@ public class Engine {
 						return true;
 
 				}else if((board.BB & position) != 0){
-					long bishopAttacks = 0L;
 					long URAttacks = occupied & AttackSets.diagRaysUR(i);
 
 					int closestPos = Long.numberOfLeadingZeros(URAttacks);
@@ -984,7 +961,7 @@ public class Engine {
 						DLAttacks = AttackSets.diagRaysDL(i);
 					}
 
-					bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
+					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
 					bishopAttacks = bishopAttacks & (enemies ^ empty);
 					if((bishopAttacks & square) != 0)
 						return true;
@@ -1238,8 +1215,6 @@ public class Engine {
 
 				alpha = score;
 			}
-
-
 		}
 		//tpt.put(prevHash, score, depthLeft, bestMove);
 		return alpha;

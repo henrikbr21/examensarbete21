@@ -633,8 +633,6 @@ public class BoardTests {
 		int moveTo = Util.convertCoordToNum("e5");
 		board.makeMove(moveFrom, moveTo);
 		board.makeMove(Util.convertCoordToNum("f5"), Util.convertCoordToNum("e6"));
-		board.draw();
-		board2.draw();
 
 		long hash = tpt.hash(board);
 		long hash2 = tpt.hash(board2);

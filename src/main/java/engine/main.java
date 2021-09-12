@@ -23,7 +23,7 @@ public class main {
             board.playLine(moves);
 
             board.draw();
-
+            Util.draw(board.empty());
 
 
             PrincipalVariation pv2 = new PrincipalVariation();
@@ -34,7 +34,7 @@ public class main {
             ArrayList<Move> debugLine = Util.parseMovesForDebugging("c2c3 b8b2 g5f6 g7f6 c3d4 d8d4");
             LineDebugger.setLine(debugLine);
             long time = System.currentTimeMillis();
-            result2 = engine.alphaBetaMax(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, true);
+            result2 = engine.alphaBetaMax(board, 6, 85, 185, pv2, 0, 0L, true);
             System.out.println(result2);
             System.out.println("Time: " + (System.currentTimeMillis() - time));
             Debug.printTPHits();

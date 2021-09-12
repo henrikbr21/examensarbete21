@@ -1,7 +1,9 @@
 package engine;
 
+import java.util.Arrays;
+
 public abstract class Debug {
-    public static int TPHits[] = new int[13];
+    public static int[] TPHits = new int[13];
 
     public static boolean findDuplicate(Board board){
 
@@ -68,9 +70,7 @@ public abstract class Debug {
     }
 
     public static void clearTPHits(){
-        for(int i = 0; i < TPHits.length; i++){
-            TPHits[i] = 0;
-        }
+        Arrays.fill(TPHits, 0);
     }
 
 }

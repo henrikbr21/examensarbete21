@@ -1,8 +1,6 @@
 package engine;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Board {
 	public long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
@@ -79,6 +77,10 @@ public class Board {
 		this.castleBQValid = board.castleBQValid;
 		this.wHasCastled = board.wHasCastled;
 		this.bHasCastled = board.bHasCastled;
+		this.enPassant = board.enPassant;
+		this.enPassantPos = board.enPassantPos;
+		this.enPassantPlayer = board.enPassantPlayer; //1 for white player, 2 for black
+		this.lastMovedPos = board.lastMovedPos;
 	}
 	
 	private long stringToLong(String s) {
@@ -470,7 +472,7 @@ public class Board {
 	}
 
     public void draw() {
-        String chessBoard[][]=new String[8][8];
+        String[][] chessBoard =new String[8][8];
         for (int i=0;i<64;i++) {
             chessBoard[i/8][i%8]=" ";
         }
@@ -503,8 +505,7 @@ public class Board {
     }
 
 	public long empty() {
-		long empty = 0L;
-		empty = ~(empty & 0); //flip all bits to 1
+		long empty= ~(0L);
 		empty = empty ^ WP;
 		empty = empty ^ WR;
 		empty = empty ^ WN;
@@ -545,7 +546,6 @@ public class Board {
 			friends = friends ^ this.BK;
 			friends = friends ^ this.BQ;
 		}
-
 		return friends;
 	}
 
