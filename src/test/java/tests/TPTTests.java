@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class TPTTests{
-/*
+
     private TPT tpt;
 
     @Before
@@ -24,29 +24,29 @@ public class TPTTests{
     @Test
     public void testPutUntilMaxSize(){
         for(long i = 0; i < 10; i++){
-            tpt.put(i, i, 5);
+            tpt.put(i, i, 5, null, null, null);
         }
 
         for(long i = 10; i < 16; i++){
-            tpt.put(i, i, 5);
+            tpt.put(i, i, 5, null, null, null);
         }
 
-        tpt.put(10, 10, 5);
+        tpt.put(10, 10, 5, null, null, null);
         assertTrue(tpt.get(tpt.hashes[0]).hash == 10);
     }
 
     @Test
     public void test(){
         for(long i = 0; i < 10; i++){
-            tpt.put(i, i, 5);
+            tpt.put(i, i, 5, null, null, null);
         }
 
-        tpt.put(10, 10, 5);
+        tpt.put(10, 10, 5, null, null, null);
         for(long i = 11; i < 16; i++){
-            tpt.put(i, i, 5);
+            tpt.put(i, i, 5, null, null, null);
         }
 
-        tpt.put(10, 10, 5);
+        tpt.put(10, 10, 5, null, null, null);
 
         System.out.println("RefCount: " + tpt.get(10).refCount);
         assertTrue(tpt.get(10).refCount == 2);
@@ -58,7 +58,7 @@ public class TPTTests{
         TPT tpt = new TPT(300000);
         Engine engine = new Engine("WHITE", board, tpt);
         PrincipalVariation pv = new PrincipalVariation();
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
         assertTrue(pv.size()==4);
 
         char[][] testBoard = {
@@ -78,8 +78,8 @@ public class TPTTests{
         assertTrue(tpt.get(hash).depth == 3);
 
         TPT tpt2 = new TPT(300000);
-        Engine engine2 = new Engine("WHITE", board, true, tpt2);
-        engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+        Engine engine2 = new Engine("WHITE", board, tpt2);
+        engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
         assertTrue(tpt2.containsKey(hash));
         assertTrue(tpt2.get(hash).score == score1);
     }
@@ -93,12 +93,12 @@ public class TPTTests{
         PrincipalVariation pv2 = new PrincipalVariation();
         PrincipalVariation pv3 = new PrincipalVariation();
 
-        double result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, -1, 0L);
-        engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+        double result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, 0, 0L, false);
+        engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
 
-        double result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+        double result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
 
-        for(int i = 0; i < pv.size(); i++){
+        for(int i = 0; i < pv2.size(); i++){
             System.out.println("pv2: " + Util.convertNumToCoord(pv3.get(i).from) + Util.convertNumToCoord(pv3.get(i).to));
             System.out.println("pv3: " + Util.convertNumToCoord(pv2.get(i).from) + Util.convertNumToCoord(pv2.get(i).to));
         }
@@ -119,10 +119,10 @@ public class TPTTests{
         PrincipalVariation pv2 = new PrincipalVariation();
 
         for(int i = 0; i < 5; i++){
-            engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+            engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
         }
 
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
 
         for(int i = 0; i < pv.size(); i++){
             assertTrue(pv.get(i).from == pv2.get(i).from);
@@ -138,9 +138,9 @@ public class TPTTests{
         PrincipalVariation pv = new PrincipalVariation();
         PrincipalVariation pv2 = new PrincipalVariation();
 
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, -1, 0L);
+        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
         board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
-        engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, -1, 0L);
+        engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
         long hash = tpt.hash(board);
         TPT.TPTEntry entry = tpt.get(hash);
 
@@ -150,6 +150,6 @@ public class TPTTests{
     }
 
 
- */
+
 
 }
