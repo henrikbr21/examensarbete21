@@ -24,29 +24,29 @@ public class TPTTests{
     @Test
     public void testPutUntilMaxSize(){
         for(long i = 0; i < 10; i++){
-            tpt.put(i, i, 5, null, null, null);
+            tpt.put(i, i, 5, null, new Board(), null, 1);
         }
 
         for(long i = 10; i < 16; i++){
-            tpt.put(i, i, 5, null, null, null);
+            tpt.put(i, i, 5, null, new Board(), null, 1);
         }
 
-        tpt.put(10, 10, 5, null, null, null);
+        tpt.put(10, 10, 5, null, new Board(), null, 1);
         assertTrue(tpt.get(tpt.hashes[0]).hash == 10);
     }
 
     @Test
     public void test(){
         for(long i = 0; i < 10; i++){
-            tpt.put(i, i, 5, null, null, null);
+            tpt.put(i, i, 5, null, new Board(), null, 1);
         }
 
-        tpt.put(10, 10, 5, null, null, null);
+        tpt.put(10, 10, 5, null, new Board(), null, 1);
         for(long i = 11; i < 16; i++){
-            tpt.put(i, i, 5, null, null, null);
+            tpt.put(i, i, 5, null, null, null, 1);
         }
 
-        tpt.put(10, 10, 5, null, null, null);
+        tpt.put(10, 10, 5, null, null, null, 1);
 
         System.out.println("RefCount: " + tpt.get(10).refCount);
         assertTrue(tpt.get(10).refCount == 2);
@@ -104,8 +104,6 @@ public class TPTTests{
         }
 
         for(int i = 0; i < pv.size(); i++){
-            //assertTrue(pv3.get(i).from == pv2.get(i).from);
-            //assertTrue(pv3.get(i).to == pv2.get(i).to);
             assertTrue(result3 == result2);
         }
     }
@@ -123,11 +121,8 @@ public class TPTTests{
         }
 
         engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
-
-        for(int i = 0; i < pv.size(); i++){
-            assertTrue(pv.get(i).from == pv2.get(i).from);
-            assertTrue(pv.get(i).to == pv2.get(i).to);
-        }
+        assertTrue(pv.get(pv.size()-1).from == pv2.get(pv2.size()-1).from);
+        assertTrue(pv.get(pv.size()-1).to == pv2.get(pv2.size()-1).to);
     }
 
     @Test
@@ -139,10 +134,17 @@ public class TPTTests{
         PrincipalVariation pv2 = new PrincipalVariation();
 
         engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
-        board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
-        engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
         long hash = tpt.hash(board);
         TPT.TPTEntry entry = tpt.get(hash);
+
+        board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
+        engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
+        hash = tpt.hash(board);
+        entry = tpt.get(hash);
+
+        System.out.println(Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
+        System.out.println(Util.convertNumToCoord(entry.bestMove.from) + Util.convertNumToCoord(entry.bestMove.to));
+
 
         assertTrue(pv2.get(pv2.size()-1).from == entry.bestMove.from);
         assertTrue(pv2.get(pv2.size()-1).to == entry.bestMove.to);

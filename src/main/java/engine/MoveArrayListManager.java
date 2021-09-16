@@ -3,8 +3,8 @@ package engine;
 import java.util.ArrayList;
 
 public class MoveArrayListManager {
-    private ArrayList<MoveArrayList> moveArrayLists;
-    private static MoveArrayListManager manager = new MoveArrayListManager();
+    private final ArrayList<MoveArrayList> moveArrayLists;
+    private static final MoveArrayListManager manager = new MoveArrayListManager();
     private static long obtainCount = 0;
     private static long renounceCount = 0;
 
@@ -38,6 +38,6 @@ public class MoveArrayListManager {
     }
 
     private MoveArrayListManager() {
-        this.moveArrayLists = new ArrayList<MoveArrayList>(200);
+        this.moveArrayLists = new ArrayList<>(200);
     }
 }

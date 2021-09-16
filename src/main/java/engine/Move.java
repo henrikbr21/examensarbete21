@@ -36,9 +36,7 @@ public class Move {
     }
 
     public boolean equals(Move move){
-        if(this.from == move.from && this.to == move.to)
-            return true;
-        return false;
+        return this.from == move.from && this.to == move.to;
     }
 
 }

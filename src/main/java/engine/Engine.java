@@ -1090,7 +1090,7 @@ public class Engine {
 
 	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
 		TPT.TPTEntry entry = tpt.get(prevHash);
-		if(entry != null && entry.depth >= depthLeft){
+		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 1){
 			Debug.TPFound(depth);
 			if(entry.nodeType == TPT.EntryType.PVNODE){
 				pv.addMove(entry.bestMove);
@@ -1106,8 +1106,9 @@ public class Engine {
 
 		//End condition
 		if(depthLeft == 0){
-			depth++;
 			double score = evalPosition(board);
+			if(score == -20000)
+				score = score+depth;
 			pv.clear();
 			return score;
 		}
@@ -1119,8 +1120,10 @@ public class Engine {
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1)
 				return -20000+depth;
-			else if(board.checkColor("BLACK") == 2)
+			else if(board.checkColor("BLACK") == 2) {
+				System.out.println("BLACK CHECKMATED HIMSELF?!");
 				return 20000;
+			}
 			else return 0;
 		}
 
@@ -1150,7 +1153,7 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("BETA CUTOFF AT DEPTH: " + depth);
 				}
-				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE);
+				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 1);
 				return beta;
 			}
 			//(ALL-NODE: all children have score < beta)
@@ -1171,23 +1174,28 @@ public class Engine {
 			}
 		}
 		if(!exceededAlpha)
-			tpt.put(prevHash, bestScore, depthLeft, bestMove, board, TPT.EntryType.ALLNODE); //Maybe there's a bestMove here
-		else
-			tpt.put(prevHash, alpha, depthLeft, bestMove, board, TPT.EntryType.PVNODE);
+				tpt.put(prevHash, bestScore, depthLeft, bestMove, board, TPT.EntryType.ALLNODE, 1);
+		else{
+				tpt.put(prevHash, alpha, depthLeft, bestMove, board, TPT.EntryType.PVNODE, 1);
+		}
 		return alpha;
 	}
 
 	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
+
 		TPT.TPTEntry entry = tpt.get(prevHash);
-		if(entry != null && entry.depth >= depthLeft){
+		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 2){
 			Debug.TPFound(depth);
 			if(entry.nodeType == TPT.EntryType.PVNODE){
+				pv.clear();
 				pv.addMove(entry.bestMove);
 				return entry.score;
 			}else if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score <= alpha){
+				pv.clear();
 				pv.addMove(entry.bestMove);
 				return alpha;
 			}else if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score >= beta){
+				pv.clear();
 				pv.addMove(entry.bestMove);
 				return beta;
 			}
@@ -1195,8 +1203,9 @@ public class Engine {
 
 		//End condition
 		if(depthLeft == 0){
-			depth++;
 			double score = evalPosition(board);
+			if(score == 20000)
+				score = score-depth;
 			pv.clear();
 			return score;
 		}
@@ -1206,10 +1215,12 @@ public class Engine {
 
 		//Alternate end condition
 		if(moves.size()==0){
-			if(board.checkColor("WHITE") == 1)
+			if(board.checkColor("WHITE") == 1){
+				System.out.println("WHITE CHECKMATED HIMSELF?!");
 				return -20000;
+			}
 			else if(board.checkColor("BLACK") == 2)
-				return 20000+depth;
+				return 20000-depth;
 			else return 0;
 		}
 
@@ -1239,7 +1250,7 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("ALPHA CUTOFF AT DEPTH: " + depth);
 				}
-				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE);
+				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 2);
 				return alpha;
 			}
 
@@ -1259,9 +1270,10 @@ public class Engine {
 
 		}
 		if(!betaUpdated)
-			tpt.put(prevHash, bestScore, depthLeft, bestMove, board, TPT.EntryType.ALLNODE); //Maybe there's a bestMove here
-		else
-			tpt.put(prevHash, beta, depthLeft, bestMove, board, TPT.EntryType.PVNODE);
+				tpt.put(prevHash, bestScore, depthLeft, bestMove, board, TPT.EntryType.ALLNODE, 2);
+		else{
+				tpt.put(prevHash, beta, depthLeft, bestMove, board, TPT.EntryType.PVNODE, 2);
+		}
 		return beta;
 	}
 
@@ -1450,7 +1462,7 @@ public class Engine {
 			points = points - 30;
 
 		if(board.wHasCastled){
-			points = points + 125;
+			points = points + 150;
 		}else if(!board.wHasCastled){
 			if(board.castleWKValid){
 				points = points + 75;
@@ -1460,7 +1472,7 @@ public class Engine {
 			}
 		}
 		if(board.bHasCastled){
-			points = points - 125;
+			points = points - 150;
 		}else if(!board.bHasCastled){
 			if(board.castleBKValid){
 				points = points - 75;

@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MoveArrayList {
-    private ArrayList<Move> arrayList;
+    private final ArrayList<Move> arrayList;
     private int size;
 
     public MoveArrayList() {
-        this.arrayList = new ArrayList<Move>(200);
+        this.arrayList = new ArrayList<>(200);
     }
 
-    public Move add(int from, int to) {
-        return add(from, to, 'U', 'U', false, 0);
+    public void add(int from, int to) {
+        add(from, to, 'U', 'U', false, 0);
     }
 
     public Move add(int from, int to, char fromPiece, char toPiece, boolean checking, int score) {
-        Move move = null;
+        Move move;
         if (this.size < this.arrayList.size()) {
             move = this.arrayList.get(this.size);
             move.from = from;
