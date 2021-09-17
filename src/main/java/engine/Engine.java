@@ -1,12 +1,44 @@
 package engine;
 
 import java.util.Comparator;
+import java.util.Random;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Engine {
 	private TPT tpt;
+	private Random rand;
 	
 	public Engine(String color, Board board, TPT tpt){
 		this.tpt = tpt;
+		rand = new Random();
+	}
+
+	public class HelperThread extends Thread{
+		private Board board;
+		private String playerColor;
+		private int depthLeft;
+		private PrincipalVariation pv;
+		private boolean debug;
+
+		public HelperThread(Board board, String playerColor, int depthLeft, boolean debug){
+			this.board = board;
+			this.playerColor = playerColor;
+			this.depthLeft = depthLeft;
+			this.debug = debug;
+			pv = new PrincipalVariation();
+		}
+
+		public void run(){
+			if(playerColor.equals("WHITE")){
+				for(int i = 2; i <= depthLeft; i++){
+					alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, true);
+				}
+			}else{
+				for(int i = 2; i <= depthLeft; i++){
+					alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, true);
+				}
+			}
+		}
 	}
 
 	public MoveArrayList findMoveList(Board board, String playerColor){
@@ -1078,9 +1110,12 @@ public class Engine {
 		return false;
 	}
 
-	public MoveArrayList getSortedMoves(String color, TPT.TPTEntry entry, Board board){
+	public MoveArrayList getSortedMoves(String color, TPT.TPTEntry entry, Board board, boolean helper){
 		MoveArrayList moves = this.findMoveList(board, color);
-		if(entry != null)
+
+		if(helper){
+			randomize(moves);
+		}else if(entry != null)
 			sort(moves, entry.bestMove, board);
 		else{
 			sort(moves);
@@ -1088,7 +1123,42 @@ public class Engine {
 		return moves;
 	}
 
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
+	public double search(Board board, String playerColor, int depthLeft, PrincipalVariation pv, boolean debug){
+		double score;
+		if(playerColor.equals("WHITE")){
+			score = alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
+		}else{
+			score = alphaBetaMin(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
+		}
+		if(depthLeft == 1)
+			return score;
+
+		HelperThread[] helpers = new HelperThread[3];
+		for(int i = 0; i < helpers.length; i++){
+			helpers[i] = new HelperThread(new Board(board), playerColor, depthLeft, debug);
+			helpers[i].start();
+		}
+
+		for(int i = 2; i <= depthLeft; i++){
+			if(playerColor.equals("WHITE"))
+				score = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
+			else{
+				score = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
+			}
+		}
+/*
+		for(int i = 0; i < helpers.length; i++){
+			try {
+				helpers[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+ */
+		return score;
+	}
+
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper){
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 1){
 			Debug.TPFound(depth);
@@ -1114,7 +1184,7 @@ public class Engine {
 		}
 		PrincipalVariation localPV = new PrincipalVariation();
 
-		MoveArrayList moves = getSortedMoves("WHITE", entry, board);
+		MoveArrayList moves = getSortedMoves("WHITE", entry, board, helper);
 
 		//Alternate end condition
 		if(moves.size()==0){
@@ -1145,7 +1215,7 @@ public class Engine {
 			}
 
 			long hash = tpt.hash(simBoard);
-			score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug);
+			score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false);
 
 			//Beta-cutoff
 			if(score >= beta){
@@ -1181,7 +1251,7 @@ public class Engine {
 		return alpha;
 	}
 
-	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug){
+	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper){
 
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 2){
@@ -1211,9 +1281,9 @@ public class Engine {
 		}
 		PrincipalVariation localPV = new PrincipalVariation();
 
-		MoveArrayList moves = getSortedMoves("BLACK", entry, board);
+		MoveArrayList moves = getSortedMoves("BLACK", entry, board, helper);
 
-		//Alternate end condition
+			//Alternate end condition
 		if(moves.size()==0){
 			if(board.checkColor("WHITE") == 1){
 				System.out.println("WHITE CHECKMATED HIMSELF?!");
@@ -1242,7 +1312,7 @@ public class Engine {
 			}
 			long hash = tpt.hash(simBoard);
 
-			score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug);
+			score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false);
 
 			//Alpha-cutoff
 			if(score <= alpha){
@@ -1276,8 +1346,6 @@ public class Engine {
 		}
 		return beta;
 	}
-
-
 
 	public void sort(MoveArrayList moves, Move bestMove, Board board){
 
@@ -1373,6 +1441,27 @@ public class Engine {
 		}
 
 
+		moves.sort(new Comparator<Move>() {
+			@Override
+			public int compare(Move o1, Move o2) {
+				if(o1.score > o2.score){
+					return -1;
+				}else if(o1.score < o2.score){
+					return 1;
+				}else {
+					return 0;
+				}
+
+			}
+		});
+	}
+
+	public void randomize(MoveArrayList moves){
+
+		for(int i = 0; i < moves.size(); i++){
+			Move move = moves.get(i);
+			move.score = rand.nextInt();
+		}
 		moves.sort(new Comparator<Move>() {
 			@Override
 			public int compare(Move o1, Move o2) {

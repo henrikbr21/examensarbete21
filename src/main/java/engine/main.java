@@ -217,7 +217,6 @@ public class main {
 */
             Thread thread;
             int nbrTokens = 0;
-
             while(true) {
                 String input = scan.nextLine();
 				/*
@@ -239,7 +238,7 @@ public class main {
                 } else if (input.equals("isready")) {
                     for (int j = 0; j < 100; j++) {
                         PrincipalVariation pv = new PrincipalVariation();
-                        double result = engine.alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false);
+                        double result = engine.alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
                     }
                     System.out.println("readyok");
                 }else if(input.equals("stop")){
@@ -279,14 +278,17 @@ public class main {
                                 try {
 
                                     long time = System.currentTimeMillis();
-                                    int depthLeft = 1;
+                                    int depthLeft = 6;
                                     double result = 0;
+                                    /*
                                     while ((System.currentTimeMillis() - time) < 1000 && depthLeft < 11) {
                                         System.out.println("Depth: " + depthLeft);
                                         result = engine.alphaBetaMax(board, depthLeft, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false);
                                         System.out.println("Time taken: " + (System.currentTimeMillis() - time) + "ms");
                                         depthLeft += 1;
                                     }
+                                     */
+                                    engine.search(board, "WHITE", depthLeft, pv, false);
                                     board.draw();
                                     Util.dumpGCLogs();
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
@@ -313,7 +315,8 @@ public class main {
                                 try {
                                     MoveArrayList moves = engine.findMoveList(board, "BLACK");
                                     board.draw();
-                                    double result = engine.alphaBetaMin(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false);
+                                    //double result = engine.alphaBetaMin(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
+                                    double result = engine.search(board,"BLACK", 6, pv, false);
                                     Util.dumpGCLogs();
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
                                     System.out.println("Score: " + result);

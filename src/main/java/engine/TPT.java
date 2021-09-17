@@ -44,7 +44,7 @@ public class TPT {
         }
     }
 
-    public void put(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
+    public synchronized void put(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
 
         TPTEntry newEntry = entries.get(hash);
         if (newEntry != null) {
@@ -78,7 +78,7 @@ public class TPT {
         }
     }
 
-    private TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount, Move bestMove, Board board, EntryType type, int playerToMove) {
+    private synchronized TPTEntry updateEntry(TPTEntry entryToBeUpdated, long newHash, double newScore, int newDepth, int newRefCount, Move bestMove, Board board, EntryType type, int playerToMove) {
         entryToBeUpdated.hash = newHash;
         entryToBeUpdated.depth = newDepth;
         entryToBeUpdated.score = newScore;
@@ -90,11 +90,11 @@ public class TPT {
         return entryToBeUpdated;
     }
 
-    public TPTEntry get(long hash) {
+    public synchronized TPTEntry get(long hash) {
         return entries.get(hash);
     }
 
-    public boolean containsKey(long hash) {
+    public synchronized boolean containsKey(long hash) {
         if (entries.containsKey(hash))
             return true;
         else
