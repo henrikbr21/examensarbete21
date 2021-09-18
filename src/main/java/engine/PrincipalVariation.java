@@ -15,7 +15,7 @@ public class PrincipalVariation {
 
     public void addAllMoves(PrincipalVariation otherPV){
         for(int i = 0; i < otherPV.size(); i++){
-            pv.add(otherPV.get(i));
+            pv.add(new Move(otherPV.get(i)));
         }
     }
 

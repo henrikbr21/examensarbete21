@@ -2,41 +2,79 @@ package engine;
 
 import java.util.Comparator;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Engine {
 	private TPT tpt;
 	private Random rand;
+	private Semaphore s1;
+	private Semaphore s2;
+	private Semaphore s3;
+
 	
 	public Engine(String color, Board board, TPT tpt){
 		this.tpt = tpt;
 		rand = new Random();
 	}
 
-	public class HelperThread extends Thread{
+	public class SearchThread extends Thread{
 		private Board board;
 		private String playerColor;
 		private int depthLeft;
 		private PrincipalVariation pv;
 		private boolean debug;
+		private boolean helper;
+		private PrincipalVariation lastResult = new PrincipalVariation();
+		private double lastScore;
+		private Engine engine;
+		private int lastDepth = 0;
 
-		public HelperThread(Board board, String playerColor, int depthLeft, boolean debug){
+		public SearchThread(Board board, String playerColor, int depthLeft, boolean debug, boolean helper, Engine engine){
 			this.board = board;
 			this.playerColor = playerColor;
 			this.depthLeft = depthLeft;
 			this.debug = debug;
+			this.helper = helper;
 			pv = new PrincipalVariation();
+			this.engine = engine;
 		}
 
 		public void run(){
-			if(playerColor.equals("WHITE")){
-				for(int i = 2; i <= depthLeft; i++){
-					alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, true);
+			try{
+				if(playerColor.equals("WHITE")){
+					for(int i = 1; i <= depthLeft; i++){
+						double result = 0;
+						result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
+						if(!helper){
+							lastResult.clear();
+							lastResult.addAllMoves(pv);
+							lastScore = result;
+							lastDepth = i;
+							if(i == depthLeft){
+								synchronized (engine){
+									engine.notifyAll();
+								}
+							}
+						}
+					}
+				}else{
+					for(int i = 1; i <= depthLeft; i++){
+						double result = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
+						if(!helper){
+							lastResult.clear();
+							lastResult.addAllMoves(pv);
+							lastScore = result;
+							lastDepth = i;
+							if(i == depthLeft){
+								synchronized (engine){
+									engine.notifyAll();
+								}
+							}
+						}
+					}
 				}
-			}else{
-				for(int i = 2; i <= depthLeft; i++){
-					alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, true);
-				}
+			}catch(InterruptedException e){
 			}
 		}
 	}
@@ -1123,29 +1161,29 @@ public class Engine {
 		return moves;
 	}
 
-	public double search(Board board, String playerColor, int depthLeft, PrincipalVariation pv, boolean debug){
-		double score;
-		if(playerColor.equals("WHITE")){
-			score = alphaBetaMax(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
-		}else{
-			score = alphaBetaMin(board, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
-		}
-		if(depthLeft == 1)
-			return score;
-
-		HelperThread[] helpers = new HelperThread[3];
+	public synchronized double search(Board board, String playerColor, int depthLeft, PrincipalVariation pv, boolean debug){
+		SearchThread[] helpers = new SearchThread[3];
 		for(int i = 0; i < helpers.length; i++){
-			helpers[i] = new HelperThread(new Board(board), playerColor, depthLeft, debug);
+			helpers[i] = new SearchThread(new Board(board), playerColor, depthLeft, debug, true, this);
 			helpers[i].start();
 		}
+		SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this);
+		mainThread.start();
+		try {
+			wait(30000);
+		} catch (InterruptedException e) {
 
-		for(int i = 2; i <= depthLeft; i++){
-			if(playerColor.equals("WHITE"))
-				score = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
-			else{
-				score = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, false);
-			}
 		}
+		for(int i = 0; i < helpers.length; i++){
+			helpers[i].interrupt();
+		}
+		mainThread.interrupt();
+
+		System.out.println("DEPTH: " + mainThread.lastDepth);
+		pv.clear();
+		pv.addAllMoves(mainThread.lastResult);
+		return mainThread.lastScore;
+	}
 /*
 		for(int i = 0; i < helpers.length; i++){
 			try {
@@ -1155,10 +1193,11 @@ public class Engine {
 			}
 		}
  */
-		return score;
-	}
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper) throws InterruptedException {
+		if (Thread.interrupted()) {
+			throw new InterruptedException();
+		}
 
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper){
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 1){
 			Debug.TPFound(depth);
@@ -1251,7 +1290,10 @@ public class Engine {
 		return alpha;
 	}
 
-	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper){
+	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper) throws InterruptedException {
+		if (Thread.interrupted()) {
+			throw new InterruptedException();
+		}
 
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 2){

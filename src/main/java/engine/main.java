@@ -12,7 +12,7 @@ public class main {
         try {
             AttackSets.init();
             Scanner scan = new Scanner(System.in);
-            TPT tpt = new TPT(3000000);
+            TPT tpt = new TPT(1000000);
             final Board board = new Board();
             MoveArrayListManager.size();
             final Engine engine = new Engine("WHITE", board, tpt);
@@ -278,7 +278,7 @@ public class main {
                                 try {
 
                                     long time = System.currentTimeMillis();
-                                    int depthLeft = 6;
+                                    int depthLeft = 30;
                                     double result = 0;
                                     /*
                                     while ((System.currentTimeMillis() - time) < 1000 && depthLeft < 11) {
@@ -345,7 +345,7 @@ public class main {
 */
 
 
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | InterruptedException e) {
             e.printStackTrace();
         }
 

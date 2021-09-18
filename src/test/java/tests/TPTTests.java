@@ -58,7 +58,11 @@ public class TPTTests{
         TPT tpt = new TPT(300000);
         Engine engine = new Engine("WHITE", board, tpt);
         PrincipalVariation pv = new PrincipalVariation();
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
+        try {
+            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertTrue(pv.size()==4);
 
         char[][] testBoard = {
@@ -79,7 +83,11 @@ public class TPTTests{
 
         TPT tpt2 = new TPT(300000);
         Engine engine2 = new Engine("WHITE", board, tpt2);
-        engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
+        try {
+            engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertTrue(tpt2.containsKey(hash));
         assertTrue(tpt2.get(hash).score == score1);
     }
@@ -93,10 +101,24 @@ public class TPTTests{
         PrincipalVariation pv2 = new PrincipalVariation();
         PrincipalVariation pv3 = new PrincipalVariation();
 
-        double result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, 0, 0L, false);
-        engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
+        double result3 = 0;
+        try {
+            result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        double result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
+        double result2 = 0;
+        try {
+            result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         for(int i = 0; i < pv2.size(); i++){
             System.out.println("pv2: " + Util.convertNumToCoord(pv3.get(i).from) + Util.convertNumToCoord(pv3.get(i).to));
@@ -117,10 +139,18 @@ public class TPTTests{
         PrincipalVariation pv2 = new PrincipalVariation();
 
         for(int i = 0; i < 5; i++){
-            engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
+            try {
+                engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
+        try {
+            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertTrue(pv.get(pv.size()-1).from == pv2.get(pv2.size()-1).from);
         assertTrue(pv.get(pv.size()-1).to == pv2.get(pv2.size()-1).to);
     }
@@ -133,12 +163,20 @@ public class TPTTests{
         PrincipalVariation pv = new PrincipalVariation();
         PrincipalVariation pv2 = new PrincipalVariation();
 
-        engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false);
+        try {
+            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         long hash = tpt.hash(board);
         TPT.TPTEntry entry = tpt.get(hash);
 
         board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
-        engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false);
+        try {
+            engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false, false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         hash = tpt.hash(board);
         entry = tpt.get(hash);
 
