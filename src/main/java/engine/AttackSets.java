@@ -6,7 +6,6 @@ public abstract class AttackSets {
 	private static final long[] knightMoves = new long[64];
 	private static final long[] kingMoves = new long[64];
 	private static final long[] positions = new long[64];
-	private static final long[] rookMoves = new long[64];
 	private static final long[] rowMasks = new long[8];
 	private static final long[] colMasks = new long[8];
 	private static final long[] diagMasksRight = new long[15];
@@ -28,10 +27,10 @@ public abstract class AttackSets {
 	public static long castleWKR;
 	public static long castleBKL;
 	public static long castleBKR;
-	public static long WKLblockers;
-	public static long WKRblockers;
-	public static long BKLblockers;
-	public static long BKRblockers;
+	public static long WKLBlockers;
+	public static long WKRBlockers;
+	public static long BKLBlockers;
+	public static long BKRBlockers;
 	public static long WKStart;
 	public static long BKStart;
 	public static long wLeftRookStart;
@@ -75,7 +74,6 @@ public abstract class AttackSets {
 	public static void init(){
 		AttackSets.initKnightMoves();
 		AttackSets.initKingMoves();
-		AttackSets.initRookMoves();
 		AttackSets.initLineMasks();
 		AttackSets.initLeftRays();
 		AttackSets.initRightRays();
@@ -1031,7 +1029,7 @@ public abstract class AttackSets {
 				{'0', '0', '0', '0', '0', '0', '0', '0'},
 				{'0', '1', '1', '1', '0', '0', '0', '0'}
 		};
-		WKLblockers = Util.boardFromArray(board);
+		WKLBlockers = Util.boardFromArray(board);
 
 		board = new char[][] {
 				{'0', '0', '0', '0', '0', '0', '0', '0'},
@@ -1043,7 +1041,7 @@ public abstract class AttackSets {
 				{'0', '0', '0', '0', '0', '0', '0', '0'},
 				{'0', '0', '0', '0', '0', '1', '1', '0'}
 		};
-		WKRblockers = Util.boardFromArray(board);
+		WKRBlockers = Util.boardFromArray(board);
 
 		board = new char[][] {
 				{'0', '1', '1', '1', '0', '0', '0', '0'},
@@ -1055,7 +1053,7 @@ public abstract class AttackSets {
 				{'0', '0', '0', '0', '0', '0', '0', '0'},
 				{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
-		BKLblockers = Util.boardFromArray(board);
+		BKLBlockers = Util.boardFromArray(board);
 
 		board = new char[][] {
 				{'0', '0', '0', '0', '0', '1', '1', '0'},
@@ -1067,7 +1065,7 @@ public abstract class AttackSets {
 				{'0', '0', '0', '0', '0', '0', '0', '0'},
 				{'0', '0', '0', '0', '0', '0', '0', '0'}
 		};
-		BKRblockers = Util.boardFromArray(board);
+		BKRBlockers = Util.boardFromArray(board);
 
 		board = new char[][] {
 				{'0', '0', '0', '0', '0', '0', '0', '0'},
@@ -1237,57 +1235,12 @@ public abstract class AttackSets {
 		};
 		bPromotion = Util.boardFromArray(board);
 	}
-	
-	public static void initRookMoves() {
-	
-		/*
-		char[][] board = {
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'1', '0', '0', '0', '0', '0', '0', '0'},
-			{'0', '1', '1', '1', '1', '1', '1', '1'}
-		};
-		long bitboard = Util.boardFromArray(board);
-		bitboard = bitboard << 1;
-		draw(bitboard);
-		*/
-		
-	}
-	
-	public static long rookMoves(int pos){
-		return rookMoves[pos];
-	}
+
 	
 	//returns attacking bitboard for a king given a little-endian position.
 	public static long kingMoves(int pos) {
 		return kingMoves[pos];
 	}
-	
-	public static void draw(long bitBoard) {
-		String bitBoardString = Long.toBinaryString(bitBoard);
-		bitBoardString = Util.padBinaryString(bitBoardString);
-		int q = 64;
-		
-        for (int i=0;i<8;i++) {
-        	System.out.print("[");
-        	int k = -1;
-        	q = q - 8;
-        			
-        	for(int j = 0; j < 8; j++) {
-        		k++;
-        		
-            	
-                System.out.print(bitBoardString.charAt(q+k));
-                if(k != 7) 
-                	System.out.print(",");
-        	}
-        	System.out.println("]");
-        }
-    }
 	
 	public static void initLineMasks() {
 		char[][] board = {
