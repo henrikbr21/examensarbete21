@@ -1,8 +1,5 @@
 package engine;
 
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
-import java.sql.Array;
 import java.util.*;
 
 public class main {
@@ -15,8 +12,8 @@ public class main {
             TPT tpt = new TPT(1000000);
             final Board board = new Board();
             MoveArrayListManager.size();
-            final Engine engine = new Engine("WHITE", board, tpt);
-            final Engine engine2 = new Engine("BLACK", board, tpt);
+            final Engine engine = new Engine(tpt);
+            final Engine engine2 = new Engine(tpt);
             Random rand = new Random();
 /*
             MoveArrayList line = Util.parseMoveString("c2c3 a7a6 c3c4 b8c6 b1c3 c6e5 e2e3 e7e6 d2d4 e5c6 d4d5 c6e7 e3e4 c7c5 d5e6 d7e6 d1d8 e8d8 c1g5 d8c7 g1f3 e7c6 e1c1 g8f6 c1b1 c7b8 g5h4 h7h6 h4f6 g7f6 d1d2 b8a7 a2a3 h8g8 g2g3 f8e7 h2h3 g8g7 f1e2 b7b6 a3a4 h6h5 h1g1 c6b4 h3h4 f6f5 e4f5 e6f5 c3d5 b4d5 d2d5 c8e6 d5d3 f5f4 g3f4 g7g1 f3g1 e6f5 g1f3 e7d6 f3e5 d6e5 f4e5 a8d8 b1a2 d8d3 e2d3 f5d3 b2b3 a6a5 a2a1 d3c2 a1b2 c2d1 b2c3 d1f3 c3c2 a7b7 c2d2 f3e4 d2c1 e4d3 c1b2 d3e4 b2c3 e4f5 c3d2 f5h3 d2e2 h3e6 e2d1 e6f5 d1d2 f5d7 d2c2 d7h3 c2b1 h3g4 b1b2 g4f5 b2c3 f5g4 c3d2 g4d7 d2c2 b7a7 c2c1 d7c6 c1b1 c6h1 b1b2 h1f3 b2c2 f3g4 c2b2 g4d7 f2f4 d7c8 b2c2 c8f5 c2d1 f5c8 d1e2 c8g4 e2e1 g4e6 e1e2 e6h3 e2d1 h3g4 d1e1 g4h3 e1d1 h3g4 d1d2 g4f3 d2c1 a7b7 c1c2 f3e2 f4f5 e2f1 e5e6 f7e6 f5f6 b6b5 a4b5 a5a4 f6f7 a4b3 c2b3 f1e2 f7f8q e2d1 b3c3 e6e5 f8d6 d1e2 d6c6 b7b8 b5b6 e2c4 c3c4 e5e4 c6e4 b8c8 e4d5 c8b8 d5h1 b8c8 h1a1 c8b7 c4c5 b7b8 b6b7 b8b7 a1b1 b7c7");

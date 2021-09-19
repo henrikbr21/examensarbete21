@@ -3,13 +3,8 @@ package tests;
 import static org.junit.Assert.*;
 import engine.*;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Comparator;
 
 public class TPTTests{
 
@@ -56,7 +51,7 @@ public class TPTTests{
     public void testEntryValidity(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, tpt);
+        Engine engine = new Engine(tpt);
         PrincipalVariation pv = new PrincipalVariation();
         try {
             engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
@@ -82,7 +77,7 @@ public class TPTTests{
         assertTrue(tpt.get(hash).depth == 3);
 
         TPT tpt2 = new TPT(300000);
-        Engine engine2 = new Engine("WHITE", board, tpt2);
+        Engine engine2 = new Engine(tpt2);
         try {
             engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
         } catch (InterruptedException e) {
@@ -96,7 +91,7 @@ public class TPTTests{
     public void testEntryValidity2(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, tpt);
+        Engine engine = new Engine(tpt);
         PrincipalVariation pv = new PrincipalVariation();
         PrincipalVariation pv2 = new PrincipalVariation();
         PrincipalVariation pv3 = new PrincipalVariation();
@@ -134,7 +129,7 @@ public class TPTTests{
     public void testEntryValidity3(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, tpt);
+        Engine engine = new Engine(tpt);
         PrincipalVariation pv = new PrincipalVariation();
         PrincipalVariation pv2 = new PrincipalVariation();
 
@@ -159,7 +154,7 @@ public class TPTTests{
     public void testPVOrdering(){
         Board board = new Board();
         TPT tpt = new TPT(300000);
-        Engine engine = new Engine("WHITE", board, tpt);
+        Engine engine = new Engine(tpt);
         PrincipalVariation pv = new PrincipalVariation();
         PrincipalVariation pv2 = new PrincipalVariation();
 

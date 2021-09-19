@@ -1,33 +1,26 @@
 package engine;
 
-import java.util.Comparator;
 import java.util.Random;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class Engine {
-	private TPT tpt;
-	private Random rand;
-	private Semaphore s1;
-	private Semaphore s2;
-	private Semaphore s3;
-
+	private final TPT tpt;
+	private final Random rand;
 	
-	public Engine(String color, Board board, TPT tpt){
+	public Engine(TPT tpt){
 		this.tpt = tpt;
 		rand = new Random();
 	}
 
 	public class SearchThread extends Thread{
-		private Board board;
-		private String playerColor;
-		private int depthLeft;
-		private PrincipalVariation pv;
-		private boolean debug;
-		private boolean helper;
-		private PrincipalVariation lastResult = new PrincipalVariation();
+		private final Board board;
+		private final String playerColor;
+		private final int depthLeft;
+		private final PrincipalVariation pv;
+		private final boolean debug;
+		private final boolean helper;
+		private final PrincipalVariation lastResult = new PrincipalVariation();
 		private double lastScore;
-		private Engine engine;
+		private final Engine engine;
 		private int lastDepth = 0;
 
 		public SearchThread(Board board, String playerColor, int depthLeft, boolean debug, boolean helper, Engine engine){
@@ -44,7 +37,7 @@ public class Engine {
 			try{
 				if(playerColor.equals("WHITE")){
 					for(int i = 1; i <= depthLeft; i++){
-						double result = 0;
+						double result;
 						result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
 						if(!helper){
 							lastResult.clear();
@@ -74,7 +67,7 @@ public class Engine {
 						}
 					}
 				}
-			}catch(InterruptedException e){
+			}catch(InterruptedException ignored){
 			}
 		}
 	}
@@ -94,7 +87,7 @@ public class Engine {
 				Move move = moves.get(i);
 				Board simBoard = new Board(board);
 				simBoard.makeMove(move.from, move.to);
-				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
+				if(simBoard.BK == 0L || simBoard.WK == 0L)
 					continue;
 				int simCheck = simBoard.checkColor("WHITE");
 				if(simCheck == 2 || simCheck == 0)
@@ -114,7 +107,7 @@ public class Engine {
  				Move move = moves.get(i);
  				Board simBoard = new Board(board);
  				simBoard.makeMove(move.from, move.to);
- 				if(simBoard.BK == 0L || simBoard.WK == 0L) //SKA DESSA VARA HÄR??
+ 				if(simBoard.BK == 0L || simBoard.WK == 0L)
  					continue;
  				int simCheck = simBoard.checkColor("BLACK");
  				if(simCheck == 1 || simCheck == 0)
@@ -711,10 +704,6 @@ public class Engine {
 									simBoard.BK = simBoard.BK ^ AttackSets.bRightPasses;
 									int simCheck = simBoard.checkColor("BLACK");
 									if(simCheck == 0){
-										/*Behövs detta?
-										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(61);
-										*/
 										if((friends & AttackSets.bRightRookStart) != 0)
 											legalBKMoves = legalBKMoves | AttackSets.castleBKR;
 									}
@@ -730,10 +719,6 @@ public class Engine {
 									simBoard.BK = simBoard.BK ^ AttackSets.bLeftPasses;
 									int simCheck = simBoard.check();
 									if(simCheck == 0){
-										/* Behövs detta?
-										simBoard = new Board(board.WP, board.WR,board.WN, board.WB, board.WK, board.WQ, board.BP, board.BR, board.BN, board.BB, board.BK, board.BQ, board.castleWKValid, board.castleWQValid, board.castleBKValid, board.castleWQValid);
-										simBoard.BK = simBoard.BK ^ AttackSets.getPosition(3);
-										*/
 										if((friends & AttackSets.bLeftRookStart) != 0){
 											legalBKMoves = legalBKMoves | AttackSets.castleBKL;
 										}
@@ -947,7 +932,7 @@ public class Engine {
 				}else if((board.WK & position) != 0){
 					long WKMoves = AttackSets.kingMoves(i);
 
-					//Remove pseudolegal moves
+					//Remove pseudo-legal moves
 					long legalWKMoves2 = WKMoves & empty;
 					long legalWKMoves3 = WKMoves & enemies;
 					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
@@ -1136,7 +1121,7 @@ public class Engine {
 				}else if((board.BK & position) != 0){
 					long BKMoves = AttackSets.kingMoves(i);
 
-					//Remove pseudolegal moves
+					//Remove pseudo-legal moves
 					long legalBKMoves2 = BKMoves & empty;
 					long legalBKMoves3 = BKMoves & enemies;
 					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
@@ -1170,12 +1155,12 @@ public class Engine {
 		SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this);
 		mainThread.start();
 		try {
-			wait(30000);
-		} catch (InterruptedException e) {
+			wait(3000);
+		} catch (InterruptedException ignored) {
 
 		}
-		for(int i = 0; i < helpers.length; i++){
-			helpers[i].interrupt();
+		for (SearchThread helper : helpers) {
+			helper.interrupt();
 		}
 		mainThread.interrupt();
 
@@ -1236,7 +1221,7 @@ public class Engine {
 			else return 0;
 		}
 
-		double score = -Double.MAX_VALUE;
+		double score;
 		boolean exceededAlpha = false;
 		Move bestMove = null;
 		double bestScore = Double.NEGATIVE_INFINITY;
@@ -1336,7 +1321,7 @@ public class Engine {
 			else return 0;
 		}
 
-		double score = Double.MAX_VALUE;
+		double score;
 		boolean betaUpdated = false;
 		Move bestMove = null;
 		double bestScore = Double.POSITIVE_INFINITY;
@@ -1431,19 +1416,7 @@ public class Engine {
 		}
 
 
-		moves.sort(new Comparator<Move>() {
-			@Override
-			public int compare(Move o1, Move o2) {
-				if(o1.score > o2.score){
-					return -1;
-				}else if(o1.score < o2.score){
-					return 1;
-				}else {
-					return 0;
-				}
-
-			}
-		});
+		moves.sort((o1, o2) -> Integer.compare(o2.score, o1.score));
 	}
 
 	public void sort(MoveArrayList moves){
@@ -1483,19 +1456,7 @@ public class Engine {
 		}
 
 
-		moves.sort(new Comparator<Move>() {
-			@Override
-			public int compare(Move o1, Move o2) {
-				if(o1.score > o2.score){
-					return -1;
-				}else if(o1.score < o2.score){
-					return 1;
-				}else {
-					return 0;
-				}
-
-			}
-		});
+		moves.sort((o1, o2) -> Integer.compare(o2.score, o1.score));
 	}
 
 	public void randomize(MoveArrayList moves){
@@ -1504,19 +1465,7 @@ public class Engine {
 			Move move = moves.get(i);
 			move.score = rand.nextInt();
 		}
-		moves.sort(new Comparator<Move>() {
-			@Override
-			public int compare(Move o1, Move o2) {
-				if(o1.score > o2.score){
-					return -1;
-				}else if(o1.score < o2.score){
-					return 1;
-				}else {
-					return 0;
-				}
-
-			}
-		});
+		moves.sort((o1, o2) -> Integer.compare(o2.score, o1.score));
 	}
 	
 	public double evalPosition(Board board) {
@@ -1594,7 +1543,7 @@ public class Engine {
 
 		if(board.wHasCastled){
 			points = points + 150;
-		}else if(!board.wHasCastled){
+		}else {
 			if(board.castleWKValid){
 				points = points + 75;
 			}
@@ -1604,7 +1553,7 @@ public class Engine {
 		}
 		if(board.bHasCastled){
 			points = points - 150;
-		}else if(!board.bHasCastled){
+		}else {
 			if(board.castleBKValid){
 				points = points - 75;
 			}

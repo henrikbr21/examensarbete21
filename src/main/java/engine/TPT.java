@@ -30,8 +30,8 @@ public class TPT {
         public int refCount = 1;
         public Move bestMove;
         public Board board;
-        public EntryType nodeType = EntryType.NONE; //0 = PV
-        public int playerToMove = 0;
+        public EntryType nodeType; //0 = PV
+        public int playerToMove;
 
         public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
             this.hash = hash;
@@ -86,7 +86,7 @@ public class TPT {
         entryToBeUpdated.bestMove = bestMove;
         entryToBeUpdated.board = board;
         entryToBeUpdated.nodeType = type;
-
+        entryToBeUpdated.playerToMove = playerToMove;
         return entryToBeUpdated;
     }
 
@@ -95,10 +95,7 @@ public class TPT {
     }
 
     public synchronized boolean containsKey(long hash) {
-        if (entries.containsKey(hash))
-            return true;
-        else
-            return false;
+        return entries.containsKey(hash);
     }
 
     public long updateHash(Board board, long hash, int from, int to) {

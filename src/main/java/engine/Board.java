@@ -153,7 +153,7 @@ public class Board {
 	//returns 1 if the white player is checked, 2 if the black player is checked and 3 if both are checked.
 	public int check() {
 		Board simBoard = new Board(this);
-		Engine engine = new Engine("WHITE", simBoard, new TPT(0));
+		Engine engine = new Engine(new TPT(0));
 
 		int ret = 0;
 		if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
@@ -169,7 +169,7 @@ public class Board {
 
 	public int checkColor(String color){
 		TPT tpt = new TPT(0);
-		Engine engine = new Engine("WHITE", this, tpt);
+		Engine engine = new Engine(tpt);
 
 		if(color.equals("BLACK")){
 			if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
@@ -187,7 +187,7 @@ public class Board {
 	//to do
 	public int stalemate(){
 		TPT tpt = new TPT(0);
-		Engine engine = new Engine("WHITE", this, tpt);
+		Engine engine = new Engine(tpt);
 		boolean allCauseCheckForWhite = true;
 		boolean allCauseCheckForBlack = true;
 
@@ -223,7 +223,7 @@ public class Board {
 	//returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
 	public int checkmate(){
 		TPT tpt = new TPT(0);
-		Engine engine = new Engine("WHITE", this, tpt);
+		Engine engine = new Engine(tpt);
 
 		int check = this.check();
 

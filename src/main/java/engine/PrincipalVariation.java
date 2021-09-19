@@ -3,7 +3,7 @@ package engine;
 import java.util.ArrayList;
 
 public class PrincipalVariation {
-    private ArrayList<Move> pv;
+    private final ArrayList<Move> pv;
 
     public PrincipalVariation(){
          pv = new ArrayList<>();
