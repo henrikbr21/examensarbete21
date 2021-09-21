@@ -1,5 +1,8 @@
 package engine;
 
+import javax.management.MXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.Random;
 
 public class Engine {
@@ -35,10 +38,16 @@ public class Engine {
 
 		public void run(){
 			try{
+				long time = System.currentTimeMillis();
 				if(playerColor.equals("WHITE")){
 					for(int i = 1; i <= depthLeft; i++){
 						double result;
 						result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
+						ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+						long id = this.getId();
+						if(i == depthLeft){
+							System.out.println("THREAD " + id + " TIME: " + (System.currentTimeMillis()-time));
+						}
 						if(!helper){
 							lastResult.clear();
 							lastResult.addAllMoves(pv);
@@ -149,20 +158,34 @@ public class Engine {
 		for(int i = 0; i < 64; i++){
 			long pos = AttackSets.getPosition(i);
 
-			if((N & pos) != 0)
-				generateKnightMoves(board, i, moveList, empty, enemies, playerColor);
-			else if((B & pos) != 0)
-				generateBishopMoves(board, i, moveList, occupied, empty, enemies, playerColor);
-			else if((R & pos) != 0)
-				generateRookMoves(board, i, moveList, occupied, empty, enemies, playerColor);
-			else if((Q & pos) != 0)
-				generateQueenMoves(board, i, moveList, occupied, empty, enemies, playerColor);
-			else if((K & pos) != 0){
-				generateKingMoves(board, i, moveList, empty, enemies);
+			if((N & pos) != 0){
+				long knightMoves = generateKnightBitboard(i, empty, enemies);
+				extractMoves(board, knightMoves, i, moveList, playerColor.equals("WHITE")?'N':'n');
+			}else if((B & pos) != 0){
+				long bishopMoves = generateBishopBitboard(i, occupied, empty, enemies);
+				extractMoves(board, bishopMoves, i, moveList, playerColor.equals("WHITE")?'B':'b');
+			}else if((R & pos) != 0){
+				long rookMoves = generateRookBitboard(i, occupied, empty, enemies);
+				extractMoves(board, rookMoves, i, moveList, playerColor.equals("WHITE")?'R':'r');
+			}else if((Q & pos) != 0){
+				long queenMoves = generateQueenBitboard(i, occupied, empty, enemies);
+				extractMoves(board, queenMoves, i, moveList, playerColor.equals("WHITE")?'Q':'q');
+			}else if((K & pos) != 0){
+				long kingMoves = generateKingBitboard(i, empty, enemies);
+				extractMoves(board, kingMoves, i, moveList, playerColor.equals("WHITE")?'K':'k');
 			}
-
 		}
 		return moveList;
+	}
+
+	public void extractMoves(Board board, long moves, int pos, MoveArrayList moveList, char fromPiece){
+		char takenPiece;
+		for(int i = 0; i < 64; i++){
+			if((AttackSets.getPosition(i) & moves) != 0){
+				takenPiece = board.getPiece(i);
+				moveList.add(pos, i, fromPiece, takenPiece, false, 0);
+			}
+		}
 	}
 
 	public void generatePawnMoves(Board board, String playerColor, MoveArrayList moveList, long empty, long enemies){
@@ -285,29 +308,47 @@ public class Engine {
 			}
 		}
 	}
-	public void generateKnightMoves(Board board, int pos, MoveArrayList moveList, long empty, long enemies, String playerColor){
+	public long generatePawnAttackBoard(Board board, String playerColor, long enemies){
+		if(playerColor.equals("WHITE")){
+			//Attacks up and to the left
+			long RightColumn0 = ~(72340172838076673L);
+			long WPAttacksR = board.WP & RightColumn0;
+			WPAttacksR = WPAttacksR >>> 9;
+			WPAttacksR = WPAttacksR & enemies; //only possible if enemy present
+
+			//Attacks up and to the right
+			long leftColumn0 = 9187201950435737471L;
+			long WPAttacksL = board.WP & leftColumn0;
+			WPAttacksL = WPAttacksL >>> 7;
+			WPAttacksL = WPAttacksL & enemies;
+
+			return WPAttacksR | WPAttacksL;
+		}else{
+			//Attacks up and to the left
+			long RightColumn0 = ~(72340172838076673L);
+			long BPAttacksR = board.BP & RightColumn0;
+			BPAttacksR = BPAttacksR << 7;
+			BPAttacksR = BPAttacksR & enemies; //only possible if enemy present
+
+			//Attacks up and to the right
+			long leftColumn0 = 9187201950435737471L;
+			long BPAttacksL = board.BP & leftColumn0;
+			BPAttacksL = BPAttacksL << 9;
+			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
+
+			return BPAttacksR | BPAttacksL;
+		}
+	}
+
+	public long generateKnightBitboard(int pos, long empty, long enemies){
 		long NAttacks = AttackSets.knightMoves(pos);
 		long legalNMoves2 = NAttacks & empty;
 		long legalNMoves3 = NAttacks & enemies;
 		long legalNMoves = legalNMoves2 | legalNMoves3;
 
-		int movesFound = 0;
-		for(int j = 0; j < 64; j++) {
-			if(movesFound == 8)
-				break;
-
-			if((legalNMoves & AttackSets.getPosition(j)) != 0) {
-				movesFound++;
-
-				char takenPiece = board.getPiece(j);
-				if(playerColor.equals("WHITE"))
-					moveList.add(pos, j, 'N', takenPiece, false, 0);
-				else
-					moveList.add(pos, j, 'n', takenPiece, false, 0);
-			}
-		}
+		return legalNMoves;
 	}
-	public void generateBishopMoves(Board board, int pos, MoveArrayList moveList, long occupied, long empty, long enemies, String playerColor){
+	public long generateBishopBitboard(int pos, long occupied, long empty, long enemies){
 		long URAttacks = occupied & AttackSets.diagRaysUR(pos);
 		int closestPos = Long.numberOfLeadingZeros(URAttacks);
 		URAttacks = AttackSets.diagRaysUR(pos);
@@ -338,18 +379,9 @@ public class Engine {
 
 		long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
 		bishopAttacks = bishopAttacks & (enemies ^ empty);
-		//generate moveList
-		for(int j = 0; j < 64; j++){
-			if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-				char takenPiece = board.getPiece(j);
-				if(playerColor.equals("BLACK"))
-					moveList.add(pos, j, 'B', takenPiece, false, 0);
-				else
-					moveList.add(pos, j, 'b', takenPiece, false, 0);
-			}
-		}
+		return bishopAttacks;
 	}
-	public void generateRookMoves(Board board, int pos, MoveArrayList moveList, long occupied, long empty, long enemies, String playerColor){
+	public long generateRookBitboard(int pos, long occupied, long empty, long enemies){
 		//up attacks
 		long upAttacks = occupied & AttackSets.rookAttacksU(pos);
 		int closestPos = Long.numberOfLeadingZeros(upAttacks);
@@ -385,18 +417,10 @@ public class Engine {
 
 		long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
 		rookAttacks = rookAttacks & (enemies ^ empty);
-		//generate moveList
-		for(int j = 0; j < 64; j++){
-			if((rookAttacks & AttackSets.getPosition(j)) != 0){
-				char takenPiece = board.getPiece(j);
-				if(playerColor.equals("WHITE"))
-					moveList.add(pos, j, 'R', takenPiece, false, 0);
-				else
-					moveList.add(pos, j, 'r', takenPiece, false, 0);
-			}
-		}
+
+		return rookAttacks;
 	}
-	public void generateQueenMoves(Board board, int pos, MoveArrayList moveList, long occupied, long empty, long enemies, String playerColor){
+	public long generateQueenBitboard(int pos, long occupied, long empty, long enemies){
 		long singleQueen = AttackSets.getPosition(pos);
 
 		long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
@@ -439,35 +463,16 @@ public class Engine {
 		diagAttacks = diagAttacks & (enemies ^ empty);
 		long queenAttacks = queenAttacks1 ^ diagAttacks;
 
-		//generate moveList
-		for(int j = 0; j < 64; j++){
-			if((queenAttacks & AttackSets.getPosition(j)) != 0){ //((queenAttacks>>j)&1)==1
-				char takenPiece = board.getPiece(j);
-				if(playerColor.equals("WHITE"))
-					moveList.add(pos, j, 'Q', takenPiece, false, 0);
-				else
-					moveList.add(pos, j, 'q', takenPiece, false, 0);
-			}
-		}
+		return queenAttacks;
 	}
-	public void generateKingMoves(Board board, int pos, MoveArrayList moveList, long empty, long enemies){
+	public long generateKingBitboard(int pos, long empty, long enemies){
 		long KMoves = AttackSets.kingMoves(pos);
-
 		//Remove pseudo-legal moves
 		long legalKMoves2 = KMoves & empty;
 		long legalKMoves3 = KMoves & enemies;
 		long legalKMoves = legalKMoves2 | legalKMoves3;
 
-		int movesFound = 0;
-		for(int j = 0; j < 64; j++) {
-			if(movesFound == 8)
-				break;
-			if((legalKMoves & AttackSets.getPosition(j)) != 0) {
-				movesFound++;
-				char takenPiece = board.getPiece(j);
-				moveList.add(pos, j, 'K', takenPiece, false, 0);
-			}
-		}
+		return legalKMoves;
 	}
 
 	public void generateCastlingMoves(Board board, String playerColor, MoveArrayList moveList, long occupied, long friends){
@@ -533,1017 +538,51 @@ public class Engine {
 			}
 		}
 	}
-
-	public MoveArrayList generateMoves2(Board board, String playerColor){
-		MoveArrayList moveList = MoveArrayListManager.obtainMoveArrayList();
-
-		long occupied = board.occupied();
-		long empty = board.empty();
-		long friends = board.friends(playerColor);
-		long enemies = board.enemies(playerColor);
-
-		long attackBoard = 0L;
-		if(playerColor.equals("WHITE")){
-			long WPMoves = board.WP >>> 8;
-			long legalWPMoves = WPMoves & empty;
-
-			long WPMoves2 = legalWPMoves >>> 8;
-			long legalWPMoves2 = WPMoves2 & empty;
-			long invalidateDoubleX2 = 9223372032559808512L; //Bitboard to invalidate pawns doing double moves again
-			legalWPMoves2 = invalidateDoubleX2 & legalWPMoves2;
-
-			//Attacks up and to the left
-			long RightColumn0 = ~(72340172838076673L);
-
-			long WPAttacksR = board.WP & RightColumn0;
-
-			WPAttacksR = WPAttacksR >>> 9;
-
-			WPAttacksR = WPAttacksR & enemies; //only possible if enemy present
-
-			//Attacks up and to the right
-			long leftColumn0 = 9187201950435737471L;
-
-			long WPAttacksL = board.WP & leftColumn0;
-			WPAttacksL = WPAttacksL >>> 7;
-
-			attackBoard = WPAttacksL | WPAttacksR;
-			WPAttacksL = WPAttacksL & enemies;
-
-			for(int i = 0; i<64; i++) {
-				long pos = AttackSets.getPosition(i);
-				if((pos & legalWPMoves) != 0) {
-					moveList.add(i-8, i, 'P', '_', false, 0);
-				}
-				if((pos & legalWPMoves2) != 0) {
-					moveList.add(i-16, i, 'P', '_', false, 0);
-				}
-				if((pos & WPAttacksL) != 0) {
-					char takenPiece = board.getPiece(i);
-					moveList.add(i-7, i, 'P', takenPiece, false, 0);
-				}
-				if((pos & WPAttacksR) != 0) {
-					char takenPiece = board.getPiece(i);
-					moveList.add(i-9, i, 'P', takenPiece, false, 0);
-				}
-			}
-
-			//en passant
-			if(board.enPassant){
-				if(board.enPassantPos % 8 == 0){
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						moveList.add(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false, 0);
-					}
-				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0){
-						moveList.add(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false, 0);
-					}
-				}else{
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.WP ) != 0 && board.enPassantPlayer == 2){
-						moveList.add(board.enPassantPos+1, board.enPassantPos+8, 'P', 'p', false, 0);
-					}
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.WP) != 0 && board.enPassantPlayer == 2){
-						moveList.add(board.enPassantPos-1, board.enPassantPos+8, 'P', 'p', false, 0);
-					}
-				}
-			}
-
-			for(int i = 0; i < 64; i++){
-				long position = AttackSets.getPosition(i);
-				if((board.WN & position) != 0){
-					long WNAttacks = AttackSets.knightMoves(i);
-					long legalWNMoves2 = WNAttacks & empty;
-					long legalWNMoves3 = WNAttacks & enemies;
-
-					long legalWNMoves = legalWNMoves2 | legalWNMoves3;
-					attackBoard = attackBoard | legalWNMoves;
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8)
-							break;
-
-						if((legalWNMoves & AttackSets.getPosition(j)) != 0) {
-							movesFound++;
-
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'N', takenPiece, false, 0);
-						}
-					}
-				}else if((board.WB & position) != 0){
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | bishopAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'B', takenPiece, false, 0);
-						}
-					}
-				}else if((board.WR & position) != 0){
-					//up attacks
-					long upAttacks = occupied & AttackSets.rookAttacksU(i);
-					int closestPos = Long.numberOfLeadingZeros(upAttacks);
-					if(closestPos != 64){
-						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
-					}else{
-						upAttacks = AttackSets.rookAttacksU(i);
-					}
-
-					//down attacks
-					long downAttacks = occupied & AttackSets.rookAttacksD(i);
-					closestPos = Long.numberOfTrailingZeros(downAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
-					}else{
-						downAttacks = AttackSets.rookAttacksD(i);
-					}
-
-					//left attacks
-					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
-					closestPos = Long.numberOfTrailingZeros(leftAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
-					}else{
-						leftAttacks = AttackSets.rookAttacksL(i);
-					}
-
-					//right attacks
-					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
-					closestPos = Long.numberOfLeadingZeros(rightAttacks);
-					if(closestPos != 64){
-						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
-					}else{
-						rightAttacks = AttackSets.rookAttacksR(i);
-					}
-
-					long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
-					rookAttacks = rookAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | rookAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'R', takenPiece, false, 0);
-						}
-					}
-				}else if((board.WQ & position) != 0){
-					long singleQueen = AttackSets.getPosition(i);
-
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
-
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
-
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies ^ empty);
-					long queenAttacks = queenAttacks1 ^ diagAttacks;
-					attackBoard = attackBoard | queenAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((queenAttacks & AttackSets.getPosition(j)) != 0){ //((queenAttacks>>j)&1)==1
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'Q', takenPiece, false, 0);
-						}
-					}
-				}else if((board.WK & position) != 0){
-					long WKMoves = AttackSets.kingMoves(i);
-
-					//Remove pseudo-legal moves
-					long legalWKMoves2 = WKMoves & empty;
-					long legalWKMoves3 = WKMoves & enemies;
-					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
-					attackBoard = attackBoard | legalWKMoves;
-
-					if(board.WK == AttackSets.WKStart){
-						if(board.castleWKValid){
-							if((occupied & AttackSets.WKRBlockers) == 0){
-								if(board.checkColor("WHITE") == 0) {
-									Board simBoard = new Board(board);
-									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
-									simBoard.WK = simBoard.WK ^ AttackSets.wRightPasses;
-
-									int simCheck = simBoard.checkColor("WHITE");
-									if(simCheck == 0){
-										if((friends & AttackSets.wRightRookStart) != 0)
-											legalWKMoves = legalWKMoves | AttackSets.castleWKR;
-									}
-
-								}
-							}
-						}
-						if(board.castleWQValid){
-							if((occupied & AttackSets.WKLBlockers) == 0){
-								if(board.checkColor("WHITE") == 0){
-									Board simBoard = new Board(board);
-									simBoard.WK = simBoard.WK ^ AttackSets.WKStart;
-									simBoard.WK = simBoard.WK ^ AttackSets.wLeftPasses;
-
-									int simCheck = simBoard.checkColor("WHITE");
-									if(simCheck == 0){
-										if((friends & AttackSets.wLeftRookStart) != 0){
-											legalWKMoves = legalWKMoves | AttackSets.castleWKL;
-										}
-									}
-								}
-							}
-						}
-					}
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8)
-							break;
-
-						if((legalWKMoves & AttackSets.getPosition(j)) != 0) {
-							movesFound++;
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'K', takenPiece, false, 0);
-						}
-					}
-				}
-			}
-		}else if(playerColor.equals("BLACK")){
-			long BPMoves = board.BP << 8;
-			long legalBPMoves = BPMoves & empty;
-
-			long BPMoves2 = legalBPMoves << 8;
-			long legalBPMoves2 = BPMoves2 & empty;
-			long invalidateDoubleX2 = 4294967295L; //Bitboard to invalidate pawns doing double moves again
-			legalBPMoves2 = invalidateDoubleX2 & legalBPMoves2;
-
-			//Attacks up and to the left
-			long RightColumn0 = ~(72340172838076673L);
-
-			long BPAttacksR = board.BP & RightColumn0;
-			BPAttacksR = BPAttacksR << 7;
-
-			BPAttacksR = BPAttacksR & enemies; //only possible if enemy present
-
-			//Attacks up and to the right
-			long leftColumn0 = 9187201950435737471L;
-
-			long BPAttacksL = board.BP & leftColumn0;
-			BPAttacksL = BPAttacksL << 9;
-
-			attackBoard = BPAttacksL | BPAttacksR;
-			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
-
-			//Converting bitboards to move string:
-			for(int i = 0; i<64; i++) {
-				long pos = AttackSets.getPosition(i);
-
-				if((legalBPMoves & pos) != 0) {
-					moveList.add(i+8, i, 'p', '_', false, 0);
-				}
-				if((legalBPMoves2 & pos) != 0) {
-					moveList.add(i+16, i, 'p', '_', false, 0);
-				}
-				if((BPAttacksL & pos) != 0) {
-					char takenPiece = board.getPiece(i);
-					moveList.add(i+9, i, 'p', takenPiece, false, 0);
-				}
-
-				if((BPAttacksR & pos) != 0) {
-					char takenPiece = board.getPiece(i);
-					moveList.add(i+7, i, 'p', takenPiece, false, 0);
-				}
-			}
-
-			//en passant
-			if(board.enPassant){
-				if(board.enPassantPos % 8 == 0 && board.enPassantPlayer == 1){
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0){
-						moveList.add(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false, 0);
-					}
-				}else if(board.enPassantPos % 8 == 7 && board.enPassantPlayer == 1) {
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0){
-						moveList.add(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false, 0);
-					}
-				}else{
-					if((AttackSets.getPosition(board.enPassantPos+1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(board.enPassantPos+1, board.enPassantPos-8, 'p', 'P', false, 0);
-					}
-					if((AttackSets.getPosition(board.enPassantPos-1) & board.BP) != 0 && board.enPassantPlayer == 1){
-						moveList.add(board.enPassantPos-1, board.enPassantPos-8, 'p', 'P', false, 0);
-					}
-				}
-			}
-
-			for(int i = 0; i < 64; i++){
-				long position = AttackSets.getPosition(i);
-				if((board.BN & position) != 0){
-					long BNAttacks = AttackSets.knightMoves(i);
-					long legalBNMoves2 = BNAttacks & empty;
-					long legalBNMoves3 = BNAttacks & enemies;
-
-					long legalBNMoves = legalBNMoves2 | legalBNMoves3;
-					attackBoard = attackBoard | legalBNMoves;
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8)
-							break;
-
-						if((legalBNMoves & AttackSets.getPosition(j)) != 0) {
-							movesFound++;
-
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'n', takenPiece, false, 0);
-						}
-					}
-				}else if((board.BB & position) != 0){
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | bishopAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((bishopAttacks & AttackSets.getPosition(j)) != 0){
-
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'b', takenPiece, false, 0);
-						}
-					}
-				}else if((board.BR & position) != 0){
-					//up attacks
-					long upAttacks = occupied & AttackSets.rookAttacksU(i);
-					int closestPos = Long.numberOfLeadingZeros(upAttacks);
-					if(closestPos != 64){
-						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
-					}else{
-						upAttacks = AttackSets.rookAttacksU(i);
-					}
-
-					//down attacks
-					long downAttacks = occupied & AttackSets.rookAttacksD(i);
-					closestPos = Long.numberOfTrailingZeros(downAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
-					}else{
-						downAttacks = AttackSets.rookAttacksD(i);
-					}
-
-					//left attacks
-					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
-					closestPos = Long.numberOfTrailingZeros(leftAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
-					}else{
-						leftAttacks = AttackSets.rookAttacksL(i);
-					}
-
-					//right attacks
-					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
-					closestPos = Long.numberOfLeadingZeros(rightAttacks);
-					if(closestPos != 64){
-						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
-					}else{
-						rightAttacks = AttackSets.rookAttacksR(i);
-					}
-
-
-					long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
-					rookAttacks = rookAttacks & (enemies ^ empty);
-					attackBoard = attackBoard | rookAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((rookAttacks & AttackSets.getPosition(j)) != 0){
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'r', takenPiece, false, 0);
-						}
-					}
-				}else if((board.BQ & position) != 0){
-					long singleQueen = AttackSets.getPosition(i);
-
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
-
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
-
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies ^ empty);
-					long queenAttacks = queenAttacks1 ^ diagAttacks;
-					attackBoard = attackBoard | queenAttacks;
-
-					//generate moveList
-					for(int j = 0; j < 64; j++){
-						if((queenAttacks & AttackSets.getPosition(j)) != 0){
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'q', takenPiece, false, 0);
-						}
-					}
-				}else if((board.BK & position) != 0){
-					long BKMoves = AttackSets.kingMoves(i);
-
-					//Remove pseudo-legal moves
-					long legalBKMoves2 = BKMoves & empty;
-					long legalBKMoves3 = BKMoves & enemies;
-					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
-					attackBoard = attackBoard | legalBKMoves;
-
-					if(board.BK == AttackSets.BKStart){
-						if(board.castleBKValid){
-							if((occupied & AttackSets.BKRBlockers) == 0){
-								if(board.checkColor("BLACK") == 0) {
-									Board simBoard = new Board(board);
-									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
-									simBoard.BK = simBoard.BK ^ AttackSets.bRightPasses;
-									int simCheck = simBoard.checkColor("BLACK");
-									if(simCheck == 0){
-										if((friends & AttackSets.bRightRookStart) != 0)
-											legalBKMoves = legalBKMoves | AttackSets.castleBKR;
-									}
-
-								}
-							}
-						}
-						if(board.castleBQValid){
-							if((occupied & AttackSets.BKLBlockers) == 0){
-								if(board.check() == 0){
-									Board simBoard = new Board(board);
-									simBoard.BK = simBoard.BK ^ AttackSets.BKStart;
-									simBoard.BK = simBoard.BK ^ AttackSets.bLeftPasses;
-									int simCheck = simBoard.check();
-									if(simCheck == 0){
-										if((friends & AttackSets.bLeftRookStart) != 0){
-											legalBKMoves = legalBKMoves | AttackSets.castleBKL;
-										}
-									}
-								}
-							}
-						}
-					}
-
-					int movesFound = 0;
-					for(int j = 0; j < 64; j++) {
-						if(movesFound == 8)
-							break;
-
-						if((legalBKMoves & AttackSets.getPosition(j)) != 0) {
-							movesFound++;
-							char takenPiece = board.getPiece(j);
-							moveList.add(i, j, 'k', takenPiece, false, 0);
-						}
-					}
-				}
-			}
-		}
-		AttackSets.currentAttackBoard = attackBoard;
-		return moveList;
-	}
 	public boolean isAttackedByOpponent(Board board, String playerColor, long square){
 		long occupied = board.occupied();
 		long empty = board.empty();
-		long enemies = board.friends(playerColor);
-
-		if(playerColor.equals("BLACK")){
-
-			//Attacks up and to the left
-			long RightColumn0 = ~(72340172838076673L);
-
-			long WPAttacksR = board.WP & RightColumn0;
-
-			WPAttacksR = WPAttacksR >>> 9;
-
-			WPAttacksR = WPAttacksR & enemies; //only possible if enemy present
-
-			//Attacks up and to the right
-			long leftColumn0 = 9187201950435737471L;
-
-			long WPAttacksL = board.WP & leftColumn0;
-			WPAttacksL = WPAttacksL >>> 7;
-
-			WPAttacksL = WPAttacksL & enemies;
-			if((WPAttacksR & square) != 0)
-				return true;
-			if((WPAttacksL & square) != 0)
-				return true;
-
-			for(int i = 0; i < 64; i++){
-				long position = AttackSets.getPosition(i);
-				if((board.WN & position) != 0){
-					long WNAttacks = AttackSets.knightMoves(i);
-					long legalWNMoves2 = WNAttacks & empty;
-					long legalWNMoves3 = WNAttacks & enemies;
-
-					long legalWNMoves = legalWNMoves2 | legalWNMoves3;
-					if((legalWNMoves & square) != 0)
-						return true;
-
-				}else if((board.WB & position) != 0){
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies ^ empty);
-
-					if((bishopAttacks & square) != 0)
-						return true;
-				}else if((board.WR & position) != 0){
-					//up attacks
-					long upAttacks = occupied & AttackSets.rookAttacksU(i);
-					int closestPos = Long.numberOfLeadingZeros(upAttacks);
-					if(closestPos != 64){
-						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
-					}else{
-						upAttacks = AttackSets.rookAttacksU(i);
-					}
-
-					//down attacks
-					long downAttacks = occupied & AttackSets.rookAttacksD(i);
-					closestPos = Long.numberOfTrailingZeros(downAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
-					}else{
-						downAttacks = AttackSets.rookAttacksD(i);
-					}
-
-					//left attacks
-					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
-					closestPos = Long.numberOfTrailingZeros(leftAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
-					}else{
-						leftAttacks = AttackSets.rookAttacksL(i);
-					}
-
-					//right attacks
-					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
-					closestPos = Long.numberOfLeadingZeros(rightAttacks);
-					if(closestPos != 64){
-						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
-					}else{
-						rightAttacks = AttackSets.rookAttacksR(i);
-					}
-
-					long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
-					rookAttacks = rookAttacks & (enemies ^ empty);
-					if((rookAttacks & square) != 0)
-						return true;
-
-				}else if((board.WQ & position) != 0){
-					long singleQueen = AttackSets.getPosition(i);
-
-
-					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
-
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
-
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies ^ empty);
-					long queenAttacks = queenAttacks1 ^ diagAttacks;
-
-					if((queenAttacks & square) != 0)
-						return true;
-
-				}else if((board.WK & position) != 0){
-					long WKMoves = AttackSets.kingMoves(i);
-
-					//Remove pseudo-legal moves
-					long legalWKMoves2 = WKMoves & empty;
-					long legalWKMoves3 = WKMoves & enemies;
-					long legalWKMoves = legalWKMoves2 | legalWKMoves3;
-					if((legalWKMoves & square) != 0)
-						return true;
-				}
-			}
-		}else if(playerColor.equals("WHITE")){
-			//Attacks up and to the left
-			long RightColumn0 = ~(72340172838076673L);
-
-			long BPAttacksR = board.BP & RightColumn0;
-			BPAttacksR = BPAttacksR << 7;
-
-			BPAttacksR = BPAttacksR & enemies; //only possible if enemy present
-
-			//Attacks up and to the right
-			long leftColumn0 = 9187201950435737471L;
-
-			long BPAttacksL = board.BP & leftColumn0;
-			BPAttacksL = BPAttacksL << 9;
-
-			BPAttacksL = BPAttacksL & enemies; //only possible if enemy present
-
-			if((BPAttacksL & square) != 0)
-				return true;
-			if((BPAttacksR & square) != 0)
-				return true;
-
-			for(int i = 0; i < 64; i++){
-				long position = AttackSets.getPosition(i);
-				if((board.BN & position) != 0){
-					long BNAttacks = AttackSets.knightMoves(i);
-					long legalBNMoves2 = BNAttacks & empty;
-					long legalBNMoves3 = BNAttacks & enemies;
-
-					long legalBNMoves = legalBNMoves2 | legalBNMoves3;
-					if((legalBNMoves & square) != 0)
-						return true;
-
-				}else if((board.BB & position) != 0){
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long bishopAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					bishopAttacks = bishopAttacks & (enemies ^ empty);
-					if((bishopAttacks & square) != 0)
-						return true;
-
-				}else if((board.BR & position) != 0){
-					//up attacks
-					long upAttacks = occupied & AttackSets.rookAttacksU(i);
-					int closestPos = Long.numberOfLeadingZeros(upAttacks);
-					if(closestPos != 64){
-						upAttacks = AttackSets.rookAttacksU(i) & ~(AttackSets.rookAttacksU(closestPos));
-					}else{
-						upAttacks = AttackSets.rookAttacksU(i);
-					}
-
-					//down attacks
-					long downAttacks = occupied & AttackSets.rookAttacksD(i);
-					closestPos = Long.numberOfTrailingZeros(downAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						downAttacks = AttackSets.rookAttacksD(i) & ~(AttackSets.rookAttacksD(closestPos));
-					}else{
-						downAttacks = AttackSets.rookAttacksD(i);
-					}
-
-					//left attacks
-					long leftAttacks = occupied & AttackSets.rookAttacksL(i);
-					closestPos = Long.numberOfTrailingZeros(leftAttacks);
-					closestPos = 63-closestPos;
-					if(closestPos > 0){
-						leftAttacks = AttackSets.rookAttacksL(i) & ~(AttackSets.rookAttacksL(closestPos));
-					}else{
-						leftAttacks = AttackSets.rookAttacksL(i);
-					}
-
-					//right attacks
-					long rightAttacks = occupied & AttackSets.rookAttacksR(i);
-					closestPos = Long.numberOfLeadingZeros(rightAttacks);
-					if(closestPos != 64){
-						rightAttacks = AttackSets.rookAttacksR(i) & ~(AttackSets.rookAttacksR(closestPos));
-					}else{
-						rightAttacks = AttackSets.rookAttacksR(i);
-					}
-
-
-					long rookAttacks = upAttacks | downAttacks | leftAttacks | rightAttacks;
-					rookAttacks = rookAttacks & (enemies ^ empty);
-					if((rookAttacks & square) != 0)
-						return true;
-
-				}else if((board.BQ & position) != 0){
-					long singleQueen = AttackSets.getPosition(i);
-
-					//long occupied = occupied() & AttackSets.rowMask(i/8);
-					long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
-					horizontalAttacks = horizontalAttacks & AttackSets.rowMask(i/8);
-
-					long verticalAttacks = ((occupied&AttackSets.colMask(i%8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied&AttackSets.colMask(i%8)) - (2 * Long.reverse(singleQueen)));
-					verticalAttacks = verticalAttacks & AttackSets.colMask(i%8);
-					long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
-					queenAttacks1 = queenAttacks1 & (enemies ^ empty);
-
-					long URAttacks = occupied & AttackSets.diagRaysUR(i);
-
-					int closestPos = Long.numberOfLeadingZeros(URAttacks);
-					if(closestPos != 64){
-						URAttacks = AttackSets.diagRaysUR(i) & ~(AttackSets.diagRaysUR(closestPos));
-					}else{
-						URAttacks = AttackSets.diagRaysUR(i);
-					}
-
-					long DRAttacks = occupied & AttackSets.diagRaysDR(i);
-					closestPos = Long.numberOfTrailingZeros(DRAttacks);
-					closestPos = 63 - closestPos;
-					if(closestPos > 0){
-						DRAttacks = AttackSets.diagRaysDR(i) & ~(AttackSets.diagRaysDR(closestPos));
-					}else{
-						DRAttacks = AttackSets.diagRaysDR(i);
-					}
-
-					long ULAttacks = occupied & AttackSets.diagRaysUL(i);
-
-					closestPos = Long.numberOfLeadingZeros(ULAttacks);
-					if(closestPos != 64){
-						ULAttacks = AttackSets.diagRaysUL(i) & ~(AttackSets.diagRaysUL(closestPos));
-					}else{
-						ULAttacks = AttackSets.diagRaysUL(i);
-					}
-
-					long DLAttacks = occupied & AttackSets.diagRaysDL(i);
-
-					closestPos = Long.numberOfTrailingZeros(DLAttacks);
-					closestPos = 63 - closestPos;
-
-					if(closestPos > 0){
-						DLAttacks = AttackSets.diagRaysDL(i) & ~(AttackSets.diagRaysDL(closestPos));
-					}else{
-						DLAttacks = AttackSets.diagRaysDL(i);
-					}
-
-					long diagAttacks = URAttacks | DRAttacks | ULAttacks | DLAttacks;
-					diagAttacks = diagAttacks & (enemies ^ empty);
-					long queenAttacks = queenAttacks1 ^ diagAttacks;
-					if((queenAttacks & square) != 0)
+		long enemies = board.enemies(playerColor);
+		long N;
+		long B;
+		long R;
+		long Q;
+		long K;
+
+		if(playerColor.equals("WHITE")){
+			N = board.WN;
+			B = board.WB;
+			R = board.WR;
+			Q = board.WQ;
+			K = board.WK;
+		}else {
+			N = board.BN;
+			B = board.BB;
+			R = board.BR;
+			Q = board.BQ;
+			K = board.BK;
+		}
+
+		if((generatePawnAttackBoard(board, playerColor, enemies) & square) != 0)
+			return true;
+
+		for(int i = 0; i < 64; i++){
+			long pos = AttackSets.getPosition(i);
+
+			if((pos & N) != 0){
+				if((generateKnightBitboard(i, empty, enemies) & square) != 0)
 					return true;
-
-				}else if((board.BK & position) != 0){
-					long BKMoves = AttackSets.kingMoves(i);
-
-					//Remove pseudo-legal moves
-					long legalBKMoves2 = BKMoves & empty;
-					long legalBKMoves3 = BKMoves & enemies;
-					long legalBKMoves = legalBKMoves2 | legalBKMoves3;
-					if((legalBKMoves & square) != 0)
-						return true;
-				}
+			}else if((pos & B) != 0){
+				if((generateBishopBitboard(i, occupied, empty, enemies) & square) != 0)
+					return true;
+			}else if((pos & R) != 0){
+				if((generateRookBitboard(i, occupied, empty, enemies) & square) != 0)
+					return true;
+			}else if((pos & Q) != 0){
+				if((generateQueenBitboard(i, occupied, empty, enemies) & square) != 0)
+					return true;
+			}else if((pos & K) != 0){
+				if((generateKingBitboard(i, empty, enemies) & square) != 0)
+					return true;
 			}
 		}
 		return false;
@@ -1571,7 +610,7 @@ public class Engine {
 		SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this);
 		mainThread.start();
 		try {
-			wait(3000);
+			wait(5000);
 		} catch (InterruptedException ignored) {
 
 		}

@@ -156,11 +156,11 @@ public class Board {
 		Engine engine = new Engine(new TPT(0));
 
 		int ret = 0;
-		if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
+		if(engine.isAttackedByOpponent(this, "WHITE", this.BK)){
 			ret |= 2;
 		}
 
-		if(engine.isAttackedByOpponent(this, "WHITE", this.WK)){
+		if(engine.isAttackedByOpponent(this, "BLACK", this.WK)){
 			ret |= 1;
 		}
 
@@ -172,11 +172,11 @@ public class Board {
 		Engine engine = new Engine(tpt);
 
 		if(color.equals("BLACK")){
-			if(engine.isAttackedByOpponent(this, "BLACK", this.BK)){
+			if(engine.isAttackedByOpponent(this, "WHITE", this.BK)){
 				return 2;
 			}else return 0;
 		}else if(color.equals("WHITE")){
-			if(engine.isAttackedByOpponent(this, "WHITE", this.WK)){
+			if(engine.isAttackedByOpponent(this, "BLACK", this.WK)){
 				return 1;
 			}else return 0;
 

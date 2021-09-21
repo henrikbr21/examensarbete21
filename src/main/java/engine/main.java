@@ -15,30 +15,14 @@ public class main {
             final Engine engine = new Engine(tpt);
             final Engine engine2 = new Engine(tpt);
             Random rand = new Random();
-/*
-            MoveArrayList line = Util.parseMoveString("e2e4 d7d6 b1c3 g8f6 d1f3 c8g4 f3d3 g4e6 d3b5 e6d7 b5b7");
-            board.playLine(line);
-            board.draw();
 
-            PrincipalVariation pv2 = new PrincipalVariation();
-            //double result3 = engine.alphaBetaMin(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, tpt.hash(board), false);
+            //long time = System.currentTimeMillis();
 
-            long time = System.currentTimeMillis();
-            double result2 = 0;
-            for(int i = 0; i < 11; i++){
-                pv2.clear();
-                result2 = engine.search(board, "BLACK", 6, pv2, false);
-                System.out.println("DEPTH: " + i);
-                System.out.println("Time: " + (System.currentTimeMillis() - time));
-                System.out.println(result2);
-                for(int j = 0; j < pv2.size(); j++){
-                    Move move2 = pv2.get(j);
-                    System.out.println(Util.convertNumToCoord(move2.from) + Util.convertNumToCoord(move2.to));
-                }
-
-            }
-
-
+            //MoveArrayList line = Util.parseMoveString("e2e4 d7d6 b1c3 g8f6 d1f3 c8g4 f3d3 g4e6 d3b5 e6d7 b5b7");
+            //board.playLine(line);
+            //long time = System.currentTimeMillis();
+            //engine.search(board, "WHITE", 6, new PrincipalVariation(), false);
+            //System.out.println("Time: " + (System.currentTimeMillis()-time));
 
 /*
             PrincipalVariation pv3 = new PrincipalVariation();
@@ -274,7 +258,6 @@ public class main {
 
                                     long time = System.currentTimeMillis();
                                     int depthLeft = 30;
-                                    double result = 0;
                                     /*
                                     while ((System.currentTimeMillis() - time) < 1000 && depthLeft < 11) {
                                         System.out.println("Depth: " + depthLeft);
@@ -283,7 +266,7 @@ public class main {
                                         depthLeft += 1;
                                     }
                                      */
-                                    engine.search(board, "WHITE", depthLeft, pv, false);
+                                    double result = engine.search(board, "WHITE", depthLeft, pv, false);
                                     board.draw();
                                     Util.dumpGCLogs();
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
@@ -311,7 +294,7 @@ public class main {
                                     MoveArrayList moves = engine.findMoveList(board, "BLACK");
                                     board.draw();
                                     //double result = engine.alphaBetaMin(board, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
-                                    double result = engine.search(board,"BLACK", 6, pv, false);
+                                    double result = engine.search(board,"BLACK", 10, pv, false);
                                     Util.dumpGCLogs();
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));
                                     System.out.println("Score: " + result);
