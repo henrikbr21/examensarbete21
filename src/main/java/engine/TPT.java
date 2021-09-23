@@ -98,20 +98,24 @@ public class TPT {
         return entries.containsKey(hash);
     }
 
-    public long updateHash(Board board, long hash, int from, int to) {
-        char fromPiece = board.getPiece(from);
-        char toPiece = board.getPiece(to);
+    public long updateHash(Board board, long hash, Move move) {
+        char fromPiece = move.fromPiece;
+        char toPiece = move.toPiece;
         int fromPieceIndex;
+        int from = move.from;
+        int to = move.to;
 
         int fromColumn = from % 8;
         int toColumn = to % 8;
         if((fromPiece == 'P' || fromPiece == 'p') && toPiece == '_' && fromColumn != toColumn) { //enpassant
-            board.makeMove(from, to);
-            return hash(board);
+            Board simBoard = new Board(board);
+            simBoard.makeMove(from, to);
+            return hash(simBoard);
         }else if((fromPiece == 'K' || fromPiece == 'k')){
             if((from == 4 && to == 2) || (from == 4 && to == 6) || (from == 60 && to == 58) || (from == 60 && to == 62)){
-                board.makeMove(from, to);
-                return hash(board);
+                Board simBoard = new Board(board);
+                simBoard.makeMove(from, to);
+                return hash(simBoard);
             }
         }
 
@@ -167,6 +171,7 @@ public class TPT {
                 fromPieceIndex = 11;
                 break;
             default:
+                board.draw();
                 throw new IllegalArgumentException("Piece type:" + fromPiece + " Illegal move:" + Util.convertNumToCoord(from) + Util.convertNumToCoord(to));
         }
 

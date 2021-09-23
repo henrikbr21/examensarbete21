@@ -54,7 +54,7 @@ public class TPTTests{
         Engine engine = new Engine(tpt);
         PrincipalVariation pv = new PrincipalVariation();
         try {
-            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -79,7 +79,7 @@ public class TPTTests{
         TPT tpt2 = new TPT(300000);
         Engine engine2 = new Engine(tpt2);
         try {
-            engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+            engine2.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -98,19 +98,19 @@ public class TPTTests{
 
         double result3 = 0;
         try {
-            result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, 0, 0L, false, false);
+            result3 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv3, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         try {
-            engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+            engine.alphaBetaMin(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         double result2 = 0;
         try {
-            result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false, false);
+            result2 = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -135,14 +135,14 @@ public class TPTTests{
 
         for(int i = 0; i < 5; i++){
             try {
-                engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+                engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
         try {
-            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false, false);
+            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -159,7 +159,7 @@ public class TPTTests{
         PrincipalVariation pv2 = new PrincipalVariation();
 
         try {
-            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, 0L, false, false);
+            engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -168,7 +168,7 @@ public class TPTTests{
 
         board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
         try {
-            engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, 0L, false, false);
+            engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -183,8 +183,4 @@ public class TPTTests{
         assertTrue(pv2.get(pv2.size()-1).to == entry.bestMove.to);
 
     }
-
-
-
-
 }

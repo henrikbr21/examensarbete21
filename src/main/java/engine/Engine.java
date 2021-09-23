@@ -40,9 +40,10 @@ public class Engine {
 			try{
 				long time = System.currentTimeMillis();
 				if(playerColor.equals("WHITE")){
-					for(int i = 1; i <= depthLeft; i++){
-						double result;
-						result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
+					for(int i = 0; i <= depthLeft; i += 2){
+						if(i == 6 && !helper)
+							System.out.println("Hej");
+						double result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
 						ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
 						long id = this.getId();
 						if(i == depthLeft){
@@ -61,7 +62,7 @@ public class Engine {
 						}
 					}
 				}else{
-					for(int i = 1; i <= depthLeft; i++){
+					for(int i = 0; i <= depthLeft; i += 2){
 						double result = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
 						if(!helper){
 							lastResult.clear();
@@ -155,24 +156,25 @@ public class Engine {
 		generatePawnMoves(board, playerColor, moveList, empty, enemies);
 		generateCastlingMoves(board, playerColor, moveList, occupied, friends);
 
+		boolean white = playerColor.equals("WHITE");
 		for(int i = 0; i < 64; i++){
 			long pos = AttackSets.getPosition(i);
 
 			if((N & pos) != 0){
 				long knightMoves = generateKnightBitboard(i, empty, enemies);
-				extractMoves(board, knightMoves, i, moveList, playerColor.equals("WHITE")?'N':'n');
+				extractMoves(board, knightMoves, i, moveList, white?'N':'n');
 			}else if((B & pos) != 0){
 				long bishopMoves = generateBishopBitboard(i, occupied, empty, enemies);
-				extractMoves(board, bishopMoves, i, moveList, playerColor.equals("WHITE")?'B':'b');
+				extractMoves(board, bishopMoves, i, moveList, white?'B':'b');
 			}else if((R & pos) != 0){
 				long rookMoves = generateRookBitboard(i, occupied, empty, enemies);
-				extractMoves(board, rookMoves, i, moveList, playerColor.equals("WHITE")?'R':'r');
+				extractMoves(board, rookMoves, i, moveList, white?'R':'r');
 			}else if((Q & pos) != 0){
 				long queenMoves = generateQueenBitboard(i, occupied, empty, enemies);
-				extractMoves(board, queenMoves, i, moveList, playerColor.equals("WHITE")?'Q':'q');
+				extractMoves(board, queenMoves, i, moveList, white?'Q':'q');
 			}else if((K & pos) != 0){
 				long kingMoves = generateKingBitboard(i, empty, enemies);
-				extractMoves(board, kingMoves, i, moveList, playerColor.equals("WHITE")?'K':'k');
+				extractMoves(board, kingMoves, i, moveList, white?'K':'k');
 			}
 		}
 		return moveList;
@@ -182,6 +184,7 @@ public class Engine {
 		char takenPiece;
 		for(int i = 0; i < 64; i++){
 			if((AttackSets.getPosition(i) & moves) != 0){
+				fromPiece = board.getPiece(pos);
 				takenPiece = board.getPiece(i);
 				moveList.add(pos, i, fromPiece, takenPiece, false, 0);
 			}
@@ -644,10 +647,12 @@ public class Engine {
 			if(entry.nodeType == TPT.EntryType.PVNODE){
 				pv.addMove(entry.bestMove);
 				return entry.score;
-			}else if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score >= beta){
+			}
+			if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score >= beta){
 				pv.addMove(entry.bestMove);
 				return beta;
-			}else if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score <= alpha){
+			}
+			if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score <= alpha){
 				pv.addMove(entry.bestMove);
 				return alpha;
 			}
@@ -693,7 +698,8 @@ public class Engine {
 					LineDebugger.unmatch(depth+1);
 			}
 
-			long hash = tpt.hash(simBoard);
+			//long hash = tpt.hash(simBoard);
+			long hash = tpt.updateHash(board, prevHash, move);
 			score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false);
 
 			//Beta-cutoff
@@ -703,6 +709,7 @@ public class Engine {
 						System.out.println("BETA CUTOFF AT DEPTH: " + depth);
 				}
 				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 1);
+				MoveArrayListManager.renounceMoveArrayList(moves);
 				return beta;
 			}
 			//(ALL-NODE: all children have score < beta)
@@ -727,6 +734,7 @@ public class Engine {
 		else{
 				tpt.put(prevHash, alpha, depthLeft, bestMove, board, TPT.EntryType.PVNODE, 1);
 		}
+		MoveArrayListManager.renounceMoveArrayList(moves);
 		return alpha;
 	}
 
@@ -742,11 +750,13 @@ public class Engine {
 				pv.clear();
 				pv.addMove(entry.bestMove);
 				return entry.score;
-			}else if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score <= alpha){
+			}
+			if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score <= alpha){
 				pv.clear();
 				pv.addMove(entry.bestMove);
 				return alpha;
-			}else if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score >= beta){
+			}
+			if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score >= beta){
 				pv.clear();
 				pv.addMove(entry.bestMove);
 				return beta;
@@ -792,8 +802,9 @@ public class Engine {
 				else
 					LineDebugger.unmatch(depth+1);
 			}
-			long hash = tpt.hash(simBoard);
 
+			//long hash = tpt.hash(simBoard);
+			long hash = tpt.updateHash(board, prevHash, move);
 			score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false);
 
 			//Alpha-cutoff
@@ -803,6 +814,7 @@ public class Engine {
 						System.out.println("ALPHA CUTOFF AT DEPTH: " + depth);
 				}
 				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 2);
+				MoveArrayListManager.renounceMoveArrayList(moves);
 				return alpha;
 			}
 
@@ -826,6 +838,7 @@ public class Engine {
 		else{
 				tpt.put(prevHash, beta, depthLeft, bestMove, board, TPT.EntryType.PVNODE, 2);
 		}
+		MoveArrayListManager.renounceMoveArrayList(moves);
 		return beta;
 	}
 
@@ -833,6 +846,10 @@ public class Engine {
 
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
+
+			if(move.fromPiece == '_')
+				System.out.println("SORT: ILLEGAL MOVE");
+
 			int tempScore = 0;
 			if(move.fromPiece == 'P' || move.fromPiece == 'p'){
 				tempScore += -1;
@@ -875,13 +892,15 @@ public class Engine {
 	}
 
 	public void sort(MoveArrayList moves){
-
 		for(int i = 0; i < moves.size(); i++){
 			Move move = moves.get(i);
-			int tempScore = 0;
+			if(move.fromPiece == '_')
+				System.out.println("SORT: ILLEGAL MOVE");
+
 			if(move.toPiece == '_')
 				continue;
 
+			int tempScore = 0;
 			if(move.fromPiece == 'P' || move.fromPiece == 'p'){
 				tempScore += -1;
 			}else if(move.fromPiece == 'N' || move.fromPiece == 'n'){

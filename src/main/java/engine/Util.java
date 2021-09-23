@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public abstract class Util {
+	private static long totalCollectionTime = 0;
+	private static long totalCollectionCount = 0;
 
 	public static String convertNumToCoord(int i){
 		String coord = "";
@@ -215,13 +217,15 @@ public abstract class Util {
 		return moves;
 	}
 
-	public static void dumpGCLogs(){
+	public static GCStats dumpGCLogs(){
 		MoveArrayListManager.dumpCounts();
 
 		List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
-		for (GarbageCollectorMXBean mxBean : gcMXBeans) {
-			System.out.println("Name: " + mxBean.getName() + " Collection count: " + mxBean.getCollectionCount() + " Collection time: " + mxBean.getCollectionTime() + "ms.");
-		}
+		GarbageCollectorMXBean mxBean = gcMXBeans.get(0);
+		GCStats stat = new GCStats(mxBean.getCollectionCount()-totalCollectionCount, mxBean.getCollectionTime()-totalCollectionTime);
+		totalCollectionCount = mxBean.getCollectionCount();
+		totalCollectionTime = mxBean.getCollectionTime();
+		return stat;
 	}
 
 	public static boolean isEven(int nbr){

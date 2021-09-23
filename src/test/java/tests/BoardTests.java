@@ -529,7 +529,7 @@ public class BoardTests {
 		Board oldBoard = new Board(board);
 		board.makeMove(8, 16);
 		long hash = tpt.hash(board);
-		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, 8,16);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(8, 16, 'P', '_', false, 0));
 		assertTrue(hash == hashToBeUpdated);
 	}
 
@@ -550,7 +550,7 @@ public class BoardTests {
 		Board oldBoard = new Board(board);
 		board.makeMove(8, 17);
 		long hash = tpt.hash(board);
-		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, 8,17);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(8, 17, 'P', 'p', false, 0));
 		assertTrue(hash == hashToBeUpdated);
 	}
 
@@ -571,7 +571,7 @@ public class BoardTests {
 		Board oldBoard = new Board(board);
 		board.makeMove(Util.convertCoordToNum("a7"), Util.convertCoordToNum("a6"));
 		long hash = tpt.hash(board);
-		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, Util.convertCoordToNum("a7"),Util.convertCoordToNum("a6"));
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("a7"), Util.convertCoordToNum("a6"), 'p', '_', false, 0));
 		System.out.println(hash);
 		System.out.println(hashToBeUpdated);
 		assertTrue(hash == hashToBeUpdated);
@@ -596,7 +596,109 @@ public class BoardTests {
 		int moveTo = Util.convertCoordToNum("b6");
 		board.makeMove(moveFrom, moveTo);
 		long hash = tpt.hash(board);
-		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, moveFrom,moveTo);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("a7"), Util.convertCoordToNum("b6"), 'p', 'P', false, 0));
+		System.out.println(hash);
+		System.out.println(hashToBeUpdated);
+		assertTrue(hash == hashToBeUpdated);
+
+	}
+
+	@Test
+	public void testUpdateHash5(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', ' ', ' ', ' ', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		long hashToBeUpdated = tpt.hash(board);
+		Board oldBoard = new Board(board);
+		int moveFrom = Util.convertCoordToNum("e1");
+		int moveTo = Util.convertCoordToNum("c1");
+		board.makeMove(moveFrom, moveTo);
+		long hash = tpt.hash(board);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e1"), Util.convertCoordToNum("c1"), 'K', '_', false, 0));
+		System.out.println(hash);
+		System.out.println(hashToBeUpdated);
+		assertTrue(hash == hashToBeUpdated);
+	}
+
+
+	@Test
+	public void testUpdateHash6(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'}
+		};
+		Board board = new Board(testBoard);
+		long hashToBeUpdated = tpt.hash(board);
+		Board oldBoard = new Board(board);
+		int moveFrom = Util.convertCoordToNum("e1");
+		int moveTo = Util.convertCoordToNum("g1");
+		board.makeMove(moveFrom, moveTo);
+		long hash = tpt.hash(board);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e1"), Util.convertCoordToNum("g1"), 'K', '_', false, 0));
+		System.out.println(hash);
+		System.out.println(hashToBeUpdated);
+		assertTrue(hash == hashToBeUpdated);
+	}
+
+	@Test
+	public void testUpdateHash7(){
+		char[][] testBoard = {
+				{'r', ' ', ' ', ' ', 'k', 'b', 'n', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		long hashToBeUpdated = tpt.hash(board);
+		Board oldBoard = new Board(board);
+		int moveFrom = Util.convertCoordToNum("e8");
+		int moveTo = Util.convertCoordToNum("c8");
+		board.makeMove(moveFrom, moveTo);
+		long hash = tpt.hash(board);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e8"), Util.convertCoordToNum("c8"), 'k', '_', false, 0));
+		System.out.println(hash);
+		System.out.println(hashToBeUpdated);
+		assertTrue(hash == hashToBeUpdated);
+	}
+
+	@Test
+	public void testUpdateHash8(){
+		char[][] testBoard = {
+				{'r', 'n', 'b', 'q', 'k', ' ', ' ', 'r'},
+				{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+				{' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P'},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+		};
+		Board board = new Board(testBoard);
+		long hashToBeUpdated = tpt.hash(board);
+		Board oldBoard = new Board(board);
+		int moveFrom = Util.convertCoordToNum("e8");
+		int moveTo = Util.convertCoordToNum("g8");
+		board.makeMove(moveFrom, moveTo);
+		long hash = tpt.hash(board);
+		hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e8"), Util.convertCoordToNum("g8"), 'k', '_', false, 0));
 		System.out.println(hash);
 		System.out.println(hashToBeUpdated);
 		assertTrue(hash == hashToBeUpdated);
