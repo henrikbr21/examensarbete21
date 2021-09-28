@@ -57,4 +57,14 @@ public class MoveArrayList {
     public void clear() {
         this.size = 0;
     }
+
+    public int indexOf(Move move){
+        int i = 0;
+        for(Move arrMove : arrayList){
+            if(arrMove.from == move.from && arrMove.to == move.to)
+                return i;
+            i++;
+        }
+        return -1;
+    }
 }

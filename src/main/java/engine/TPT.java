@@ -32,6 +32,9 @@ public class TPT {
         public Board board;
         public EntryType nodeType; //0 = PV
         public int playerToMove;
+        public int PVentries;
+        public int CUTentries;
+        public int ALLentries;
 
         public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
             this.hash = hash;
@@ -66,8 +69,6 @@ public class TPT {
         } else {
             entries.put(hash, new TPTEntry(hash, score, depth, bestMove, board, type, playerToMove));
         }
-
-
         hashes[nextIndex] = hash;
 
         if (nextIndex < (hashes.length - 1)) {

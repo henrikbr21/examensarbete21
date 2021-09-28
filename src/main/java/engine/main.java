@@ -16,15 +16,53 @@ public class main {
             final Engine engine2 = new Engine(tpt);
             Random rand = new Random();
 
+            TestBoards.initBoards100();
+
+            char[][] randomBoard = {
+                    {'r', ' ', ' ', ' ', ' ', 'k', ' ', ' '},
+                    {' ', ' ', ' ', 'r', ' ', 'p', 'p', 'p'},
+                    {'p', ' ', ' ', ' ', ' ', 'n', ' ', ' '},
+                    {' ', ' ', ' ', 'p', 'R', ' ', ' ', ' '},
+                    {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+                    {' ', ' ', ' ', 'B', ' ', 'P', ' ', ' '},
+                    {'P', ' ', ' ', ' ', ' ', ' ', 'P', 'P'},
+                    {'R', ' ', ' ', ' ', ' ', ' ', 'K', ' '}
+            };
+            Board board2 = new Board(randomBoard);
+            BoardGenerator.setBoard(board2);
+            BoardGenerator.generateRandomBoards("D:\\Boards\\RandomMoveBoards\\randomMoveBoards30.txt", 29, 290);
+
+
+            /*
+            TestBoards.initBoards100();
+            MeasurementData data = new MeasurementData();
+            for(ArrayList<Board> testBoards : TestBoards.boards){
+                for(int i = 0; i < testBoards.size(); i++){
+                    PrincipalVariation pv3 = new PrincipalVariation();
+                    Board testBoard = testBoards.get(i);
+                    double result = 0;
+                    if(i % 2 == 0)
+                        result = engine.search(testBoard, "WHITE", 6, pv3, false, data, i);
+                    else
+                        result = engine.search(testBoard, "BLACK", 6, pv3, false, data, i);
+                    data.setScore(i, result);
+                }
+                break;
+            }
+
+            data.printToFile();
+
             //long time = System.currentTimeMillis();
-/*
-            MoveArrayList line = Util.parseMoveString("c2c3 b7b5 b1a3 a7a6 g1f3 b8c6 d2d4 g8f6 d4d5 c6a5 f3e5 d7d6");
+
+            /*
+            MoveArrayList line = Util.parseMoveString("e2e4 f7f6 d2d4 h7h5 f1e2 g7g6 g1f3 e7e6 e4e5 f8b4 c1d2 b4d2 b1d2 b8c6 c2c3 f6e5 f3e5 c6e5 d4e5 d8g5 d2f3 g5g2 h1g1");
+            board.playLine(line);
             board.draw();
             long time = System.currentTimeMillis();
             PrincipalVariation pv3 = new PrincipalVariation();
 
             double result2 = 0;
-            result2 = engine.search(board, "WHITE", 12, pv3, false);
+            result2 = engine.search(board, "BLACK", 6, pv3, false);
             System.out.println("Time: " + (System.currentTimeMillis()-time));
 
             System.out.println(result2);
@@ -35,12 +73,11 @@ public class main {
             System.out.println(result2);
             Debug.printTPHits();
             Debug.clearTPHits();
-
 */
 
             Thread thread;
             int nbrTokens = 0;
-            while(true) {
+            if(false) {
                 String input = scan.nextLine();
 				/*
 				String input = "";
@@ -61,7 +98,7 @@ public class main {
                 } else if (input.equals("isready")) {
                     for (int j = 0; j < 100; j++) {
                         PrincipalVariation pv = new PrincipalVariation();
-                        double result = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
+                        double result = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false, new MeasurementData(), 0, false);
                     }
                     System.out.println("readyok");
                 }else if(input.equals("stop")){
@@ -100,7 +137,7 @@ public class main {
                             public void run() {
                                 try {
                                     long time = System.currentTimeMillis();
-                                    double result = engine.search(board, "WHITE", 12, pv, false);
+                                    double result = engine.search(board, "WHITE", 12, pv, false, new MeasurementData(), 0);
                                     board.draw();
                                     GCStats stat = Util.dumpGCLogs();
                                     System.out.println("Collection count: " + stat.count + " Collection time: " + stat.time);
@@ -128,7 +165,7 @@ public class main {
                                 try {
                                     MoveArrayList moves = engine.findMoveList(board, "BLACK");
                                     board.draw();
-                                    double result = engine.search(board,"BLACK", 12, pv, false);
+                                    double result = engine.search(board,"BLACK", 12, pv, false, new MeasurementData(), 0);
                                     GCStats stat = Util.dumpGCLogs();
                                     System.out.println("Collection count: " + stat.count + " Collection time: " + stat.time);
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));

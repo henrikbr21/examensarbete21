@@ -471,18 +471,18 @@ public class Board {
             chessBoard[i/8][i%8]=" ";
         }
         for (int i=0;i<64;i++) {
-            if (((WP>>i)&1)==1) {chessBoard[i/8][i%8]="P";}
-            if (((WN>>i)&1)==1) {chessBoard[i/8][i%8]="N";}
-            if (((WB>>i)&1)==1) {chessBoard[i/8][i%8]="B";}
-            if (((WR>>i)&1)==1) {chessBoard[i/8][i%8]="R";}
-            if (((WQ>>i)&1)==1) {chessBoard[i/8][i%8]="Q";}
-            if (((WK>>i)&1)==1) {chessBoard[i/8][i%8]="K";}
-            if (((BP>>i)&1)==1) {chessBoard[i/8][i%8]="p";}
-            if (((BN>>i)&1)==1) {chessBoard[i/8][i%8]="n";}
-            if (((BB>>i)&1)==1) {chessBoard[i/8][i%8]="b";}
-            if (((BR>>i)&1)==1) {chessBoard[i/8][i%8]="r";}
-            if (((BQ>>i)&1)==1) {chessBoard[i/8][i%8]="q";}
-            if (((BK>>i)&1)==1) {chessBoard[i/8][i%8]="k";}
+            if (((WP >> i)&1) == 1) {chessBoard[i/8][i%8] = "P";}
+            if (((WN >> i)&1) == 1) {chessBoard[i/8][i%8] = "N";}
+            if (((WB >> i)&1) == 1) {chessBoard[i/8][i%8] = "B";}
+            if (((WR >> i)&1) == 1) {chessBoard[i/8][i%8] = "R";}
+            if (((WQ >> i)&1) == 1) {chessBoard[i/8][i%8] = "Q";}
+            if (((WK >> i)&1) == 1) {chessBoard[i/8][i%8] = "K";}
+            if (((BP >> i)&1) == 1) {chessBoard[i/8][i%8] = "p";}
+            if (((BN >> i)&1) == 1) {chessBoard[i/8][i%8] = "n";}
+            if (((BB >> i)&1) == 1) {chessBoard[i/8][i%8] = "b";}
+            if (((BR >> i)&1) == 1) {chessBoard[i/8][i%8] = "r";}
+            if (((BQ >> i)&1) == 1) {chessBoard[i/8][i%8] = "q";}
+            if (((BK >> i)&1) == 1) {chessBoard[i/8][i%8] = "k";}
         }
         String[][] chessBoard2 = new String[8][8];
 		for(int i = 0; i < 8; i++){

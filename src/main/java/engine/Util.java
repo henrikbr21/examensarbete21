@@ -228,6 +228,12 @@ public abstract class Util {
 		return stat;
 	}
 
+	public static long getMemoryUsasge(){
+		Runtime rt = Runtime.getRuntime();
+		rt.maxMemory();
+		return rt.totalMemory()-rt.freeMemory();
+	}
+
 	public static boolean isEven(int nbr){
 		if(nbr % 2 == 0){
 			return true;

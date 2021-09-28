@@ -40,4 +40,10 @@ public class MoveArrayListManager {
     private MoveArrayListManager() {
         this.moveArrayLists = new ArrayList<>(200);
     }
+
+    public void reset(){
+        obtainCount = 0;
+        renounceCount = 0;
+        moveArrayLists.clear();
+    }
 }

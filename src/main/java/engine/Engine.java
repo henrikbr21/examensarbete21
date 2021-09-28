@@ -1,8 +1,10 @@
 package engine;
 
 import javax.management.MXBean;
+import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import java.util.List;
 import java.util.Random;
 
 public class Engine {
@@ -25,8 +27,10 @@ public class Engine {
 		private double lastScore;
 		private final Engine engine;
 		private int lastDepth = 0;
+		private MeasurementData data;
+		private int searchNbr;
 
-		public SearchThread(Board board, String playerColor, int depthLeft, boolean debug, boolean helper, Engine engine){
+		public SearchThread(Board board, String playerColor, int depthLeft, boolean debug, boolean helper, Engine engine, MeasurementData data, int searchNbr){
 			this.board = board;
 			this.playerColor = playerColor;
 			this.depthLeft = depthLeft;
@@ -34,22 +38,33 @@ public class Engine {
 			this.helper = helper;
 			pv = new PrincipalVariation();
 			this.engine = engine;
+			this.data = data;
+			this.searchNbr = searchNbr;
 		}
 
 		public void run(){
 			try{
-				long time = System.currentTimeMillis();
+				ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+				//List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
+				GCStats stat = new GCStats(-1, -1);
+				Runtime rt = Runtime.getRuntime();
 				if(playerColor.equals("WHITE")){
 					for(int i = 0; i <= depthLeft; i += 2){
-						if(i == 6 && !helper)
-							System.out.println("Hej");
-						double result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
-						ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
-						long id = this.getId();
+						boolean lastIteration = false;
 						if(i == depthLeft){
-							System.out.println("THREAD " + id + " TIME: " + (System.currentTimeMillis()-time));
+							lastIteration = true;
 						}
+						long time = mxBean.getCurrentThreadCpuTime();
+						double result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper, data, searchNbr, lastIteration);
+						data.setExecutionTime(searchNbr, i, (mxBean.getCurrentThreadCpuTime() - time));
+						long id = this.getId();
 						if(!helper){
+							if(i == depthLeft){
+								stat = Util.dumpGCLogs();
+								data.setGcCollectionTime(searchNbr, stat.time);
+								data.setGcCollectionCount(searchNbr, stat.count);
+								data.setMemoryUsage(searchNbr, (i/2)-1, rt.maxMemory()-rt.freeMemory());
+							}
 							lastResult.clear();
 							lastResult.addAllMoves(pv);
 							lastScore = result;
@@ -63,8 +78,19 @@ public class Engine {
 					}
 				}else{
 					for(int i = 0; i <= depthLeft; i += 2){
-						double result = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper);
+						boolean lastIteration = false;
+						if(i == depthLeft){
+							lastIteration = true;
+						}
+						long time = mxBean.getCurrentThreadCpuTime();
+						double result = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper, data, searchNbr, lastIteration);
+						data.setExecutionTime(searchNbr, i, (mxBean.getCurrentThreadCpuTime() - time));
 						if(!helper){
+							if(i == depthLeft){
+								stat = Util.dumpGCLogs();
+								data.setGcCollectionTime(searchNbr, stat.time);
+								data.setGcCollectionCount(searchNbr, stat.count);
+							}
 							lastResult.clear();
 							lastResult.addAllMoves(pv);
 							lastScore = result;
@@ -604,21 +630,21 @@ public class Engine {
 		return moves;
 	}
 
-	public synchronized double search(Board board, String playerColor, int depthLeft, PrincipalVariation pv, boolean debug){
+	public synchronized double search(Board board, String playerColor, int depthLeft, PrincipalVariation pv, boolean debug, MeasurementData data, int searchNbr){
 		SearchThread[] helpers = new SearchThread[3];
 		for(int i = 0; i < helpers.length; i++){
-			helpers[i] = new SearchThread(new Board(board), playerColor, depthLeft, debug, true, this);
-			helpers[i].start();
+			//helpers[i] = new SearchThread(new Board(board), playerColor, depthLeft, debug, true, this, searchNbr);
+			//helpers[i].start();
 		}
-		SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this);
+		SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this, data, searchNbr);
 		mainThread.start();
 		try {
-			wait(5000);
+			wait(10000);
 		} catch (InterruptedException ignored) {
 
 		}
 		for (SearchThread helper : helpers) {
-			helper.interrupt();
+			//helper.interrupt();
 		}
 		mainThread.interrupt();
 
@@ -636,23 +662,30 @@ public class Engine {
 			}
 		}
  */
-	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper) throws InterruptedException {
+	public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper, MeasurementData data, int searchNbr, boolean lastIteration) throws InterruptedException {
 		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
 
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 1){
-			Debug.TPFound(depth);
+			if(lastIteration)
+				data.incrementTPHits(searchNbr, depth);
 			if(entry.nodeType == TPT.EntryType.PVNODE){
+				if(lastIteration)
+					data.incrementPVHits(searchNbr, depth);
 				pv.addMove(entry.bestMove);
 				return entry.score;
 			}
 			if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score >= beta){
+				if(lastIteration)
+					data.incrementCUTHits(searchNbr, depth);
 				pv.addMove(entry.bestMove);
 				return beta;
 			}
 			if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score <= alpha){
+				if(lastIteration)
+					data.incrementALLHits(searchNbr, depth);
 				pv.addMove(entry.bestMove);
 				return alpha;
 			}
@@ -700,7 +733,7 @@ public class Engine {
 
 			//long hash = tpt.hash(simBoard);
 			long hash = tpt.updateHash(board, prevHash, move);
-			score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false);
+			score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false, data, searchNbr, lastIteration);
 
 			//Beta-cutoff
 			if(score >= beta){
@@ -708,6 +741,8 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("BETA CUTOFF AT DEPTH: " + depth);
 				}
+				if(lastIteration)
+					data.setBestMoveIndex(searchNbr, depth, i);
 				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 1);
 				MoveArrayListManager.renounceMoveArrayList(moves);
 				return beta;
@@ -727,6 +762,8 @@ public class Engine {
 			if(score > bestScore){
 				bestMove = new Move(move);
 				bestScore = score;
+				if(lastIteration)
+					data.setBestMoveIndex(searchNbr, depth, i);
 			}
 		}
 		if(!exceededAlpha)
@@ -738,26 +775,33 @@ public class Engine {
 		return alpha;
 	}
 
-	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper) throws InterruptedException {
+	public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper, MeasurementData data, int searchNbr, boolean lastIteration) throws InterruptedException {
 		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
 
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 2){
-			Debug.TPFound(depth);
+			if(lastIteration)
+				data.incrementTPHits(searchNbr, depth);
 			if(entry.nodeType == TPT.EntryType.PVNODE){
-				pv.clear();
+				if(lastIteration)
+					data.incrementPVHits(searchNbr, depth);
+				//pv.clear();
 				pv.addMove(entry.bestMove);
 				return entry.score;
 			}
 			if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score <= alpha){
-				pv.clear();
+				if(lastIteration)
+					data.incrementCUTHits(searchNbr, depth);
+				//pv.clear();
 				pv.addMove(entry.bestMove);
 				return alpha;
 			}
 			if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score >= beta){
-				pv.clear();
+				if(lastIteration)
+					data.incrementALLHits(searchNbr, depth);
+				//pv.clear();
 				pv.addMove(entry.bestMove);
 				return beta;
 			}
@@ -805,7 +849,7 @@ public class Engine {
 
 			//long hash = tpt.hash(simBoard);
 			long hash = tpt.updateHash(board, prevHash, move);
-			score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false);
+			score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth+1, hash, debug, false, data, searchNbr, lastIteration);
 
 			//Alpha-cutoff
 			if(score <= alpha){
@@ -813,6 +857,8 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("ALPHA CUTOFF AT DEPTH: " + depth);
 				}
+				if(lastIteration)
+					data.setBestMoveIndex(searchNbr, depth, i);
 				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 2);
 				MoveArrayListManager.renounceMoveArrayList(moves);
 				return alpha;
@@ -830,6 +876,8 @@ public class Engine {
 			if(score < bestScore){
 				bestMove = new Move(move);
 				bestScore = score;
+				if(lastIteration)
+					data.setBestMoveIndex(searchNbr, depth, i);
 			}
 
 		}
