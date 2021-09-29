@@ -14,16 +14,17 @@ public class BoardGenerator {
     }
 
     public static void generateKlasBoards(String dir, int nbr, int start) {
-        Engine engine = new Engine(new TPT(2));
+        Engine engine = new Engine(new TPT(1000000));
         Board simBoard = new Board(board);
 
+
         for (int i = 0; i < 10; i++) {
-            MoveArrayList moves;
+            PrincipalVariation pv = new PrincipalVariation();
             if (i % 2 == 0)
-                moves = engine.findMoveList(simBoard, "WHITE");
+                engine.search(simBoard, "WHITE", 6, pv, false, new MeasurementData(), 0);
             else
-                moves = engine.findMoveList(simBoard, "BLACK");
-            Move move = moves.get(rand.nextInt(moves.size() - 1));
+                engine.search(simBoard, "BLACK", 6, pv, false, new MeasurementData(), 0);
+            Move move = pv.get(pv.size()-1);
             simBoard.makeMove(move.from, move.to);
             String[][] charArrays = generateCharArrays(simBoard);
             printBoard(charArrays, i, dir, nbr, start);
@@ -68,8 +69,8 @@ public class BoardGenerator {
             }
             fw.write("}; \n");
             int writeNumber = start + iteration;
-            fw.write("Board randomBoard" + writeNumber +  "= new Board(randomBoard); \n");
-            fw.write("randomBoards" + nbr + ".add(randomBoard" + writeNumber + "); \n");
+            fw.write("Board KLASBoard" + writeNumber +  "= new Board(randomBoard); \n");
+            fw.write("KLASBoards" + nbr + ".add(KLASBoard" + writeNumber + "); \n");
             fw.write("\n");
             /*
             Board randomBoard9 = new Board(randomBoard);

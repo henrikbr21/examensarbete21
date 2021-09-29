@@ -34,6 +34,37 @@ public class TestBoards {
     private static ArrayList<Board> randomBoards27 = new ArrayList<Board>();
     private static ArrayList<Board> randomBoards28 = new ArrayList<Board>();
     private static ArrayList<Board> randomBoards29 = new ArrayList<Board>();
+    private static ArrayList<Board> KLASBoards0 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards1 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards2 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards3 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards4 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards5 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards6 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards7 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards8 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards9 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards10 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards11 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards12 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards13 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards14 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards15 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards16 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards17 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards18 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards19 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards20 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards21 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards22 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards23 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards24 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards25 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards26 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards27 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards28 = new ArrayList<>();
+    private static ArrayList<Board> KLASBoards29 = new ArrayList<>();
+
 
     public static void initBoards100(){
         char[][] randomBoard = {
@@ -3992,7 +4023,6 @@ public class TestBoards {
         Board randomBoard299= new Board(randomBoard);
         randomBoards29.add(randomBoard299);
 
-
         boards.add(randomBoards20);
         boards.add(randomBoards21);
         boards.add(randomBoards22);
@@ -4003,6 +4033,2631 @@ public class TestBoards {
         boards.add(randomBoards27);
         boards.add(randomBoards28);
         boards.add(randomBoards29);
+    }
+
+    public static void initKLASBoards(){
+        char[][] randomBoard = {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'b', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'p', ' ', 'p'},
+                {' ', 'B', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard0= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard0);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'b', ' ', 'p', ' ', 'p'},
+                {' ', 'B', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard1= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard1);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'b', ' ', 'p', ' ', 'p'},
+                {' ', ' ', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard2= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard2);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'p', ' ', 'p'},
+                {' ', ' ', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'b', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard3= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard3);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'p', ' ', 'p'},
+                {' ', 'B', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'b', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard4= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard4);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'b', ' ', 'p', ' ', 'p'},
+                {' ', 'B', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard5= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard5);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'b', ' ', 'p', ' ', 'p'},
+                {' ', ' ', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard6= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard6);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'b', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'p', ' ', 'p'},
+                {' ', ' ', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard7= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard7);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'b', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'p', ' ', 'p'},
+                {' ', 'B', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard8= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard8);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', ' ', 'k', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'b', ' ', 'p', ' ', 'p'},
+                {' ', 'B', ' ', 'K', ' ', 'P', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        };
+        Board KLASBoard9= new Board(randomBoard);
+        KLASBoards0.add(KLASBoard9);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', ' ', 'q', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', 'b', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'p', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'N', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard10= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard10);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', 'b', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'p', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'N', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard11= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard11);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', 'b', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'N', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard12= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard12);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'b', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'N', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard13= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard13);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'N', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard14= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard14);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'b', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'N', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard15= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard15);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', 'b', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'N', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard16= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard16);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', 'b', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'N', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'Q', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard17= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard17);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', 'b', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'N', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'Q', 'P', 'P'},
+                {' ', ' ', 'R', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard18= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard18);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {'p', 'q', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {'n', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', 'P', 'b', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'N', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'Q', 'P', 'P'},
+                {' ', ' ', 'R', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard19= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard19);
+
+        //HERE
+        randomBoard = new char[][] {
+                {' ', ' ', 'k', 'R', ' ', 'r', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', 'N', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', 'B', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard20= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard20);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'k', 'r', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', 'N', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', 'B', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard21= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard21);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'k', 'N', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', 'B', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard22= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard22);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'k', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', 'B', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard23= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard23);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'k', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', 'B', ' ', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard24= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard24);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'k', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', 'B', ' ', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard25= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard25);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'k', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', 'P', ' '},
+                {' ', ' ', 'P', 'B', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard26= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard26);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', 'k', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', 'P', ' '},
+                {' ', ' ', 'P', 'B', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard27= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard27);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', 'k', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', 'P', 'B', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard28= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard28);
+
+        randomBoard = new char[][] {
+                {'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', ' ', ' ', 'p', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', 'P', 'B', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '},
+        };
+        Board KLASBoard29= new Board(randomBoard);
+        KLASBoards20.add(KLASBoard29);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {' ', ' ', 'q', 'n', ' ', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'B', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', ' ', ' ', ' '},
+                {' ', 'R', ' ', ' ', 'R', ' ', 'K', ' '},
+        };
+        Board KLASBoard30= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard30);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {'r', ' ', 'q', 'n', ' ', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'B', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', ' ', ' ', ' '},
+                {' ', 'R', ' ', ' ', 'R', ' ', 'K', ' '},
+        };
+        Board KLASBoard31= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard31);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {'r', ' ', 'q', 'n', ' ', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'B', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', ' ', ' ', ' '},
+                {' ', 'R', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard32= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard32);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', ' ', 'q', 'n', 'r', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'B', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', ' ', ' ', ' '},
+                {' ', 'R', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard33= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard33);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', ' ', 'q', 'B', 'r', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', ' ', ' ', ' '},
+                {' ', 'R', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard34= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard34);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', ' ', ' ', 'q', 'r', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', ' ', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', ' ', ' ', ' '},
+                {' ', 'R', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard35= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard35);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', ' ', ' ', 'q', 'r', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'Q', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', ' ', ' ', ' ', ' '},
+                {' ', 'R', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard36= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard36);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', ' ', ' ', ' ', 'r', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'q', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', ' ', ' ', ' ', ' '},
+                {' ', 'R', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard37= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard37);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', ' ', ' ', ' ', 'r', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'R', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard38= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard38);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+                {'r', 'r', ' ', ' ', ' ', ' ', 'b', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'R', 'p', 'P', 'p', ' ', 'p', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'p', 'P', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', 'N', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard39= new Board(randomBoard);
+        KLASBoards3.add(KLASBoard39);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', 'p'},
+                {' ', 'b', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard40= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard40);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', 'b', 'p', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard41= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard41);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', 'B'},
+                {' ', 'b', 'p', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard42= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard42);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', 'B'},
+                {' ', 'b', 'p', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard43= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard43);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', 'b', 'p', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard44= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard44);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', 'b', ' ', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', 'p', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard45= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard45);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', 'b', ' ', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', 'P', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard46= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard46);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', 'b', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', 'P', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard47= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard47);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', 'b', 'p', 'P', ' ', ' ', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', ' ', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard48= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard48);
+
+        randomBoard = new char[][] {
+                {'r', 'n', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {'p', 'p', ' ', 'b', 'n', 'p', 'p', ' '},
+                {' ', 'b', ' ', ' ', 'p', ' ', ' ', 'p'},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'B', ' ', 'N', ' ', ' '},
+                {'P', ' ', 'Q', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'N', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard49= new Board(randomBoard);
+        KLASBoards4.add(KLASBoard49);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', ' ', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'b', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', 'P'},
+                {'P', 'P', 'P', 'P', ' ', 'P', 'P', ' '},
+                {'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard50= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard50);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', 'P'},
+                {'P', 'P', 'P', 'P', ' ', 'P', 'P', ' '},
+                {'R', 'N', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard51= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard51);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', ' ', 'N', ' ', 'P'},
+                {'P', 'P', 'P', 'P', ' ', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard52= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard52);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', ' ', 'N', ' ', 'P'},
+                {'P', 'P', 'P', 'P', ' ', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard53= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard53);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', ' ', ' ', ' ', 'P'},
+                {'P', 'P', 'P', 'P', ' ', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard54= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard54);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', ' ', ' ', ' ', 'P'},
+                {'P', 'P', 'P', 'P', ' ', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard55= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard55);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {'P', 'P', 'P', 'P', 'N', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard56= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard56);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', 'n', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {'P', 'P', 'P', 'P', 'N', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard57= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard57);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', 'n', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {'P', 'P', 'P', ' ', 'N', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard58= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard58);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', 'b', ' ', 'r'},
+                {'p', 'p', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {'P', 'P', 'P', ' ', 'N', 'P', 'P', ' '},
+                {'R', ' ', 'B', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard59= new Board(randomBoard);
+        KLASBoards5.add(KLASBoard59);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {'q', 'P', ' ', 'R', ' ', ' ', 'P', ' '},
+                {'P', ' ', ' ', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'Q', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard60= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard60);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', 'q', 'p', 'p', 'p'},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', ' ', 'R', ' ', ' ', 'P', ' '},
+                {'P', ' ', ' ', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'Q', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard61= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard61);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', 'q', 'p', 'p', 'p'},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', ' ', ' ', 'R', ' ', 'P', ' '},
+                {'P', ' ', ' ', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'Q', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard62= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard62);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'q', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', ' ', ' ', 'R', ' ', 'P', ' '},
+                {'P', ' ', ' ', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'Q', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard63= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard63);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'q', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', 'R', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', ' ', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'Q', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard64= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard64);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', ' ', 'p', 'p', ' '},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'q', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', 'R', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', ' ', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'Q', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard65= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard65);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', ' ', 'p', 'p', ' '},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'q', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', 'R', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', 'Q', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard66= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard66);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', 'q', 'p', 'p', ' '},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', 'P', ' ', 'B', 'P', ' ', ' '},
+                {' ', 'P', 'R', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', 'Q', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard67= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard67);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', 'q', 'p', 'p', ' '},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'B', ' ', 'p'},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', 'P', 'R', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', 'Q', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard68= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard68);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'r', ' ', ' ', 'k', ' '},
+                {' ', 'p', ' ', ' ', 'q', 'p', 'p', ' '},
+                {'p', ' ', 'n', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'B', ' ', 'p'},
+                {' ', ' ', 'P', ' ', ' ', 'P', ' ', ' '},
+                {' ', 'P', 'R', ' ', ' ', ' ', 'P', ' '},
+                {'P', ' ', 'Q', 'R', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard69= new Board(randomBoard);
+        KLASBoards6.add(KLASBoard69);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', 'b', 'p', ' ', 'p', 'p'},
+                {'p', ' ', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'B', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', 'K', ' '},
+        };
+        Board KLASBoard70= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard70);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', 'b', 'p', ' ', 'p', 'p'},
+                {'p', 'q', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'B', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', 'K', ' '},
+        };
+        Board KLASBoard71= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard71);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', 'b', 'p', ' ', 'p', 'p'},
+                {'p', 'q', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'B', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard72= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard72);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', 'b', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', 'n', ' ', 'p'},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'B', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard73= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard73);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', 'b', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', 'n', ' ', 'p'},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', 'B'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard74= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard74);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', 'n', ' ', 'p'},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', 'B'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard75= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard75);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'B', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', 'n', ' ', 'p'},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard76= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard76);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'n', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard77= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard77);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'n', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {' ', 'p', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'Q', ' '},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard78= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard78);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {'p', 'q', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {' ', 'p', 'n', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'Q', ' '},
+                {'P', 'P', ' ', 'N', ' ', ' ', 'P', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', ' ', 'R', 'R', ' ', 'K'},
+        };
+        Board KLASBoard79= new Board(randomBoard);
+        KLASBoards7.add(KLASBoard79);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', ' ', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', 'p'},
+                {' ', ' ', ' ', ' ', 'p', 'n', ' ', ' '},
+                {'q', ' ', ' ', ' ', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', ' ', 'Q', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', 'B', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard80= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard80);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', 'p'},
+                {' ', ' ', ' ', ' ', 'p', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', ' ', 'Q', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', 'B', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard81= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard81);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', 'p'},
+                {' ', ' ', ' ', ' ', 'p', 'n', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', 'B', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', ' ', 'Q', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard82= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard82);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'p', 'n', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', 'B', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', ' ', 'Q', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard83= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard83);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'p', 'n', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', 'B', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', 'Q', ' ', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard84= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard84);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'n', 'b', 'p', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', 'B', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', 'Q', ' ', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard85= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard85);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'n', 'B', 'p', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', 'Q', ' ', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard86= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard86);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', ' ', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'n', 'q', 'p', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', 'Q', ' ', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard87= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard87);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', ' ', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'n', 'q', 'p', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', 'N', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', 'Q', ' ', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard88= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard88);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', ' ', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', 'n', ' ', 'p', ' ', 'p'},
+                {' ', ' ', ' ', 'q', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', 'N', 'P'},
+                {' ', ' ', ' ', 'B', ' ', ' ', ' ', 'R'},
+                {'P', 'Q', ' ', ' ', ' ', 'P', 'P', ' '},
+                {' ', 'R', ' ', ' ', ' ', 'K', ' ', ' '},
+        };
+        Board KLASBoard89= new Board(randomBoard);
+        KLASBoards8.add(KLASBoard89);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'p', ' ', 'n', 'b', 'p', ' ', ' '},
+                {'P', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', 'p', ' ', 'n', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'P', ' ', 'p'},
+                {'N', ' ', 'N', 'B', 'B', 'P', ' ', ' '},
+                {'P', 'P', ' ', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard90= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard90);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'p', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {'P', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', 'p', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'P', ' ', 'p'},
+                {'N', ' ', 'N', 'B', 'B', 'P', ' ', ' '},
+                {'P', 'P', ' ', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard91= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard91);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'P', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', 'p', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'P', ' ', 'p'},
+                {'N', ' ', 'N', 'B', 'B', 'P', ' ', ' '},
+                {'P', 'P', ' ', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard92= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard92);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', 'p', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'P', ' ', 'p'},
+                {'N', ' ', 'N', 'B', 'B', 'P', ' ', ' '},
+                {'P', 'P', ' ', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard93= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard93);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', 'p', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'P', ' ', 'p'},
+                {' ', ' ', 'N', 'B', 'B', 'P', ' ', ' '},
+                {'P', 'P', 'N', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard94= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard94);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'p', ' ', 'p'},
+                {' ', ' ', 'N', 'B', 'B', 'P', ' ', ' '},
+                {'P', 'P', 'N', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard95= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard95);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'p', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'B', ' ', 'p'},
+                {' ', ' ', 'N', 'B', ' ', 'P', ' ', ' '},
+                {'P', 'P', 'N', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard96= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard96);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'p', 'P', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'P', ' ', 'P', 'B', ' ', 'p'},
+                {' ', ' ', 'N', 'B', ' ', 'P', ' ', ' '},
+                {'P', 'P', 'N', ' ', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard97= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard97);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', 'n', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'p', 'P', ' ', ' ', 'p', ' '},
+                {' ', ' ', 'P', ' ', 'P', ' ', ' ', 'p'},
+                {' ', ' ', 'N', 'B', ' ', 'P', ' ', ' '},
+                {'P', 'P', 'N', 'B', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard98= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard98);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', 'b', ' ', ' ', 'b', 'p', ' ', 'n'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'p', 'P', 'n', ' ', 'p', ' '},
+                {' ', ' ', 'P', ' ', 'P', ' ', ' ', 'p'},
+                {' ', ' ', 'N', 'B', ' ', 'P', ' ', ' '},
+                {'P', 'P', 'N', 'B', ' ', ' ', 'Q', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard99= new Board(randomBoard);
+        KLASBoards9.add(KLASBoard99);
+    }
+
+    public static void initKLASBoards200(){
+        //HERE
+        char[][] randomBoard = {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', 'q', 'n', 'b', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'Q', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', 'P', 'N', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard100= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard100);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', 'b', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', 'q', 'b', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'Q', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', 'P', 'N', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard101= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard101);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', 'b', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', 'q', 'b', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'Q', ' ', 'B', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard102= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard102);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', 'b', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'q', ' ', 'B', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard103= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard103);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', 'b', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'P', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard104= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard104);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', 'b', ' ', 'P', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard105= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard105);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', 'b', ' ', 'P', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', 'N', 'K', ' '},
+        };
+        Board KLASBoard106= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard106);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', 'q', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', 'b', ' ', 'P', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'R', ' ', 'N', 'K', ' '},
+        };
+        Board KLASBoard107= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard107);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', 'q', ' ', ' '},
+                {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                {'P', 'b', ' ', 'P', ' ', 'B', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', ' ', ' ', 'B', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'R', ' ', 'N', 'K', ' '},
+        };
+        Board KLASBoard108= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard108);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', 'k', ' ', ' ', 'r'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'p', 'p'},
+                {'p', 'p', ' ', ' ', 'p', 'q', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'b', ' ', 'P', ' ', 'B', ' ', ' '},
+                {' ', 'b', ' ', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', ' ', ' ', 'B', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'R', ' ', 'N', 'K', ' '},
+        };
+        Board KLASBoard109= new Board(randomBoard);
+        KLASBoards10.add(KLASBoard109);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', 'b', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', 'Q', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', 'p', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'N', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard110= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard110);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', 'b', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', 'Q', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'N', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard111= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard111);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', 'b', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', 'Q', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'N', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard112= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard112);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', ' ', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', 'Q', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', 'b'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'N', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard113= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard113);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', ' ', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', 'b'},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'N', 'Q'},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard114= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard114);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', ' ', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'b', 'Q'},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard115= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard115);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'k', ' ', ' ', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'Q', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard116= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard116);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'k', ' ', ' ', ' ', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', ' ', ' ', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', 'Q', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard117= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard117);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'k', ' ', ' ', ' ', ' ', 'r'},
+                {'p', ' ', ' ', 'p', ' ', ' ', 'Q', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard118= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard118);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'k', 'r', ' ', ' ', ' ', ' '},
+                {'p', ' ', ' ', 'p', ' ', ' ', 'Q', 'p'},
+                {'q', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'n', ' ', 'p', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', 'P', 'B', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard119= new Board(randomBoard);
+        KLASBoards11.add(KLASBoard119);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {'q', 'R', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard120= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard120);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {'q', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {' ', 'R', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard121= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard121);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {'q', 'R', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {' ', ' ', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard122= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard122);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {' ', 'R', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {'q', ' ', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard123= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard123);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {'q', 'R', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard124= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard124);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {'q', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {' ', 'R', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard125= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard125);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {'q', 'R', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {' ', ' ', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard126= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard126);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {' ', 'R', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {'q', ' ', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard127= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard127);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {'q', 'R', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard128= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard128);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'r', ' ', ' ', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', ' ', ' ', 'n', ' ', 'p'},
+                {'q', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'B'},
+                {' ', 'R', 'N', 'Q', 'P', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', ' ', 'R', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard129= new Board(randomBoard);
+        KLASBoards12.add(KLASBoard129);
+
+        //HERE
+        randomBoard = new char[][] {
+                {' ', 'r', 'b', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'p', ' ', 'n', 'p', ' ', ' ', ' ', ' '},
+                {' ', 'p', ' ', 'N', 'p', ' ', 'b', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', 'N', ' ', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard130= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard130);
+
+        randomBoard = new char[][] {
+                {' ', 'r', 'b', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'p', ' ', 'N', 'p', ' ', 'b', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', 'N', ' ', 'B', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard131= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard131);
+
+        randomBoard = new char[][] {
+                {' ', 'r', 'b', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'p', ' ', 'N', 'p', ' ', 'b', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'B', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', 'N', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard132= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard132);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'b', ' ', 'n', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'p', ' ', 'N', 'p', ' ', 'b', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'B', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', 'N', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard133= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard133);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'b', ' ', 'n', 'p', ' ', ' ', ' ', ' '},
+                {'p', 'p', ' ', 'N', 'p', ' ', 'b', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'B', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', 'N', ' ', ' ', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard134= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard134);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'b', ' ', 'n', 'p', ' ', ' ', ' ', 'b'},
+                {'p', 'p', ' ', 'N', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'B', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', 'N', ' ', ' ', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard135= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard135);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'b', ' ', 'n', 'p', ' ', ' ', ' ', 'b'},
+                {'p', 'p', ' ', 'N', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', 'N', ' ', 'B', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard136= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard136);
+
+        randomBoard = new char[][] {
+                {' ', 'r', 'b', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', ' ', ' ', 'b'},
+                {'p', 'p', ' ', 'N', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', 'N', ' ', 'B', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard137= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard137);
+
+        randomBoard = new char[][] {
+                {' ', 'r', 'b', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {' ', ' ', 'n', 'p', ' ', ' ', ' ', 'b'},
+                {'p', 'p', ' ', 'N', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'B', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', 'N', ' ', ' ', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard138= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard138);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', 'p'},
+                {'b', ' ', 'n', 'p', ' ', ' ', ' ', 'b'},
+                {'p', 'p', ' ', 'N', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'B', ' '},
+                {'P', ' ', 'P', ' ', ' ', ' ', 'P', ' '},
+                {' ', 'P', 'N', ' ', ' ', 'P', ' ', 'P'},
+                {'R', ' ', ' ', 'Q', 'K', ' ', ' ', 'R'},
+        };
+        Board KLASBoard139= new Board(randomBoard);
+        KLASBoards13.add(KLASBoard139);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', 'n', 'n', 'p', ' ', 'p', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'p', ' ', ' ', ' ', 'P'},
+                {' ', 'P', ' ', 'P', ' ', 'N', ' ', ' '},
+                {'P', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard140= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard140);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', 'n', 'p', ' ', 'p', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'n', 'P', 'p', ' ', ' ', ' ', 'P'},
+                {' ', 'P', ' ', 'P', ' ', 'N', ' ', ' '},
+                {'P', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard141= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard141);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', 'n', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'n', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {' ', 'P', ' ', 'P', ' ', 'N', ' ', ' '},
+                {'P', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard142= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard142);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', 'n', ' ', ' '},
+                {' ', 'n', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {' ', 'P', ' ', 'P', ' ', 'N', ' ', ' '},
+                {'P', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard143= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard143);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', 'n', ' ', ' '},
+                {' ', 'n', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {'P', 'P', ' ', 'P', ' ', 'N', ' ', ' '},
+                {' ', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard144= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard144);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {'n', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', 'n', ' ', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {'P', 'P', ' ', 'P', ' ', 'N', ' ', ' '},
+                {' ', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard145= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard145);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'b', 'p', 'p', ' '},
+                {'n', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', 'n', ' ', ' '},
+                {' ', 'P', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', 'P', ' ', 'N', ' ', ' '},
+                {' ', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard146= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard146);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', 'n', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', 'n', ' ', ' '},
+                {' ', 'P', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', 'P', ' ', 'N', ' ', ' '},
+                {' ', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard147= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard147);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'b', 'n', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', ' ', ' ', 'n', ' ', ' '},
+                {' ', 'P', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', 'P', ' ', 'N', ' ', ' '},
+                {' ', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard148= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard148);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', ' ', 'n', ' ', 'b', 'p', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', 'p', 'P', 'b', ' ', 'n', ' ', ' '},
+                {' ', 'P', ' ', 'p', ' ', ' ', ' ', 'P'},
+                {'P', ' ', ' ', 'P', ' ', 'N', ' ', ' '},
+                {' ', 'B', ' ', 'N', 'Q', 'P', 'B', ' '},
+                {'R', ' ', 'R', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard149= new Board(randomBoard);
+        KLASBoards14.add(KLASBoard149);
+
+
+        //HERE
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', 'q', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', ' ', 'n', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                {'P', 'B', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard150= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard150);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', 'q', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'p', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                {'P', 'B', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard151= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard151);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', 'q', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'p', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                {'P', 'B', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard152= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard152);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', 'q', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', ' ', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                {'P', 'B', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard153= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard153);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', 'q', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', ' ', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                {' ', 'B', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard154= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard154);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'q', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                {' ', 'B', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard155= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard155);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'q', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'B', 'Q', ' ', ' ', ' '},
+                {' ', 'B', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard156= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard156);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'q', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'B', 'Q', ' ', ' ', ' '},
+                {' ', 'B', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard157= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard157);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'q', 'p', 'b', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'B', 'Q', ' ', ' ', ' '},
+                {' ', 'B', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard158= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard158);
+
+        randomBoard = new char[][] {
+                {' ', ' ', 'r', ' ', ' ', ' ', 'k', ' '},
+                {'p', 'b', ' ', 'n', 'q', 'p', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', 'b', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {'P', ' ', ' ', 'B', 'Q', ' ', ' ', ' '},
+                {' ', 'B', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', 'R', ' ', ' ', ' ', ' ', 'K', ' '},
+        };
+        Board KLASBoard159= new Board(randomBoard);
+        KLASBoards15.add(KLASBoard159);
+
+        //HERE
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', 'r', ' ', 'k', ' '},
+                {' ', ' ', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'B', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'n', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', 'B', 'P', ' ', ' ', 'N', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard160= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard160);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', 'r', ' ', 'k', ' '},
+                {' ', ' ', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'n', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', 'B', 'P', ' ', ' ', 'N', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard161= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard161);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', 'r', ' ', 'k', ' '},
+                {' ', ' ', 'p', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'n', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', 'N', ' ', ' '},
+                {' ', 'P', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard162= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard162);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', 'n', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', 'N', ' ', ' '},
+                {' ', 'P', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard163= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard163);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', 'r', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard164= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard164);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', ' ', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', 'r', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', ' ', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard165= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard165);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', ' ', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', 'r', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', 'P', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard166= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard166);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', ' ', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', ' ', ' ', ' ', 'r'},
+                {' ', ' ', ' ', ' ', 'P', 'P', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard167= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard167);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', ' ', ' ', 'k', ' '},
+                {' ', ' ', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', 'r', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', ' ', ' ', ' ', 'r'},
+                {' ', ' ', ' ', ' ', 'P', 'P', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', 'N', ' ', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard168= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard168);
+
+        randomBoard = new char[][] {
+                {' ', ' ', ' ', 'q', ' ', ' ', 'k', ' '},
+                {' ', 'r', ' ', 'b', ' ', 'p', 'p', 'p'},
+                {' ', ' ', ' ', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', 'p', ' ', ' ', ' ', ' ', 'r'},
+                {' ', ' ', ' ', ' ', 'P', 'P', ' ', ' '},
+                {' ', 'B', 'P', ' ', 'Q', 'N', ' ', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard169= new Board(randomBoard);
+        KLASBoards16.add(KLASBoard169);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', 'k', ' ', ' ', 'r'},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', 'n', 'p', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', ' ', 'N', 'P', ' '},
+                {'P', 'P', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', 'B', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard170= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard170);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', 'n', 'p', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', ' ', 'N', 'P', ' '},
+                {'P', 'P', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', 'B', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard171= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard171);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', 'n', 'p', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', 'B', 'N', 'P', ' '},
+                {'P', 'P', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard172= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard172);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'n', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', 'B', 'N', 'P', ' '},
+                {'P', 'P', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard173= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard173);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', 'p', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'n', ' ', ' ', ' '},
+                {' ', ' ', 'N', ' ', 'B', ' ', 'P', ' '},
+                {'P', 'P', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard174= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard174);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', 'p', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'n', ' ', 'B', ' ', 'P', ' '},
+                {'P', 'P', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard175= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard175);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', 'p', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', 'P', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard176= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard176);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', ' ', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', ' '},
+                {' ', ' ', ' ', 'p', 'N', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', 'P', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard177= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard177);
+
+        randomBoard = new char[][] {
+                {'r', 'n', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', ' ', 'b', 'p'},
+                {' ', ' ', ' ', ' ', ' ', 'p', 'p', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'N', 'B', ' ', 'P', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard178= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard178);
+
+        randomBoard = new char[][] {
+                {'r', ' ', 'b', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', ' ', 'b', 'p'},
+                {'n', ' ', ' ', ' ', ' ', 'p', 'p', ' '},
+                {' ', ' ', ' ', 'p', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', 'N', 'B', ' ', 'P', ' '},
+                {'P', ' ', ' ', ' ', 'P', 'P', 'B', 'P'},
+                {'R', ' ', ' ', 'Q', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard179= new Board(randomBoard);
+        KLASBoards17.add(KLASBoard179);
+
+        //HERE
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', 'k', ' '},
+                {' ', ' ', 'p', 'b', ' ', 'B', 'p', 'p'},
+                {' ', 'b', 'n', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'N', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard180= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard180);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', 'b', ' ', 'B', 'p', 'p'},
+                {' ', 'b', 'n', 'p', ' ', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', 'N', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard181= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard181);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', 'b', ' ', 'B', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'N', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard182= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard182);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', 'B', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'b', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard183= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard183);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', ' ', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'B', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', 'p', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard184= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard184);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', ' ', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'B', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', 'B', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard185= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard185);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', ' ', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'B', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'B', ' '},
+                {' ', ' ', ' ', 'p', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard186= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard186);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', ' ', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'B', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'B', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard187= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard187);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', ' ', 'p', 'p'},
+                {' ', 'b', 'n', 'p', 'B', 'n', ' ', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'B', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard188= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard188);
+
+        randomBoard = new char[][] {
+                {' ', 'r', ' ', 'q', ' ', 'r', ' ', 'k'},
+                {' ', ' ', 'p', ' ', ' ', ' ', 'p', ' '},
+                {' ', 'b', 'n', 'p', 'B', 'n', ' ', 'p'},
+                {' ', 'p', ' ', ' ', ' ', ' ', 'B', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'N', 'Q', 'P', 'P', 'P'},
+                {'R', ' ', ' ', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard189= new Board(randomBoard);
+        KLASBoards18.add(KLASBoard189);
+
+        //HERE
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', 'P', 'Q', 'n', ' '},
+                {' ', ' ', ' ', 'B', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard190= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard190);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', 'p'},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', 'P', 'Q', 'n', ' '},
+                {' ', ' ', ' ', 'B', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard191= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard191);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', 'p'},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'b', 'P', ' ', 'Q', ' '},
+                {' ', ' ', ' ', 'B', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'R', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard192= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard192);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', 'p'},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'Q', ' '},
+                {' ', ' ', ' ', 'B', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', ' ', 'P', 'P', 'P'},
+                {'b', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard193= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard193);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', 'p'},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'Q', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {'b', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard194= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard194);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', ' '},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'P', ' ', 'Q', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {'b', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard195= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard195);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', ' '},
+                {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {'b', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard196= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard196);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', ' '},
+                {' ', ' ', 'b', ' ', ' ', 'b', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'P', ' ', ' ', 'Q'},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard197= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard197);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', ' '},
+                {' ', ' ', 'b', ' ', ' ', 'b', 'p', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'P', 'Q', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard198= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard198);
+
+        randomBoard = new char[][] {
+                {'r', ' ', ' ', ' ', ' ', 'r', 'k', ' '},
+                {'p', 'p', ' ', ' ', 'p', 'p', ' ', ' '},
+                {' ', ' ', 'b', ' ', ' ', 'b', 'p', ' '},
+                {'q', ' ', ' ', ' ', ' ', ' ', ' ', 'p'},
+                {' ', ' ', ' ', ' ', 'P', 'Q', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', 'N', ' ', ' '},
+                {'P', ' ', ' ', ' ', 'B', 'P', 'P', 'P'},
+                {' ', ' ', 'B', ' ', ' ', 'R', 'K', ' '},
+        };
+        Board KLASBoard199= new Board(randomBoard);
+        KLASBoards19.add(KLASBoard199);
+
     }
 
 }

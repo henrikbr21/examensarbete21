@@ -639,7 +639,7 @@ public class Engine {
 		SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this, data, searchNbr);
 		mainThread.start();
 		try {
-			wait(10000);
+			wait(30000);
 		} catch (InterruptedException ignored) {
 
 		}
@@ -669,22 +669,22 @@ public class Engine {
 
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 1){
-			if(lastIteration)
+			if(lastIteration && data != null)
 				data.incrementTPHits(searchNbr, depth);
 			if(entry.nodeType == TPT.EntryType.PVNODE){
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.incrementPVHits(searchNbr, depth);
 				pv.addMove(entry.bestMove);
 				return entry.score;
 			}
 			if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score >= beta){
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.incrementCUTHits(searchNbr, depth);
 				pv.addMove(entry.bestMove);
 				return beta;
 			}
 			if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score <= alpha){
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.incrementALLHits(searchNbr, depth);
 				pv.addMove(entry.bestMove);
 				return alpha;
@@ -741,7 +741,7 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("BETA CUTOFF AT DEPTH: " + depth);
 				}
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.setBestMoveIndex(searchNbr, depth, i);
 				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 1);
 				MoveArrayListManager.renounceMoveArrayList(moves);
@@ -762,7 +762,7 @@ public class Engine {
 			if(score > bestScore){
 				bestMove = new Move(move);
 				bestScore = score;
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.setBestMoveIndex(searchNbr, depth, i);
 			}
 		}
@@ -782,24 +782,24 @@ public class Engine {
 
 		TPT.TPTEntry entry = tpt.get(prevHash);
 		if(entry != null && entry.depth >= depthLeft && entry.playerToMove == 2){
-			if(lastIteration)
+			if(lastIteration && data != null)
 				data.incrementTPHits(searchNbr, depth);
 			if(entry.nodeType == TPT.EntryType.PVNODE){
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.incrementPVHits(searchNbr, depth);
 				//pv.clear();
 				pv.addMove(entry.bestMove);
 				return entry.score;
 			}
 			if(entry.nodeType == TPT.EntryType.CUTNODE && entry.score <= alpha){
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.incrementCUTHits(searchNbr, depth);
 				//pv.clear();
 				pv.addMove(entry.bestMove);
 				return alpha;
 			}
 			if(entry.nodeType == TPT.EntryType.ALLNODE && entry.score >= beta){
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.incrementALLHits(searchNbr, depth);
 				//pv.clear();
 				pv.addMove(entry.bestMove);
@@ -857,7 +857,7 @@ public class Engine {
 					if(LineDebugger.onLine(depth))
 						System.out.println("ALPHA CUTOFF AT DEPTH: " + depth);
 				}
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.setBestMoveIndex(searchNbr, depth, i);
 				tpt.put(prevHash, score, depthLeft, new Move(move), board, TPT.EntryType.CUTNODE, 2);
 				MoveArrayListManager.renounceMoveArrayList(moves);
@@ -876,7 +876,7 @@ public class Engine {
 			if(score < bestScore){
 				bestMove = new Move(move);
 				bestScore = score;
-				if(lastIteration)
+				if(lastIteration && data != null)
 					data.setBestMoveIndex(searchNbr, depth, i);
 			}
 

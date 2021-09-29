@@ -19,18 +19,18 @@ public class main {
             TestBoards.initBoards100();
 
             char[][] randomBoard = {
-                    {'r', ' ', ' ', ' ', ' ', 'k', ' ', ' '},
-                    {' ', ' ', ' ', 'r', ' ', 'p', 'p', 'p'},
-                    {'p', ' ', ' ', ' ', ' ', 'n', ' ', ' '},
-                    {' ', ' ', ' ', 'p', 'R', ' ', ' ', ' '},
-                    {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
-                    {' ', ' ', ' ', 'B', ' ', 'P', ' ', ' '},
-                    {'P', ' ', ' ', ' ', ' ', ' ', 'P', 'P'},
-                    {'R', ' ', ' ', ' ', ' ', ' ', 'K', ' '}
+                    {'r', ' ', ' ', 'q', ' ', 'r', 'k', ' '},
+                    {'p', 'p', ' ', ' ', 'p', 'p', 'b', 'p'},
+                    {' ', ' ', 'b', ' ', ' ', ' ', 'p', ' '},
+                    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                    {' ', ' ', ' ', 'P', 'P', ' ', 'n', ' '},
+                    {' ', ' ', ' ', 'B', 'Q', 'N', ' ', ' '},
+                    {'P', ' ', ' ', ' ', ' ', 'P', 'P', 'P'},
+                    {'R', ' ', 'B', ' ', ' ', 'R', 'K', ' '}
             };
             Board board2 = new Board(randomBoard);
             BoardGenerator.setBoard(board2);
-            BoardGenerator.generateRandomBoards("D:\\Boards\\RandomMoveBoards\\randomMoveBoards30.txt", 29, 290);
+            BoardGenerator.generateKlasBoards("D:\\Boards\\KLASBoards\\KLASBoards19.txt", 19, 190);
 
 
             /*
