@@ -228,6 +228,27 @@ public abstract class Util {
 		return stat;
 	}
 
+	public static void fixCastlingBoolean(Board board){
+		if((AttackSets.WKStart & board.WK) == 0){
+			board.castleWKValid = false;
+			board.castleWQValid = false;
+		}else {
+			if((AttackSets.wRightRookStart & board.WR) == 0)
+				board.castleWKValid = false;
+			if((AttackSets.wLeftRookStart & board.WR) == 0)
+				board.castleWQValid = false;
+		}
+		if((AttackSets.BKStart & board.BK) == 0){
+			board.castleBKValid = false;
+			board.castleBQValid = false;
+		}else {
+			if((AttackSets.bRightRookStart & board.BR) == 0)
+				board.castleBKValid = false;
+			if((AttackSets.bLeftRookStart & board.BR) == 0)
+				board.castleBQValid = false;
+		}
+	}
+
 	public static long getMemoryUsasge(){
 		Runtime rt = Runtime.getRuntime();
 		rt.maxMemory();
