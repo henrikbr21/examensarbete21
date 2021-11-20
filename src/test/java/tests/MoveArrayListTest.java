@@ -1,6 +1,7 @@
 package tests;
 
 import static org.junit.Assert.*;
+
 import engine.*;
 
 import org.hamcrest.CoreMatchers;

@@ -10,74 +10,62 @@ public class main {
             AttackSets.init();
             Scanner scan = new Scanner(System.in);
             TPT tpt = new TPT(1000000);
+            TPT tpt2 = new TPT(1000000);
             final Board board = new Board();
             MoveArrayListManager.size();
             final Engine engine = new Engine(tpt);
-            final Engine engine2 = new Engine(tpt);
+            final Engine engine2 = new Engine(tpt2);
             Random rand = new Random();
+            Runtime rt = Runtime.getRuntime();
 
+
+/*
             TestBoards.initBoards100();
+            TestBoards.initBoards200();
+            TestBoards.initRandomBoards300();
+            TestBoards.initKLASBoards100();
+            TestBoards.initKLASBoards200();
+            TestBoards.initKLASBoards300();
 
-            char[][] randomBoard = {
-                    {' ', ' ', ' ', 'r', 'r', ' ', 'k', ' '},
-                    {'b', 'p', 'q', ' ', ' ', 'p', 'p', ' '},
-                    {'p', ' ', ' ', ' ', 'b', 'n', ' ', 'p'},
-                    {'P', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
-                    {'R', ' ', ' ', ' ', 'P', 'n', ' ', ' '},
-                    {' ', ' ', 'P', 'B', ' ', ' ', 'N', 'P'},
-                    {' ', 'P', 'Q', 'N', ' ', 'P', 'P', ' '},
-                    {' ', ' ', 'B', ' ', 'R', ' ', 'K', ' '}
-            };
-            Board board2 = new Board(randomBoard);
-            BoardGenerator.setBoard(board2);
-            BoardGenerator.generateKlasBoards("D:\\Boards\\KLASBoards\\KLASBoards29.txt", 29, 290);
+            for(int i = 0; i < 60; i++){
+                ArrayList<Board> warmupBoards = TestBoards.boards.get(i);
+                Board warmupBoard = warmupBoards.get(0);
+                engine2.search(warmupBoard, "WHITE", 6, new PrincipalVariation(), false, new MeasurementData(), 0);
+                engine2.search(warmupBoard, "BLACK", 6, new PrincipalVariation(), false, new MeasurementData(), 0);
+                System.out.println("WARMUP: " + i);
+            }
+            rt.gc();
 
-
-            /*
-            TestBoards.initBoards100();
             MeasurementData data = new MeasurementData();
+            int k = 0;
             for(ArrayList<Board> testBoards : TestBoards.boards){
                 for(int i = 0; i < testBoards.size(); i++){
+                    System.out.println("Iteration:" + k);
                     PrincipalVariation pv3 = new PrincipalVariation();
                     Board testBoard = testBoards.get(i);
                     double result = 0;
                     if(i % 2 == 0)
-                        result = engine.search(testBoard, "WHITE", 6, pv3, false, data, i);
+                        result = engine.search(testBoard, "WHITE", 6, pv3, false, data, k);
                     else
-                        result = engine.search(testBoard, "BLACK", 6, pv3, false, data, i);
-                    data.setScore(i, result);
+                        result = engine.search(testBoard, "BLACK", 6, pv3, false, data, k);
+                    data.setScore(k, result);
+                    k++;
                 }
-                break;
+                tpt = new TPT(1000000);
+                long time2 = System.currentTimeMillis();
+                rt.gc();
+                System.out.println("Garbage collection:" + (System.currentTimeMillis()-time2));
             }
 
-            data.printToFile();
+            data.printToFile(600);
+*/
+
 
             //long time = System.currentTimeMillis();
 
-            /*
-            MoveArrayList line = Util.parseMoveString("e2e4 f7f6 d2d4 h7h5 f1e2 g7g6 g1f3 e7e6 e4e5 f8b4 c1d2 b4d2 b1d2 b8c6 c2c3 f6e5 f3e5 c6e5 d4e5 d8g5 d2f3 g5g2 h1g1");
-            board.playLine(line);
-            board.draw();
-            long time = System.currentTimeMillis();
-            PrincipalVariation pv3 = new PrincipalVariation();
-
-            double result2 = 0;
-            result2 = engine.search(board, "BLACK", 6, pv3, false);
-            System.out.println("Time: " + (System.currentTimeMillis()-time));
-
-            System.out.println(result2);
-            for(int i = 0; i < pv3.size(); i++){
-                Move move2 = pv3.get(i);
-                System.out.println(Util.convertNumToCoord(move2.from) + Util.convertNumToCoord(move2.to));
-            }
-            System.out.println(result2);
-            Debug.printTPHits();
-            Debug.clearTPHits();
-*/
-
             Thread thread;
             int nbrTokens = 0;
-            if(false) {
+            while (true) {
                 String input = scan.nextLine();
 				/*
 				String input = "";
@@ -101,7 +89,7 @@ public class main {
                         double result = engine.alphaBetaMax(board, 4, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false, new MeasurementData(), 0, false);
                     }
                     System.out.println("readyok");
-                }else if(input.equals("stop")){
+                } else if (input.equals("stop")) {
                     Util.dumpGCLogs();
                 } else if (input.equals("ucinewgame")) {
                 } else if (input.startsWith("position startpos ")) {
@@ -137,7 +125,7 @@ public class main {
                             public void run() {
                                 try {
                                     long time = System.currentTimeMillis();
-                                    double result = engine.search(board, "WHITE", 12, pv, false, new MeasurementData(), 0);
+                                    double result = engine.search(board, "WHITE", 16, pv, false, new MeasurementData(), 0);
                                     board.draw();
                                     GCStats stat = Util.dumpGCLogs();
                                     System.out.println("Collection count: " + stat.count + " Collection time: " + stat.time);
@@ -165,7 +153,7 @@ public class main {
                                 try {
                                     MoveArrayList moves = engine.findMoveList(board, "BLACK");
                                     board.draw();
-                                    double result = engine.search(board,"BLACK", 12, pv, false, new MeasurementData(), 0);
+                                    double result = engine.search(board, "BLACK", 16, pv, false, new MeasurementData(), 0);
                                     GCStats stat = Util.dumpGCLogs();
                                     System.out.println("Collection count: " + stat.count + " Collection time: " + stat.time);
                                     System.out.println("bestmove " + Util.convertNumToCoord(pv.get(pv.size() - 1).from) + Util.convertNumToCoord(pv.get(pv.size() - 1).to));

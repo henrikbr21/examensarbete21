@@ -58,10 +58,10 @@ public class MoveArrayList {
         this.size = 0;
     }
 
-    public int indexOf(Move move){
+    public int indexOf(Move move) {
         int i = 0;
-        for(Move arrMove : arrayList){
-            if(arrMove.from == move.from && arrMove.to == move.to)
+        for (Move arrMove : arrayList) {
+            if (arrMove.from == move.from && arrMove.to == move.to)
                 return i;
             i++;
         }

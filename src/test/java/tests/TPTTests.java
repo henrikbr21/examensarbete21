@@ -1,28 +1,29 @@
 package tests;
 
 import static org.junit.Assert.*;
+
 import engine.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class TPTTests{
+public class TPTTests {
 
     private TPT tpt;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         tpt = new TPT(10);
         AttackSets.init();
     }
 
     @Test
-    public void testPutUntilMaxSize(){
-        for(long i = 0; i < 10; i++){
+    public void testPutUntilMaxSize() {
+        for (long i = 0; i < 10; i++) {
             tpt.put(i, i, 5, null, new Board(), null, 1);
         }
 
-        for(long i = 10; i < 16; i++){
+        for (long i = 10; i < 16; i++) {
             tpt.put(i, i, 5, null, new Board(), null, 1);
         }
 
@@ -31,13 +32,13 @@ public class TPTTests{
     }
 
     @Test
-    public void test(){
-        for(long i = 0; i < 10; i++){
+    public void test() {
+        for (long i = 0; i < 10; i++) {
             tpt.put(i, i, 5, null, new Board(), null, 1);
         }
 
         tpt.put(10, 10, 5, null, new Board(), null, 1);
-        for(long i = 11; i < 16; i++){
+        for (long i = 11; i < 16; i++) {
             tpt.put(i, i, 5, null, null, null, 1);
         }
 
@@ -48,7 +49,7 @@ public class TPTTests{
     }
 
     @Test
-    public void testEntryValidity(){
+    public void testEntryValidity() {
         Board board = new Board();
         TPT tpt = new TPT(300000);
         Engine engine = new Engine(tpt);
@@ -58,7 +59,7 @@ public class TPTTests{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertTrue(pv.size()==4);
+        assertTrue(pv.size() == 4);
 
         char[][] testBoard = {
                 {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
@@ -88,7 +89,7 @@ public class TPTTests{
     }
 
     @Test
-    public void testEntryValidity2(){
+    public void testEntryValidity2() {
         Board board = new Board();
         TPT tpt = new TPT(300000);
         Engine engine = new Engine(tpt);
@@ -115,25 +116,25 @@ public class TPTTests{
             e.printStackTrace();
         }
 
-        for(int i = 0; i < pv2.size(); i++){
+        for (int i = 0; i < pv2.size(); i++) {
             System.out.println("pv2: " + Util.convertNumToCoord(pv3.get(i).from) + Util.convertNumToCoord(pv3.get(i).to));
             System.out.println("pv3: " + Util.convertNumToCoord(pv2.get(i).from) + Util.convertNumToCoord(pv2.get(i).to));
         }
 
-        for(int i = 0; i < pv.size(); i++){
+        for (int i = 0; i < pv.size(); i++) {
             assertTrue(result3 == result2);
         }
     }
 
     @Test
-    public void testEntryValidity3(){
+    public void testEntryValidity3() {
         Board board = new Board();
         TPT tpt = new TPT(300000);
         Engine engine = new Engine(tpt);
         PrincipalVariation pv = new PrincipalVariation();
         PrincipalVariation pv2 = new PrincipalVariation();
 
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             try {
                 engine.alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), false, false);
             } catch (InterruptedException e) {
@@ -146,12 +147,12 @@ public class TPTTests{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertTrue(pv.get(pv.size()-1).from == pv2.get(pv2.size()-1).from);
-        assertTrue(pv.get(pv.size()-1).to == pv2.get(pv2.size()-1).to);
+        assertTrue(pv.get(pv.size() - 1).from == pv2.get(pv2.size() - 1).from);
+        assertTrue(pv.get(pv.size() - 1).to == pv2.get(pv2.size() - 1).to);
     }
 
     @Test
-    public void testPVOrdering(){
+    public void testPVOrdering() {
         Board board = new Board();
         TPT tpt = new TPT(300000);
         Engine engine = new Engine(tpt);
@@ -166,7 +167,7 @@ public class TPTTests{
         long hash = tpt.hash(board);
         TPT.TPTEntry entry = tpt.get(hash);
 
-        board.makeMove(pv.get(pv.size()-1).from, pv.get(pv.size()-1).to);
+        board.makeMove(pv.get(pv.size() - 1).from, pv.get(pv.size() - 1).to);
         try {
             engine.alphaBetaMin(board, 3, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv2, 0, tpt.hash(board), false, false);
         } catch (InterruptedException e) {
@@ -175,12 +176,12 @@ public class TPTTests{
         hash = tpt.hash(board);
         entry = tpt.get(hash);
 
-        System.out.println(Util.convertNumToCoord(pv2.get(pv2.size()-1).from) + Util.convertNumToCoord(pv2.get(pv2.size()-1).to));
+        System.out.println(Util.convertNumToCoord(pv2.get(pv2.size() - 1).from) + Util.convertNumToCoord(pv2.get(pv2.size() - 1).to));
         System.out.println(Util.convertNumToCoord(entry.bestMove.from) + Util.convertNumToCoord(entry.bestMove.to));
 
 
-        assertTrue(pv2.get(pv2.size()-1).from == entry.bestMove.from);
-        assertTrue(pv2.get(pv2.size()-1).to == entry.bestMove.to);
+        assertTrue(pv2.get(pv2.size() - 1).from == entry.bestMove.from);
+        assertTrue(pv2.get(pv2.size() - 1).to == entry.bestMove.to);
 
     }
 }

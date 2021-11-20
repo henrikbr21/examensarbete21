@@ -14,37 +14,37 @@ public abstract class LineDebugger {
         matches = new boolean[line.size()];
     }
 
-    public static Move getMove(int depth){
-        return debugLine.get(depth-1);
+    public static Move getMove(int depth) {
+        return debugLine.get(depth - 1);
     }
 
-    public static void match(int depth){
-        matches[depth-1] = true;
+    public static void match(int depth) {
+        matches[depth - 1] = true;
     }
 
-    public static void unmatch(int depth){
-        matches[depth-1] = false;
+    public static void unmatch(int depth) {
+        matches[depth - 1] = false;
     }
 
-    public static boolean onLine(int depth){
-        for(int i = 0; i < depth-1; i++){
-            if(!matches[i]){
+    public static boolean onLine(int depth) {
+        for (int i = 0; i < depth - 1; i++) {
+            if (!matches[i]) {
                 return false;
             }
         }
         return true;
     }
 
-    public static void setAlphaLine(){
+    public static void setAlphaLine() {
         alphaLine.clear();
-        for(Move move : currentLine){
+        for (Move move : currentLine) {
             alphaLine.add(new Move((move)));
         }
     }
 
-    public static void setBetaLine(){
+    public static void setBetaLine() {
         betaLine.clear();
-        for(Move move : currentLine){
+        for (Move move : currentLine) {
             betaLine.add(new Move((move)));
         }
     }

@@ -27,7 +27,7 @@ public class MoveArrayListManager {
         }
     }
 
-    public static void dumpCounts(){
+    public static void dumpCounts() {
         System.out.println("Obtain count: " + obtainCount + " Renounce count: " + renounceCount);
     }
 
@@ -41,7 +41,7 @@ public class MoveArrayListManager {
         this.moveArrayLists = new ArrayList<>(200);
     }
 
-    public void reset(){
+    public void reset() {
         obtainCount = 0;
         renounceCount = 0;
         moveArrayLists.clear();

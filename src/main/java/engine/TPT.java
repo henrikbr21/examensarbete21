@@ -19,7 +19,7 @@ public class TPT {
         entries = new HashMap<>();
     }
 
-    public enum EntryType{
+    public enum EntryType {
         PVNODE, CUTNODE, ALLNODE, NONE
     }
 
@@ -32,9 +32,6 @@ public class TPT {
         public Board board;
         public EntryType nodeType; //0 = PV
         public int playerToMove;
-        public int PVentries;
-        public int CUTentries;
-        public int ALLentries;
 
         public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
             this.hash = hash;
@@ -45,6 +42,11 @@ public class TPT {
             this.nodeType = type;
             this.playerToMove = playerToMove;
         }
+    }
+
+    public void clear(int size) {
+        entries = new HashMap<>();
+        hashes = new long[size];
     }
 
     public synchronized void put(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
@@ -108,12 +110,12 @@ public class TPT {
 
         int fromColumn = from % 8;
         int toColumn = to % 8;
-        if((fromPiece == 'P' || fromPiece == 'p') && toPiece == '_' && fromColumn != toColumn) { //enpassant
+        if ((fromPiece == 'P' || fromPiece == 'p') && toPiece == '_' && fromColumn != toColumn) { //enpassant
             Board simBoard = new Board(board);
             simBoard.makeMove(from, to);
             return hash(simBoard);
-        }else if((fromPiece == 'K' || fromPiece == 'k')){
-            if((from == 4 && to == 2) || (from == 4 && to == 6) || (from == 60 && to == 58) || (from == 60 && to == 62)){
+        } else if ((fromPiece == 'K' || fromPiece == 'k')) {
+            if ((from == 4 && to == 2) || (from == 4 && to == 6) || (from == 60 && to == 58) || (from == 60 && to == 62)) {
                 Board simBoard = new Board(board);
                 simBoard.makeMove(from, to);
                 return hash(simBoard);
@@ -273,13 +275,13 @@ public class TPT {
             }
         }
 
-        if(!board.castleWKValid){
+        if (!board.castleWKValid) {
             hash ^= AttackSets.randCastleNumbers[0];
-        }else if(!board.castleWQValid){
+        } else if (!board.castleWQValid) {
             hash ^= AttackSets.randCastleNumbers[1];
-        }else if(!board.castleBKValid){
+        } else if (!board.castleBKValid) {
             hash ^= AttackSets.randCastleNumbers[2];
-        }else if(!board.castleBQValid){
+        } else if (!board.castleBQValid) {
             hash ^= AttackSets.randCastleNumbers[3];
         }
         return hash;

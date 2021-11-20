@@ -26,7 +26,7 @@ public class Move {
         this.score = score;
     }
 
-    public Move(Move move){
+    public Move(Move move) {
         this.from = move.from;
         this.to = move.to;
         this.fromPiece = move.fromPiece;
@@ -35,7 +35,7 @@ public class Move {
         this.score = move.score;
     }
 
-    public boolean equals(Move move){
+    public boolean equals(Move move) {
         return this.from == move.from && this.to == move.to;
     }
 
