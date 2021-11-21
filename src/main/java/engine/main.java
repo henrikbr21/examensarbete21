@@ -2,6 +2,10 @@ package engine;
 
 import java.util.*;
 
+/**
+ * The main class allows the engine to react and respond to input according to the Universal Chess Interface (UCI).
+ */
+
 public class main {
 
     public static void main(String[] args) {

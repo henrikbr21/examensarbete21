@@ -2,6 +2,13 @@ package engine;
 
 import java.util.Arrays;
 
+/**
+ * The Board class is used to represent a chessboard along with the location all of its pieces and other relevant
+ * attributes such as castling rights and en passant. This class also has methods that provide useful information about
+ * the board such as the empty() methods. These methods return all of the squares on the board that are empty.
+ * Similarly, the methods friendly() and enemies() are provided.
+ */
+
 public class Board {
     public long WP = 0, WR = 0, WN = 0, WB = 0, WK = 0, WQ = 0, BP = 0, BR = 0, BN = 0, BB = 0, BK = 0, BQ = 0;
     public boolean castleWQValid = true;
@@ -143,6 +150,12 @@ public class Board {
         }
     }
 
+    /**
+     * Plays the line of moves in moves on this Board.
+     *
+     * @param moves - the moves to be played.
+     */
+
     public void playLine(MoveArrayList moves) {
         for (int i = 0; i < moves.size(); i++) {
             Move move = moves.get(i);
@@ -170,11 +183,9 @@ public class Board {
     /**
      * Tests whether player of color "color" is in check or not.
      *
-     * @param color  the color of the player who may be in check, valid values: "WHITE" and "BLACK".
-     * @return  0 - in case the player is not in check.
-     *          1 - in case the player is "WHITE" and in check.
-     *          2 - in case the player is "BLACK" and in check.
-     *         -1 - in case the color is invalid.
+     * @param color the color of the player who may be in check, valid values: "WHITE" and "BLACK".
+     * @return 0 - in case the player is not in check. 1 - in case the player is "WHITE" and in check. 2 - in case the
+     * player is "BLACK" and in check. -1 - in case the color is invalid.
      */
     public int checkColor(String color) {
         TPT tpt = new TPT(0);
@@ -228,7 +239,12 @@ public class Board {
         return 0;
     }
 
-    //returns 0 if no one is checkmated, 1 if the white player is checkmated, 2 if the black player is checkmated
+    /**
+     * Determines if either player is checkmated and if so, which.
+     *
+     * @return 0 - if neither player is checkmated. 1 - if the player with the white pieces is checkmated. 2 - if the
+     * player with the black pieces is checkmated.
+     */
     public int checkmate() {
         TPT tpt = new TPT(0);
         Engine engine = new Engine(tpt);
@@ -272,7 +288,12 @@ public class Board {
         return 0;
     }
 
-    //makes a move, updates the board and castling rights
+    /**
+     * Makes a move and updates the Board accordingly.
+     *
+     * @param from - the position from which the piece moves as an index on a bitboard.
+     * @param to   - the position to which the piece moves as an index on a bitboard.
+     */
     public void makeMove(int from, int to) {
         long fromPos = AttackSets.getPosition(from);
         long toPos = AttackSets.getPosition(to);

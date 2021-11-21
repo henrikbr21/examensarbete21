@@ -2,6 +2,10 @@ package engine;
 
 import java.util.ArrayList;
 
+/**
+ * This is a class used solely for the purpose of debugging.
+ */
+
 public abstract class LineDebugger {
     public static ArrayList<Move> debugLine;
     public static ArrayList<Move> currentLine;

@@ -7,6 +7,13 @@ import java.lang.management.ThreadMXBean;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This class represents a chess engine and is responsible for psuedo-legal and legal move generation, the evaluation of
+ * board positions and searching according to the minimax algorithm with alpha-beta pruning. This class also implements
+ * several optimizations that improve its performance by reducing its execution time such as move ordering, iterative
+ * deepening and lazy SMP parallel search.
+ */
+
 public class Engine {
     private final TPT tpt;
     private final Random rand;
@@ -16,6 +23,10 @@ public class Engine {
         rand = new Random();
     }
 
+    /**
+     * This class is an extension of type Thread whose run method starts the alpha-beta search algorithm. Several
+     * instances of the SearchThread class are started by the search() method.
+     */
     public class SearchThread extends Thread {
         private final Board board;
         private final String playerColor;
@@ -30,6 +41,20 @@ public class Engine {
         private MeasurementData data;
         private int searchNbr;
 
+        /**
+         * Creates an instance of a SearchThread.
+         *
+         * @param board       - the board on which the SearchThread will search.
+         * @param playerColor - the color of the player whose turn it is to move.
+         * @param depthLeft   - the remaining depth to be searched. In this case it is the maximum depth that the
+         *                    SearchThread will search to.
+         * @param debug       - defines whether or not the method call is for debugging purposes or not.
+         * @param helper      - defines whether the SearchThread is the main thread or a helper to the main thread.
+         * @param engine      - the engine used for searching.
+         * @param data        - a class which holds data regarding the performance of the search. Only used for
+         *                    measurement purposes.
+         * @param searchNbr   - only used for measurement purposes.
+         */
         public SearchThread(Board board, String playerColor, int depthLeft, boolean debug, boolean helper, Engine engine, MeasurementData data, int searchNbr) {
             this.board = board;
             this.playerColor = playerColor;
@@ -49,6 +74,7 @@ public class Engine {
                 GCStats stat = new GCStats(-1, -1);
                 Runtime rt = Runtime.getRuntime();
                 if (playerColor.equals("WHITE")) {
+                    //Iterative deepening
                     for (int i = 2; i <= depthLeft; i += 2) {
                         boolean lastIteration = false;
                         if (i == depthLeft && !helper) {
@@ -79,6 +105,7 @@ public class Engine {
                         }
                     }
                 } else {
+                    //Iterative deepening
                     for (int i = 2; i <= depthLeft; i += 2) {
                         boolean lastIteration = false;
                         if (i == depthLeft && !helper) {
@@ -113,6 +140,15 @@ public class Engine {
         }
     }
 
+    /**
+     * This method uses the pseudo-legal moves given by the move generator method generateMoves() and checks each of the
+     * moves to see whether they are actually legal.
+     *
+     * @param board       - the board on which the moves are found.
+     * @param playerColor - the player for whom moves are founds.
+     * @return - the fully legal moves available to for the player with the pieces of color playerColor on the given
+     * board.
+     */
     public MoveArrayList findMoveList(Board board, String playerColor) {
         MoveArrayList legalMoves = MoveArrayListManager.obtainMoveArrayList();
 
@@ -159,6 +195,15 @@ public class Engine {
         return legalMoves;
     }
 
+    /**
+     * This method finds all pseudo-legal moves available to the player with the pieces of color playerColor on the
+     * given Board. This method generates some moves that are not actually legal, as they may leave the player's own
+     * king in check.
+     *
+     * @param board       - the board on which moves are found.
+     * @param playerColor - the color for whom moves are found.
+     * @return - the list of pseudo-legal moves.
+     */
     public MoveArrayList generateMoves(Board board, String playerColor) {
         MoveArrayList moveList = MoveArrayListManager.obtainMoveArrayList();
         long occupied = board.occupied();
@@ -506,7 +551,6 @@ public class Engine {
 
     public long generateKingBitboard(int pos, long empty, long enemies) {
         long KMoves = AttackSets.kingMoves(pos);
-        //Remove pseudo-legal moves
         long legalKMoves2 = KMoves & empty;
         long legalKMoves3 = KMoves & enemies;
         long legalKMoves = legalKMoves2 | legalKMoves3;
@@ -578,6 +622,14 @@ public class Engine {
         }
     }
 
+    /**
+     * This method determines whether a square on a board is attacked by any of the opponent's pieces.
+     *
+     * @param board       - the board that is examined.
+     * @param playerColor - the color of the player whose square.
+     * @param square      - the square which is examined for attackers by this method, in the form of a bitboard.
+     * @return - true if the square is attacked. - false, if not.
+     */
     public boolean isAttackedByOpponent(Board board, String playerColor, long square) {
         long occupied = board.occupied();
         long empty = board.empty();
@@ -628,6 +680,20 @@ public class Engine {
         return false;
     }
 
+    /**
+     * This method uses the findMoveList()-method to find all of the legal moves on a given board and then calls the
+     * sort()-method to sort the moves. The sorting is also known as move ordering. Depending on the thread who called
+     * this method, it may use randomized sorting or not.
+     *
+     * @param color  - the color of the player for whom the sorted moves are to be retrieved.
+     * @param entry  - this TPTEntry holds the previous best move for the Board in question from the previous iteration
+     *               of iterative deepening. This TPTEntry, when provided, is used by sort()-method to so that it may
+     *               prioritize this previous best move when sorting.
+     * @param board  - the board on which the moves are found.
+     * @param helper - this parameter defines whether or not the sorting is to be randomized or not.
+     * @return - the sorted list of moves available to player of the color color on the Board in question.
+     */
+
     public MoveArrayList getSortedMoves(String color, TPT.TPTEntry entry, Board board, boolean helper) {
         MoveArrayList moves = this.findMoveList(board, color);
 
@@ -674,6 +740,30 @@ public class Engine {
                     e.printStackTrace();
                 }
             }
+     */
+
+    /**
+     * This method corresponds to the maximizing half of the alpha-beta search algorithm. It recursively calls the
+     * minimizing half alphaBetaMin().
+     *
+     * @param board         - the board to be searched.
+     * @param depthLeft     - the depth left to search before termination.
+     * @param alpha         - the lower bound of the score. In other words, the worst case scenario evaluation found so
+     *                      far for the player with the white pieces.
+     * @param beta          - the upper bound of the score. In other words, the worst case scenario evaluation found so
+     *                      far for the player with the black pieces.
+     * @param pv            - the Principal Variation, which is filled by this method the moves the engine expects will
+     *                      be played.
+     * @param depth         - the current search depth.
+     * @param prevHash      - the Zobrist hash of the previous board, i.e. the board that is a parent to the Board
+     *                      board.
+     * @param debug         - defines whether the method call is for debugging purposes.
+     * @param helper        - defines whether the caller is a helper thread or a main thread.
+     * @param data          - object holding data regarding the performance of the search.
+     * @param searchNbr     - only used for measurement purposes.
+     * @param lastIteration - only used for debugging purposes.
+     * @return - the double score as well as the PrincipalVariation pv are the returned objects.
+     * @throws InterruptedException
      */
     public double alphaBetaMax(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper, MeasurementData data, int searchNbr, boolean lastIteration) throws InterruptedException {
         if (Thread.interrupted()) {
@@ -800,6 +890,29 @@ public class Engine {
         return alpha;
     }
 
+    /**
+     * This method corresponds to the minizming half of the alpha-beta search algorithm. It recursively calls the
+     * maximizing half alphaBetaMax().
+     *
+     * @param board         - the board to be searched.
+     * @param depthLeft     - the depth left to search before termination.
+     * @param alpha         - the lower bound of the score. In other words, the worst case scenario evaluation found so
+     *                      far for the player with the white pieces.
+     * @param beta          - the upper bound of the score. In other words, the worst case scenario evaluation found so
+     *                      far for the player with the black pieces.
+     * @param pv            - the Principal Variation, which is filled by this method the moves the engine expects will
+     *                      be played.
+     * @param depth         - the current search depth.
+     * @param prevHash      - the Zobrist hash of the previous board, i.e. the board that is a parent to the Board
+     *                      board.
+     * @param debug         - defines whether the method call is for debugging purposes.
+     * @param helper        - defines whether the caller is a helper thread or a main thread.
+     * @param data          - object holding data regarding the performance of the search.
+     * @param searchNbr     - only used for measurement purposes.
+     * @param lastIteration - only used for debugging purposes.
+     * @return - the double score as well as the PrincipalVariation pv are the returned objects.
+     * @throws InterruptedException
+     */
     public double alphaBetaMin(Board board, int depthLeft, double alpha, double beta, PrincipalVariation pv, int depth, long prevHash, boolean debug, boolean helper, MeasurementData data, int searchNbr, boolean lastIteration) throws InterruptedException {
         if (Thread.interrupted()) {
             throw new InterruptedException();
@@ -930,6 +1043,14 @@ public class Engine {
         return beta;
     }
 
+    /**
+     * This method is responsible for ordering moves according to MVV-LVA as well as the best Move found so far on a
+     * given board where available.
+     *
+     * @param moves    - the list of moves to be sorted.
+     * @param bestMove - the best move found on the Board board.
+     * @param board    - the board on which the moves were found.
+     */
     public void sort(MoveArrayList moves, Move bestMove, Board board) {
 
         for (int i = 0; i < moves.size(); i++) {
@@ -1032,6 +1153,15 @@ public class Engine {
         moves.sort((o1, o2) -> Integer.compare(o2.score, o1.score));
     }
 
+    /**
+     * This method is responsible for the static evaluation of boards. It is used by the search method to allow the
+     * engine to determine what possibilities are favorable for either player.
+     *
+     * @param board - the board to be evaluated.
+     * @return - a double representing how favorable/unfavorable the board is for the two player. A positive number is
+     * considered favorable for the player with the white pieces while a negative number is considered favorable for the
+     * player with the black pieces. The greater the number, the more favorable or unfavorable the board is considered.
+     */
     public double evalPosition(Board board) {
         double points = 0;
 

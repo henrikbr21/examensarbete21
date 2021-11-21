@@ -2,6 +2,10 @@ package engine;
 
 import java.util.Arrays;
 
+/**
+ * This is a class that is used solely for debugging and measurement purposes.
+ */
+
 public abstract class Debug {
     public static int[] TPHits = new int[13];
 
@@ -50,7 +54,7 @@ public abstract class Debug {
 
 
             if (copiesFound > 1) {
-                System.out.println("ERROR SEVERAL PIECES ON ONE SQUARE!!!!!");
+                System.out.println("ERROR SEVERAL PIECES ON ONE SQUARE!");
                 return true;
             }
 

@@ -2,6 +2,11 @@ package engine;
 
 import java.util.Random;
 
+/**
+ * This class contains different bitboards that the engine uses for different purposes. Most are related to move
+ * generation while a few are used for evaluation purposes.
+ */
+
 public abstract class AttackSets {
     private static final long[] knightMoves = new long[64];
     private static final long[] kingMoves = new long[64];

@@ -2,6 +2,11 @@ package engine;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to avoid initializing new objects of type MoveArrayList in order to minimize interference from the
+ * garbage collection performed by the JVM.
+ */
+
 public class MoveArrayListManager {
     private final ArrayList<MoveArrayList> moveArrayLists;
     private static final MoveArrayListManager manager = new MoveArrayListManager();

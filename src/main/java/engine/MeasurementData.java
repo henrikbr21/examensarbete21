@@ -8,6 +8,10 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used solely for the purpose of measuring the performance of the engine.
+ */
+
 public class MeasurementData {
     private List<int[]> TPHits;
     private List<int[]> PVHits;

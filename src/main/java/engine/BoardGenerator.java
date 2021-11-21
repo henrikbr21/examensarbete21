@@ -5,6 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+/**
+ * This class is used solely for the purpose of generating various chessboard used to measure the performance of the
+ * engine.
+ */
+
 public class BoardGenerator {
     private static Board board;
     private static Random rand = new Random();

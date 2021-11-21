@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * This class contains various utility methods most of which are related to string manipulation.
+ */
+
 public abstract class Util {
     private static long totalCollectionTime = 0;
     private static long totalCollectionCount = 0;

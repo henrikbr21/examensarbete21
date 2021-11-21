@@ -3,6 +3,11 @@ package engine;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * The MoveArrayList can be considered a wrapper of the ArrayList class. The purpose of this class is to avoid
+ * initializing new objects of type Move in order to minimize interference from the JVM's garbage collection.
+ */
+
 public class MoveArrayList {
     private final ArrayList<Move> arrayList;
     private int size;

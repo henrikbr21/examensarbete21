@@ -2,6 +2,12 @@ package engine;
 
 import java.util.HashMap;
 
+/**
+ * This class is an implementation of a transposition table. The class consists primarily of a HashMap where the keys
+ * are Zobrist hashes of chessboards and the values are entries of types TPTEntry. The TPT class is also responsible for
+ * generating these Zobrist hashes.
+ */
+
 public class TPT {
     private int nextIndex = 0;
     public long[] hashes;
@@ -23,6 +29,11 @@ public class TPT {
         PVNODE, CUTNODE, ALLNODE, NONE
     }
 
+    /**
+     * This class is used to store all relevant information about a board that has been searched by the engine. The
+     * hashes are Zobrist hashes of chessboards.
+     */
+
     public class TPTEntry {
         public long hash;
         public double score;
@@ -33,6 +44,19 @@ public class TPT {
         public EntryType nodeType; //0 = PV
         public int playerToMove;
 
+        /**
+         * An instance of type TPTEntry holds all of the information regarding a board that the chess engine needs.
+         *
+         * @param hash         - the Zobrist hash of the board.
+         * @param score        - the score last found during a search.
+         * @param depth        - the depth to which the board was searched.
+         * @param bestMove     - the best move found on the board in question,
+         * @param board        - the board which was searched. This parameter is actually unnecessary, used for
+         *                     debugging purposes.
+         * @param type         - The type of node representing the board. This attribute is used to determine whether
+         *                     the attribute score is an exact score, or a lower/upper bound of the actual score.
+         * @param playerToMove - the player whose turn it is to be move on the board.
+         */
         public TPTEntry(long hash, double score, int depth, Move bestMove, Board board, EntryType type, int playerToMove) {
             this.hash = hash;
             this.score = score;
@@ -227,6 +251,13 @@ public class TPT {
 
     }
 
+
+    /**
+     * This method generates a Zobrist hash of a board.
+     *
+     * @param board - the board for which a hash value will be generated.
+     * @return - the hash value as a long.
+     */
     public long hash(Board board) {
         long hash = 0L;
 

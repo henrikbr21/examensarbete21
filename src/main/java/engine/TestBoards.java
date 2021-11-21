@@ -2,6 +2,11 @@ package engine;
 
 import java.util.ArrayList;
 
+/**
+ * This class holds a large number of board positions used as a dataset for measuring the performance of the chess
+ * engine.
+ */
+
 public class TestBoards {
     public static ArrayList<ArrayList<Board>> boards = new ArrayList<>();
     private static ArrayList<Board> randomBoards0 = new ArrayList<Board>();

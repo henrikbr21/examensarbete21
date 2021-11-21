@@ -2,6 +2,10 @@ package engine;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to represent a principal variation.
+ */
+
 public class PrincipalVariation {
     private final ArrayList<Move> pv;
 

@@ -1,5 +1,9 @@
 package engine;
 
+/**
+ * This class represents a move in chess. The score attribute is used for move ordering according to MVV-LVA.
+ */
+
 public class Move {
     public int from;
     public int to;
