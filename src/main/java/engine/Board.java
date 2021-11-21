@@ -194,11 +194,13 @@ public class Board {
         if (color.equals("BLACK")) {
             if (engine.isAttackedByOpponent(this, "WHITE", this.BK)) {
                 return 2;
-            } else return 0;
+            } else
+                return 0;
         } else if (color.equals("WHITE")) {
             if (engine.isAttackedByOpponent(this, "BLACK", this.WK)) {
                 return 1;
-            } else return 0;
+            } else
+                return 0;
 
         }
         return -1;
@@ -480,18 +482,18 @@ public class Board {
     }
 
     public void clearPosition(long pos) {
-        WK = WK & (~pos);
-        WP = WP & (~pos);
-        WR = WR & (~pos);
-        WN = WN & (~pos);
-        WB = WB & (~pos);
-        WQ = WQ & (~pos);
-        BK = BK & (~pos);
-        BP = BP & (~pos);
-        BR = BR & (~pos);
-        BN = BN & (~pos);
-        BB = BB & (~pos);
-        BQ = BQ & (~pos);
+        WK &= (~pos);
+        WP &= (~pos);
+        WR &= (~pos);
+        WN &= (~pos);
+        WB &= (~pos);
+        WQ &= (~pos);
+        BK &= (~pos);
+        BP &= (~pos);
+        BR &= (~pos);
+        BN &= (~pos);
+        BB &= (~pos);
+        BQ &= (~pos);
     }
 
     public void draw() {
@@ -547,7 +549,8 @@ public class Board {
             System.out.println(Arrays.toString(chessBoard2[i]));
         }
         System.out.println("-----------------------");
-        System.out.println("WK: " + castleWKValid + " WQ: " + castleWQValid + " BK: " + castleBKValid + " BQ: " + castleBQValid);
+        System.out.println(
+                "WK: " + castleWKValid + " WQ: " + castleWQValid + " BK: " + castleBKValid + " BQ: " + castleBQValid);
         System.out.println("wHasCastled: " + wHasCastled + " bHasCastled" + bHasCastled);
     }
 

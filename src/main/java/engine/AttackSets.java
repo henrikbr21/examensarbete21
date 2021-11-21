@@ -90,8 +90,6 @@ public abstract class AttackSets {
         AttackSets.initZobrist();
     }
 
-
-    //TO DO: move boards to AttackSets class
     public static void initKnightMoves() {
         long bottomLeft1 = 9223372036854775807L;
         bottomLeft1 = ~bottomLeft1;

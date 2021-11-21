@@ -77,12 +77,6 @@ public class BoardGenerator {
             fw.write("Board KLASBoard" + writeNumber + "= new Board(randomBoard); \n");
             fw.write("KLASBoards" + nbr + ".add(KLASBoard" + writeNumber + "); \n");
             fw.write("\n");
-            /*
-            Board randomBoard9 = new Board(randomBoard);
-            randomBoards0.add(randomBoard9);
-            boards.add(randomBoards0);
-            */
-
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -573,7 +573,8 @@ public class BoardTests {
         Board oldBoard = new Board(board);
         board.makeMove(Util.convertCoordToNum("a7"), Util.convertCoordToNum("a6"));
         long hash = tpt.hash(board);
-        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("a7"), Util.convertCoordToNum("a6"), 'p', '_', false, 0));
+        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated,
+                new Move(Util.convertCoordToNum("a7"), Util.convertCoordToNum("a6"), 'p', '_', false, 0));
         System.out.println(hash);
         System.out.println(hashToBeUpdated);
         assertTrue(hash == hashToBeUpdated);
@@ -598,7 +599,8 @@ public class BoardTests {
         int moveTo = Util.convertCoordToNum("b6");
         board.makeMove(moveFrom, moveTo);
         long hash = tpt.hash(board);
-        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("a7"), Util.convertCoordToNum("b6"), 'p', 'P', false, 0));
+        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated,
+                new Move(Util.convertCoordToNum("a7"), Util.convertCoordToNum("b6"), 'p', 'P', false, 0));
         System.out.println(hash);
         System.out.println(hashToBeUpdated);
         assertTrue(hash == hashToBeUpdated);
@@ -624,7 +626,8 @@ public class BoardTests {
         int moveTo = Util.convertCoordToNum("c1");
         board.makeMove(moveFrom, moveTo);
         long hash = tpt.hash(board);
-        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e1"), Util.convertCoordToNum("c1"), 'K', '_', false, 0));
+        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated,
+                new Move(Util.convertCoordToNum("e1"), Util.convertCoordToNum("c1"), 'K', '_', false, 0));
         System.out.println(hash);
         System.out.println(hashToBeUpdated);
         assertTrue(hash == hashToBeUpdated);
@@ -650,7 +653,8 @@ public class BoardTests {
         int moveTo = Util.convertCoordToNum("g1");
         board.makeMove(moveFrom, moveTo);
         long hash = tpt.hash(board);
-        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e1"), Util.convertCoordToNum("g1"), 'K', '_', false, 0));
+        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated,
+                new Move(Util.convertCoordToNum("e1"), Util.convertCoordToNum("g1"), 'K', '_', false, 0));
         System.out.println(hash);
         System.out.println(hashToBeUpdated);
         assertTrue(hash == hashToBeUpdated);
@@ -675,7 +679,8 @@ public class BoardTests {
         int moveTo = Util.convertCoordToNum("c8");
         board.makeMove(moveFrom, moveTo);
         long hash = tpt.hash(board);
-        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e8"), Util.convertCoordToNum("c8"), 'k', '_', false, 0));
+        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated,
+                new Move(Util.convertCoordToNum("e8"), Util.convertCoordToNum("c8"), 'k', '_', false, 0));
         System.out.println(hash);
         System.out.println(hashToBeUpdated);
         assertTrue(hash == hashToBeUpdated);
@@ -700,7 +705,8 @@ public class BoardTests {
         int moveTo = Util.convertCoordToNum("g8");
         board.makeMove(moveFrom, moveTo);
         long hash = tpt.hash(board);
-        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated, new Move(Util.convertCoordToNum("e8"), Util.convertCoordToNum("g8"), 'k', '_', false, 0));
+        hashToBeUpdated = tpt.updateHash(oldBoard, hashToBeUpdated,
+                new Move(Util.convertCoordToNum("e8"), Util.convertCoordToNum("g8"), 'k', '_', false, 0));
         System.out.println(hash);
         System.out.println(hashToBeUpdated);
         assertTrue(hash == hashToBeUpdated);

@@ -205,7 +205,8 @@ public abstract class Util {
 
         while (st.hasMoreTokens()) {
             String singleMove = st.nextToken();
-            moves.add(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2)));
+            moves.add(Util.convertCoordToNum(singleMove.substring(0, 2)),
+                    Util.convertCoordToNum(singleMove.substring(2)));
         }
         return moves;
     }
@@ -216,7 +217,8 @@ public abstract class Util {
 
         while (st.hasMoreTokens()) {
             String singleMove = st.nextToken();
-            moves.add(new Move(Util.convertCoordToNum(singleMove.substring(0, 2)), Util.convertCoordToNum(singleMove.substring(2))));
+            moves.add(new Move(Util.convertCoordToNum(singleMove.substring(0, 2)),
+                    Util.convertCoordToNum(singleMove.substring(2))));
         }
         return moves;
     }
@@ -226,7 +228,8 @@ public abstract class Util {
 
         List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
         GarbageCollectorMXBean mxBean = gcMXBeans.get(0);
-        GCStats stat = new GCStats(mxBean.getCollectionCount() - totalCollectionCount, mxBean.getCollectionTime() - totalCollectionTime);
+        GCStats stat = new GCStats(mxBean.getCollectionCount() - totalCollectionCount,
+                mxBean.getCollectionTime() - totalCollectionTime);
         totalCollectionCount = mxBean.getCollectionCount();
         totalCollectionTime = mxBean.getCollectionTime();
         return stat;

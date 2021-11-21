@@ -81,7 +81,8 @@ public class Engine {
                             lastIteration = true;
                         }
                         long time = mxBean.getCurrentThreadCpuTime();
-                        double result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper, data, searchNbr, lastIteration);
+                        double result = alphaBetaMax(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv,
+                                0, tpt.hash(board), debug, helper, data, searchNbr, lastIteration);
 
                         long id = this.getId();
                         if (!helper) {
@@ -112,7 +113,8 @@ public class Engine {
                             lastIteration = true;
                         }
                         long time = mxBean.getCurrentThreadCpuTime();
-                        double result = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv, 0, tpt.hash(board), debug, helper, data, searchNbr, lastIteration);
+                        double result = alphaBetaMin(board, i, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pv,
+                                0, tpt.hash(board), debug, helper, data, searchNbr, lastIteration);
                         if (!helper) {
                             if (i == depthLeft) {
                                 //data.setExecutionTime(searchNbr, i, (mxBean.getCurrentThreadCpuTime() - time));
@@ -309,7 +311,8 @@ public class Engine {
             //en passant
             if (board.enPassant) {
                 if (board.enPassantPos % 8 == 0) {
-                    if ((AttackSets.getPosition(board.enPassantPos + 1) & board.WP) != 0 && board.enPassantPlayer == 2) {
+                    if ((AttackSets.getPosition(
+                            board.enPassantPos + 1) & board.WP) != 0 && board.enPassantPlayer == 2) {
                         moveList.add(board.enPassantPos + 1, board.enPassantPos + 8, 'P', 'p', false, 0);
                     }
                 } else if (board.enPassantPos % 8 == 7 && board.enPassantPlayer == 2) {
@@ -317,10 +320,12 @@ public class Engine {
                         moveList.add(board.enPassantPos - 1, board.enPassantPos + 8, 'P', 'p', false, 0);
                     }
                 } else {
-                    if ((AttackSets.getPosition(board.enPassantPos + 1) & board.WP) != 0 && board.enPassantPlayer == 2) {
+                    if ((AttackSets.getPosition(
+                            board.enPassantPos + 1) & board.WP) != 0 && board.enPassantPlayer == 2) {
                         moveList.add(board.enPassantPos + 1, board.enPassantPos + 8, 'P', 'p', false, 0);
                     }
-                    if ((AttackSets.getPosition(board.enPassantPos - 1) & board.WP) != 0 && board.enPassantPlayer == 2) {
+                    if ((AttackSets.getPosition(
+                            board.enPassantPos - 1) & board.WP) != 0 && board.enPassantPlayer == 2) {
                         moveList.add(board.enPassantPos - 1, board.enPassantPos + 8, 'P', 'p', false, 0);
                     }
                 }
@@ -377,10 +382,12 @@ public class Engine {
                         moveList.add(board.enPassantPos - 1, board.enPassantPos - 8, 'p', 'P', false, 0);
                     }
                 } else {
-                    if ((AttackSets.getPosition(board.enPassantPos + 1) & board.BP) != 0 && board.enPassantPlayer == 1) {
+                    if ((AttackSets.getPosition(
+                            board.enPassantPos + 1) & board.BP) != 0 && board.enPassantPlayer == 1) {
                         moveList.add(board.enPassantPos + 1, board.enPassantPos - 8, 'p', 'P', false, 0);
                     }
-                    if ((AttackSets.getPosition(board.enPassantPos - 1) & board.BP) != 0 && board.enPassantPlayer == 1) {
+                    if ((AttackSets.getPosition(
+                            board.enPassantPos - 1) & board.BP) != 0 && board.enPassantPlayer == 1) {
                         moveList.add(board.enPassantPos - 1, board.enPassantPos - 8, 'p', 'P', false, 0);
                     }
                 }
@@ -506,10 +513,12 @@ public class Engine {
     public long generateQueenBitboard(int pos, long occupied, long empty, long enemies) {
         long singleQueen = AttackSets.getPosition(pos);
 
-        long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
+        long horizontalAttacks = (occupied - 2 * singleQueen) ^ Long.reverse(
+                Long.reverse(occupied) - 2 * Long.reverse(singleQueen));
         horizontalAttacks = horizontalAttacks & AttackSets.rowMask(pos / 8);
 
-        long verticalAttacks = ((occupied & AttackSets.colMask(pos % 8)) - (2 * singleQueen)) ^ Long.reverse(Long.reverse(occupied & AttackSets.colMask(pos % 8)) - (2 * Long.reverse(singleQueen)));
+        long verticalAttacks = ((occupied & AttackSets.colMask(pos % 8)) - (2 * singleQueen)) ^ Long.reverse(
+                Long.reverse(occupied & AttackSets.colMask(pos % 8)) - (2 * Long.reverse(singleQueen)));
         verticalAttacks = verticalAttacks & AttackSets.colMask(pos % 8);
         long queenAttacks1 = verticalAttacks ^ horizontalAttacks;
         queenAttacks1 = queenAttacks1 & (enemies ^ empty);
@@ -714,7 +723,8 @@ public class Engine {
             helpers[i] = new SearchThread(new Board(board), playerColor, depthLeft, debug, true, this, data, searchNbr);
             helpers[i].start();
         }
-        SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this, data, searchNbr);
+        SearchThread mainThread = new SearchThread(new Board(board), playerColor, depthLeft, debug, false, this, data,
+                searchNbr);
         mainThread.start();
         try {
             wait(5000);
@@ -821,7 +831,8 @@ public class Engine {
             else if (board.checkColor("BLACK") == 2) {
                 System.out.println("BLACK CHECKMATED HIMSELF?!");
                 return 20000;
-            } else return 0;
+            } else
+                return 0;
         }
 
         double score;
@@ -843,7 +854,8 @@ public class Engine {
             }
 
             long hash = tpt.updateHash(board, prevHash, move);
-            score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth + 1, hash, debug, false, data, searchNbr, lastIteration);
+            score = alphaBetaMin(simBoard, depthLeft - 1, alpha, beta, localPV, depth + 1, hash, debug, false, data,
+                    searchNbr, lastIteration);
 
             //Beta-cutoff
             if (score >= beta) {
@@ -975,7 +987,8 @@ public class Engine {
                 return -20000;
             } else if (board.checkColor("BLACK") == 2)
                 return 20000 - depth;
-            else return 0;
+            else
+                return 0;
         }
 
         double score;
@@ -997,7 +1010,8 @@ public class Engine {
             }
 
             long hash = tpt.updateHash(board, prevHash, move);
-            score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth + 1, hash, debug, false, data, searchNbr, lastIteration);
+            score = alphaBetaMax(simBoard, depthLeft - 1, alpha, beta, localPV, depth + 1, hash, debug, false, data,
+                    searchNbr, lastIteration);
 
             //Alpha-cutoff
             if (score <= alpha) {

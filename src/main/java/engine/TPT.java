@@ -199,7 +199,9 @@ public class TPT {
                 break;
             default:
                 board.draw();
-                throw new IllegalArgumentException("Piece type:" + fromPiece + " Illegal move:" + Util.convertNumToCoord(from) + Util.convertNumToCoord(to));
+                throw new IllegalArgumentException(
+                        "Piece type:" + fromPiece + " Illegal move:" + Util.convertNumToCoord(
+                                from) + Util.convertNumToCoord(to));
         }
 
         hash ^= AttackSets.randomNumbers[to][fromPieceIndex];
@@ -244,7 +246,9 @@ public class TPT {
                 hash ^= AttackSets.randomNumbers[to][11];
                 break;
             default:
-                throw new IllegalArgumentException("Piece type:" + fromPiece + " Illegal move:" + Util.convertNumToCoord(from) + Util.convertNumToCoord(to));
+                throw new IllegalArgumentException(
+                        "Piece type:" + fromPiece + " Illegal move:" + Util.convertNumToCoord(
+                                from) + Util.convertNumToCoord(to));
 
         }
         return hash;

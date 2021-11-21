@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
@@ -9,12 +9,12 @@ dependencies {
 }
 
 test {
-  // Log passed/failed tests in the console (see also build/reports/tests):
-  testLogging.events 'passed', 'failed'
+    // Log passed/failed tests in the console (see also build/reports/tests):
+    testLogging.events 'passed', 'failed'
 
-  testLogging.exceptionFormat = 'full' // Full error output for test failures.
+    testLogging.exceptionFormat = 'full' // Full error output for test failures.
 
-  dependsOn 'cleanTest'  // This causes tests to always be re-run.
+    dependsOn 'cleanTest'  // This causes tests to always be re-run.
 }
 
 jar {

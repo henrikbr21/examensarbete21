@@ -178,7 +178,8 @@ public class MeasurementData {
             file.createNewFile();
             FileWriter fw = new FileWriter("C:\\Users\\Gurkburk\\Desktop\\filename.csv");
 
-            fw.write("Search,Score,executionTime_2,executionTime_4,executionTime_6,memoryUsage_2,memoryUsage_4,memoryUsage_6,bestMoveIndex_0,bestMoveIndex_1,bestMoveIndex_2,bestMoveIndex_3,bestMoveIndex_4,bestMoveIndex_5,TPHits_0,TPHits_1,TPHits_2,TPHits_3,TPHits_4,TPHits_5,TPHits_6,PVHits_0,PVHits_1,PVHits_2,PVHits_3,PVHits_4,PVHits_5,PVHits_6,CUTHits_0,CUTHits_1,CUTHits_2,CUTHits_3,CUTHits_4,CUTHits_5,CUTHits_6,ALLHits_0,ALLHits_1,ALLHits_2,ALLHits_3,ALLHits_4,ALLHits_5,ALLHits_6,gcCollectionTime,gcCollectionCount");
+            fw.write(
+                    "Search,Score,executionTime_2,executionTime_4,executionTime_6,memoryUsage_2,memoryUsage_4,memoryUsage_6,bestMoveIndex_0,bestMoveIndex_1,bestMoveIndex_2,bestMoveIndex_3,bestMoveIndex_4,bestMoveIndex_5,TPHits_0,TPHits_1,TPHits_2,TPHits_3,TPHits_4,TPHits_5,TPHits_6,PVHits_0,PVHits_1,PVHits_2,PVHits_3,PVHits_4,PVHits_5,PVHits_6,CUTHits_0,CUTHits_1,CUTHits_2,CUTHits_3,CUTHits_4,CUTHits_5,CUTHits_6,ALLHits_0,ALLHits_1,ALLHits_2,ALLHits_3,ALLHits_4,ALLHits_5,ALLHits_6,gcCollectionTime,gcCollectionCount");
             fw.write("\n");
 
             //Averages
